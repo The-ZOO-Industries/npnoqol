@@ -15,16 +15,17 @@ hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
 auto hypixel::BlitzSurvivalGames::Update() -> void
 {
     this->HandleMode();
-
     if (this->mode == Mode::LOBBY) return;
 
     this->LoadMissingPlayers();
 
+    this->UpdateNameTags();
+
+    this->OrginizeTeams();
     this->AssignTeamNumbers();
     this->AssignTeamColors();
 
     this->UpdateTabList();
-    this->UpdateNameTags();
 
     this->UpdateChat();
 }

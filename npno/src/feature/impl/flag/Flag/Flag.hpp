@@ -1,23 +1,17 @@
 #pragma once
 
-#include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
+#include "../../../Feature/Feature.hpp"
 
-#include <chrono>
-#include <memory>
-#include <vector>
-
-#include <npno/Loader.hpp>
-
-class Flag
+class Flag : public Feature
 {
 public:
     explicit Flag(const std::string& name);
 
     virtual ~Flag();
 
-    virtual auto Update() -> void = 0;
-
     static auto GetPlayers() -> void;
+
+    static auto GetPlayersLastTick() -> std::vector<Player>;
 
     struct Player
     {
@@ -25,20 +19,20 @@ public:
 
         struct
         {
-            double x;
-            double y;
-            double z;
+            F64 x;
+            F64 y;
+            F64 z;
         } position;
 
         struct
         {
-            double x;
-            double y;
-            double z;
+            F64 x;
+            F64 y;
+            F64 z;
         } velocity;
 
-        float yaw;
-        float pitch;
+        F32 yaw;
+        F32 pitch;
 
         bool isOnGround;
         std::chrono::time_point<std::chrono::system_clock> onGroundTime;
@@ -73,12 +67,8 @@ public:
         std::chrono::time_point<std::chrono::system_clock> timeSinceBowing;
     };
 
-    static auto GetLastTickPlayers() -> std::vector<Player>;
-
 protected:
-    inline static std::vector<Player> playersLastTick;
-
-    inline static std::unique_ptr<Minecraft> mc{ nullptr };
+    inline static std::vector<Player> playersLastTick{};
 
     std::string name;
 };

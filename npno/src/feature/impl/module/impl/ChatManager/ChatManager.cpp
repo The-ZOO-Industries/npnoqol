@@ -1,19 +1,20 @@
-#include "ChatManager.h"
+#include "ChatManager.hpp"
 
-hypixel::ChatManager::ChatManager()
-    : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
+ChatManager::ChatManager()
+    : HypixelGamemodeModule{ true, HypixelGamemode::Gamemode::ALL }
 {
-    this->AddBlacklistedLines({
+    this->blacklistedLines = 
+    {
         "Sending you to",
         "Slow down! You can only use /tip",
-        "You are sending commands too fast! Please slow dowm.",
+        "You are sen
+	};ding commands too fast! Please slow dowm.",
         "You tipped"
-    });
 }
 
-hypixel::ChatManager::~ChatManager() = default;
+ChatManager::~ChatManager() = default;
 
-auto hypixel::ChatManager::Update() -> void 
+auto ChatManager::Update() -> void 
 {
     const std::vector<std::unique_ptr<ChatLine>>& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
 
@@ -35,14 +36,4 @@ auto hypixel::ChatManager::Update() -> void
     {
         mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
     }
-}
-
-auto hypixel::ChatManager::AddBlacklistedLine(const std::string& line) -> void
-{
-    this->blacklistedLines.push_back(line);
-}
-
-auto hypixel::ChatManager::AddBlacklistedLines(const std::vector<std::string>& lines) -> void
-{
-    this->blacklistedLines.insert(this->blacklistedLines.end(), std::make_move_iterator(lines.begin()), std::make_move_iterator(lines.end()));
 }
