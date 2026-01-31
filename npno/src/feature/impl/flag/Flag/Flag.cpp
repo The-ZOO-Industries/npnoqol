@@ -1,27 +1,21 @@
-#include "Flag.h"
-
-#include <algorithm>
+#include "Flag.hpp"
 
 Flag::Flag(const std::string& name)
-    : name{ name }
+    : Feature()
+    , name{ name }
 {
-    static std::once_flag oflag;
-    std::call_once(oflag, []
-        {
-            mc = std::make_unique<Minecraft>();
-        });
+
 }
 
 Flag::~Flag() = default;
 
-auto Flag::GetPlayers() -> void
+auto Flag::ClearCache() -> void
 {
-    if (!mc->GetTheWorld()->GetInstance())
-    {
-        playersLastTick.clear();
-        return;
-    }
+    playersLastTick.clear();
+}
 
+auto Flag::UpdatePlayers() -> void
+{
     const std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
     const std::vector<std::unique_ptr<EntityPlayer>>& playerEntities = mc->GetTheWorld()->GetPlayerEntities();
 
@@ -48,27 +42,27 @@ auto Flag::GetPlayers() -> void
             }
         );
 
-        const std::string name = player->GetName();
+        const std::string name{ player->GetName() };
 
-        const double posX = player->GetPosX();
-        const double posY = player->GetPosY();
-        const double posZ = player->GetPosZ();
+        const F64 posX{ player->GetPosX() };
+        const F64 posY{ player->GetPosY() };
+        const F64 posZ{ player->GetPosZ() };
 
-        const double velocityX = player->GetMotionX();
-        const double velocityY = player->GetMotionY();
-        const double velocityZ = player->GetMotionZ();
+        const F64 velocityX{ player->GetMotionX() };
+        const F64 velocityY{ player->GetMotionY() };
+        const F64 velocityZ{ player->GetMotionZ() };
 
-        const float rotationYaw = player->GetRotationYaw();
-        const float rotationPitch = player->GetRotationPitch();
+        const F32 rotationYaw{ player->GetRotationYaw() };
+        const F32 rotationPitch{ player->GetRotationPitch() };
 
-        const bool isOnGround = player->IsOnGround();
-        const bool isSprinting = player->IsSprinting();
-        const bool isSneaking = player->IsSneaking();
-        const bool isSwingingSword = player->IsUsingItem() and false;
-        const bool isBlockingSword = false;
-        const bool isEating = player->IsEating();
-        const bool isRiding = player->IsRiding();
-        const bool isBowing = player->IsUsingItem() and false;
+        const bool isOnGround{ player->IsOnGround() };
+        const bool isSprinting{ player->IsSprinting() };
+        const bool isSneaking{ player->IsSneaking() };
+        const bool isSwingingSword{ player->IsUsingItem() and false };
+        const bool isBlockingSword{ false };
+        const bool isEating{ player->IsEating() };
+        const bool isRiding{ player->IsRiding() };
+        const bool isBowing{ player->IsUsingItem() and false };
 
         if (it == playersLastTick.end())
         {
@@ -243,7 +237,7 @@ auto Flag::GetPlayers() -> void
     }
 }
 
-auto Flag::GetLastTickPlayers() -> std::vector<Player>
+auto Flag::GetPlayersLastTick() -> std::vector<Player>
 {
     return playersLastTick;
 }

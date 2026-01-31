@@ -1,25 +1,13 @@
-#include "Module.h"
-
-#include <print>
+#include "Module.hpp"
 
 Module::Module(const bool enable)
-	: enable{ enable }
+	: Feature()
+	, enable{ enable }
 {
-	static std::once_flag oflag;
-	std::call_once(oflag, [this]
-		{
-			mc = std::make_unique<Minecraft>();
 
-			std::println("[INFO] Minecraft instance acquired: {}", static_cast<void*>(mc->GetInstance()));
-		});
 }
 
 Module::~Module() = default;
-
-auto Module::SanityCheck() -> bool
-{
-	return mc->GetTheWorld()->GetInstance() and mc->GetThePlayer()->GetInstance();
-}
 
 auto Module::IsEnable() const -> bool
 {

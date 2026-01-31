@@ -9,9 +9,9 @@ public:
 
     virtual ~Flag();
 
-    static auto GetPlayers() -> void;
+    auto ClearCache() -> void override;
 
-    static auto GetPlayersLastTick() -> std::vector<Player>;
+    static auto UpdatePlayers() -> void;
 
     struct Player
     {
@@ -66,6 +66,8 @@ public:
         std::chrono::time_point<std::chrono::system_clock> isBowingTime;
         std::chrono::time_point<std::chrono::system_clock> timeSinceBowing;
     };
+
+    static auto GetPlayersLastTick() -> std::vector<Player>;
 
 protected:
     inline static std::vector<Player> playersLastTick{};

@@ -81,7 +81,7 @@
     <ClInclude Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\feature\impl\module\HypixelGamemodeModule\HypixelGamemodeModule.hpp">
+    <ClInclude Include="src\feature\impl\module\HypixelModule\HypixelModule.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\feature\impl\module\Module\Module.hpp">
@@ -251,7 +251,7 @@
     <ClCompile Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\module\HypixelGamemodeModule\HypixelGamemodeModule.cpp">
+    <ClCompile Include="src\feature\impl\module\HypixelModule\HypixelModule.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\feature\impl\module\Module\Module.cpp">

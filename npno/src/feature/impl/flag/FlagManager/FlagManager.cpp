@@ -1,4 +1,4 @@
-#include "FlagManager.h"
+#include "FlagManager.hpp"
 
 FlagManager::FlagManager()
 {
@@ -11,15 +11,17 @@ auto FlagManager::Update() const -> void
 {    
     for (const std::unique_ptr<Flag>& flag : this->flags)
 	{   
-        if (flag->GetLastTickPlayers().empty())
-        {
-            break;
-        }
-        
-        flag->Update();
+		if (flag->SanityCheck())
+		{
+			flag->Update();
+		}
+		else
+		{
+			flag->ClearCache();
+		}
 	}
 
-    Flag::GetPlayers();
+    Flag::UpdatePlayers();
 }
 
 template<typename F>

@@ -2,16 +2,16 @@
 
 #include "../Module/Module.hpp"
 
-class HypixelGamemodeModule : public Module
+class HypixelModule : public Module
 {
 public:
-    explicit HypixelGamemodeModule(const bool enable = true, const HypixelGamemode::Gamemode gamemode = HypixelGamemode::Gamemode::ALL);
+    explicit HypixelModule(const bool enable = true, const HypixelGamemode gamemode = HypixelGamemode::ALL);
 
-    virtual ~HypixelGamemodeModule();
-
-    auto SanityCheck() const -> bool override;
+    virtual ~HypixelModule();
 
     auto ClearCache() -> void override;
+
+    auto SanityCheck() const -> bool override;
 
 protected:
     struct Player
@@ -45,31 +45,29 @@ protected:
 
     virtual auto GetPlayerData(const std::string& playerName) -> Player;
 
-    virtual auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void {};
+    virtual auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void = 0;
 
     virtual auto LoadMissingPlayers() -> void;
 
-    virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string { return ""; };
-    virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> { return { "", "" }; };
+    virtual auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string = 0;
+    virtual auto FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string> = 0;
 
     virtual auto GetHpColor(const float hp) const -> std::string;
 
-    virtual auto HandleMode() -> void {};
+    virtual auto HandleMode() -> void = 0;
 
     virtual auto GetTeamFromTeamManager(const std::string& playerName) const -> Team final;
 
     virtual auto GetTeamEntry(const std::string& playerName) -> Team* final;
 
-    virtual	auto SentByServer(const std::string& line) const -> bool final;
-
     virtual auto OrginizeTeams() -> void final;
 
-    mutable std::unordered_map<std::string, Player> playerCache;
+    std::unordered_map<std::string, Player> playerCache;
 
-    mutable std::set<std::string> loadingPlayers;
+    std::set<std::string> loadingPlayers;
 
-    mutable std::unordered_map<std::string, std::vector<Team>> sortedTeams;
-    mutable std::vector<Team> teamManager;
+    std::unordered_map<std::string, std::vector<Team>> sortedTeams;
+    std::vector<Team> teamManager;
 
-    HypixelGamemode::Gamemode gamemode;
+    HypixelGamemode gamemode;
 };

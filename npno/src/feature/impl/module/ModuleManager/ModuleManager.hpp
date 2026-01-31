@@ -1,11 +1,8 @@
 #pragma once
 
-#include "../Module/Module.h"
+#include "../Module/Module.hpp"
 
-#include "../../util/Chat/Chat.h"
-
-#include <vector>
-#include <memory>
+#include "../../util/ChatUtil/ChatUtil.hpp"
 
 class ModuleManager final
 {
@@ -22,5 +19,5 @@ private:
 
 	std::vector<std::unique_ptr<Module>> modules;
 
-	std::unique_ptr<Chat> chat;
+	std::unique_ptr<ChatUtil> chatUtil;
 };

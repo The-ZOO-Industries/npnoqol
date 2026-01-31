@@ -1,16 +1,13 @@
 #pragma once
 
-#include "../../HypixelStatsModule/HypixelStatsModule.h"
+#include "../../HypixelModule/HypixelModule.hpp"
 
-namespace hypixel
+class ScoreboardManager final : public HypixelModule
 {
-    class ScoreboardManager final : public HypixelStatsModule
-    {
-    public:
-        ScoreboardManager();
+public:
+    ScoreboardManager();
 
-        ~ScoreboardManager() override;
+    ~ScoreboardManager() override;
 
-        auto Update() -> void override;
-    };
-}
+    auto Update() -> void override;
+};

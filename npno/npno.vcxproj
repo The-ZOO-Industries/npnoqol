@@ -44,7 +44,7 @@
     <ClInclude Include="src\feature\impl\module\impl\NickManager\NickManager.hpp" />
     <ClInclude Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.hpp" />
     <ClInclude Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.hpp" />
-    <ClInclude Include="src\feature\impl\module\HypixelGamemodeModule\HypixelGamemodeModule.hpp" />
+    <ClInclude Include="src\feature\impl\module\HypixelModule\HypixelModule.hpp" />
     <ClInclude Include="src\feature\impl\module\ModuleManager\ModuleManager.hpp" />
     <ClInclude Include="src\feature\impl\module\Module\Module.hpp" />
     <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.h" />
@@ -102,7 +102,7 @@
     <ClCompile Include="src\feature\impl\module\impl\NickManager\NickManager.cpp" />
     <ClCompile Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.cpp" />
     <ClCompile Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.cpp" />
-    <ClCompile Include="src\feature\impl\module\HypixelGamemodeModule\HypixelGamemodeModule.cpp" />
+    <ClCompile Include="src\feature\impl\module\HypixelModule\HypixelModule.cpp" />
     <ClCompile Include="src\feature\impl\module\ModuleManager\ModuleManager.cpp" />
     <ClCompile Include="src\feature\impl\module\Module\Module.cpp" />
     <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp" />

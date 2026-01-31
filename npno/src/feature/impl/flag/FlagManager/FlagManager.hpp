@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Flag/Flag.h"
+#include "../Flag/Flag.hpp"
 
 class FlagManager final
 {

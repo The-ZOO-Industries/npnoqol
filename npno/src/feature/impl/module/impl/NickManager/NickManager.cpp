@@ -1,7 +1,7 @@
-#include "NickManager.h"
+#include "NickManager.hpp"
 
-hypixel::NickManager::NickManager()
-    : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
+NickManager::NickManager()
+    : HypixelModule{ true, HypixelGamemode::Gamemode::ALL }
 {
     this->nickHashes = 
     {
@@ -38,9 +38,9 @@ hypixel::NickManager::NickManager()
     };
 }
 
-hypixel::NickManager::~NickManager() = default;
+NickManager::~NickManager() = default;
 
-auto hypixel::NickManager::Update() -> void
+auto NickManager::Update() -> void
 {
     this->SkinDenicker();
 
@@ -54,7 +54,7 @@ auto hypixel::NickManager::Update() -> void
     }
 }
 
-auto hypixel::NickManager::SkinDenicker() -> void
+auto NickManager::SkinDenicker() -> void
 {
     for (const std::unique_ptr<EntityPlayer>& player : mc->GetTheWorld()->GetPlayerEntities())
     {
@@ -96,7 +96,7 @@ auto hypixel::NickManager::SkinDenicker() -> void
     }
 }
 
-auto hypixel::NickManager::ParseSkinData(const std::string& playerName, const std::string& skinHash, const std::string& profileName) -> void
+auto NickManager::ParseSkinData(const std::string& playerName, const std::string& skinHash, const std::string& profileName) -> void
 {
     if (!this->IsNickHash(skinHash) and !profileName.empty() and profileName != playerName)
     {
@@ -108,29 +108,29 @@ auto hypixel::NickManager::ParseSkinData(const std::string& playerName, const st
     }
 }
 
-auto hypixel::NickManager::IsNickHash(const std::string& hash) -> bool
+auto NickManager::IsNickHash(const std::string& hash) -> bool
 {
     return this->nickHashes.find(hash) != this->nickHashes.end();
 }
 
-auto hypixel::NickManager::Warn(const std::string& name, const std::string& realName) -> void
+auto NickManager::Warn(const std::string& name, const std::string& realName) -> void
 {
     std::string message;
     if (!realName.empty())
     {
         message = std::format("{}{} {}is nicked as {}{}", 
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+            MinecraftCode::DARK_AQUA,
             realName,
-            MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+            MinecraftCode::AQUA,
+            MinecraftCode::DARK_AQUA,
             name);
     }
     else
     {
         message = std::format("{}{} {}is nicked",
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+            MinecraftCode::DARK_AQUA,
             name,
-            MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA));
+            MinecraftCode::AQUA);
     }
 
     mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(message));

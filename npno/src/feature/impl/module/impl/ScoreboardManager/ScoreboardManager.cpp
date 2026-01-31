@@ -1,14 +1,14 @@
-#include "ScoreboardManager.h"
+#include "ScoreboardManager.hpp"
 
-hypixel::ScoreboardManager::ScoreboardManager()
-    : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
+ScoreboardManager::ScoreboardManager()
+    : HypixelModule{ true, HypixelGamemode::ALL }
 {
 
 }
 
-hypixel::ScoreboardManager::~ScoreboardManager() = default;
+ScoreboardManager::~ScoreboardManager() = default;
 
-auto hypixel::ScoreboardManager::Update() -> void
+auto ScoreboardManager::Update() -> void
 {
     
 }

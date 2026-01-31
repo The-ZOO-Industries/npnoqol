@@ -12,6 +12,8 @@
 #include <regex>
 #include <memory>
 #include <mutex>
+#include <algorithm>
+#include <set>
 
 #include <npno/Type.hpp>
 #include <nlohmann/json.hpp>
@@ -24,6 +26,7 @@ public:
 	virtual ~Feature();
 
 	virtual auto Update() -> void = 0;
+	virtual auto ClearCache() -> void = 0;
 
 	virtual auto SanityCheck() const -> bool;
 

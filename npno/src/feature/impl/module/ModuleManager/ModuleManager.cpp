@@ -1,15 +1,14 @@
-#include "ModuleManager.h"
+#include "ModuleManager.hpp"
 
-#include "../hypixel/HypixelStatsModule/HypixelStatsModule.h"
-#include "../../util/api/HypixelAPI/HypixelAPI.h"
+#include "../HypixelModule/HypixelModule.hpp"
 
-#include "../hypixel/all/AutoGG/AutoGG.h"
-#include "../hypixel/all/ChatManager/ChatManager.h"
-#include "../hypixel/all/GamemodeManager/GamemodeManager.h"
-#include "../hypixel/all/NickManager/NickManager.h"
-#include "../hypixel/all/ScoreboardManager/ScoreboardManager.h"
+#include "../impl/BlitzSurvivalGames/BlitzSurvivalGames.hpp"
 
-#include "../hypixel/gamemode/BlitzSurvivalGames/BlitzSurvivalGames.h"
+#include "../impl/AutoGG/AutoGG.hpp"
+#include "../impl/ChatManager/ChatManager.hpp"
+#include "../impl/GamemodeManager/GamemodeManager.hpp"
+#include "../impl/NickManager/NickManager.hpp"
+#include "../impl/ScoreboardManager/ScoreboardManager.hpp"
 
 ModuleManager::ModuleManager()
 {	
@@ -21,22 +20,22 @@ ModuleManager::ModuleManager()
 
 	this->RegisterModule<hypixel::BlitzSurvivalGames>();
 
-	chat = std::make_unique<Chat>();
+	chatUtil = std::make_unique<ChatUtil>();
 }
 
 ModuleManager::~ModuleManager() = default;
 
 auto ModuleManager::Update() const -> void
 {
-	chat->Update();
+	chatUtil->Update();
 	
 	for (const std::unique_ptr<Module>& module : this->modules)
 	{
-		if (auto* hypixelModule = dynamic_cast<hypixel::HypixelStatsModule*>(module.get()))
+		if (auto* hypixelModule = dynamic_cast<HypixelModule*>(module.get()))
 		{
-			if (hypixelModule->GetGamemode() != HypixelGamemode::Gamemode::ALL)
+			if (hypixelModule->GetGamemode() != HypixelGamemode::ALL)
 			{
-				hypixelModule->SetEnable(hypixelModule->GetGamemode() == HypixelAPI::GetCurrentGamemode());
+				hypixelModule->SetEnable(hypixelModule->GetGamemode() == GamemodeManager::GetCurrentGamemode());
 			}
 
 			if (!hypixelModule->IsEnable())
@@ -45,7 +44,7 @@ auto ModuleManager::Update() const -> void
 			}
 		}
 		
-		if (module->IsEnable() && module->SanityCheck())
+		if (module->IsEnable() and module->SanityCheck())
 		{
 			module->Update();
 		}

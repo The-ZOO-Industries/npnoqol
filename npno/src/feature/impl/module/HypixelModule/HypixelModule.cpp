@@ -1,18 +1,15 @@
-#include "HypixelStatsModule.h"
+#include "HypixelModule.hpp"
 
-hypixel::HypixelStatsModule::HypixelStatsModule(const bool enable, const HypixelGamemode::Gamemode gamemode, const std::string& autoGGLine)
+HypixelModule::HypixelModule(const bool enable, const HypixelGamemode gamemode)
     : Module{ enable }
     , gamemode{ gamemode }
 {
-    if (!autoGGLine.empty())
-    {
-        HypixelAPI::AddAutoGGLine(autoGGLine);
-    }
+
 }
 
-hypixel::HypixelStatsModule::~HypixelStatsModule() = default;
+HypixelModule::~HypixelModule() = default;
 
-auto hypixel::HypixelStatsModule::SanityCheck() -> bool
+auto HypixelModule::SanityCheck() const -> bool
 {
     return
         mc->GetThePlayer()->GetInstance() and
@@ -22,18 +19,18 @@ auto hypixel::HypixelStatsModule::SanityCheck() -> bool
         mc->GetThePlayer()->GetSendQueue()->GetInstance();
 }
 
-auto hypixel::HypixelStatsModule::GetGamemode() const -> HypixelGamemode::Gamemode
+auto HypixelModule::GetGamemode() const -> HypixelGamemode::Gamemode
 {
     return this->gamemode;
 }
 
-auto hypixel::HypixelStatsModule::ClearCache() -> void
+auto HypixelModule::ClearCache() -> void
 {
     this->playerCache.clear();
     this->teamManager.clear();
 }
 
-auto hypixel::HypixelStatsModule::UpdateTabList() -> void
+auto HypixelModule::UpdateTabList() -> void
 {
     const std::unique_ptr<EntityPlayerSP>& thePlayer{ mc->GetThePlayer() };
     const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
@@ -57,7 +54,7 @@ auto hypixel::HypixelStatsModule::UpdateTabList() -> void
     }
 }
 
-auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
+auto HypixelModule::UpdateNameTags() -> void
 {
     const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
     const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
@@ -150,12 +147,7 @@ auto hypixel::HypixelStatsModule::UpdateNameTags() -> void
     }
 }
 
-auto hypixel::HypixelStatsModule::IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool
-{
-    
-}
-
-auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
+auto HypixelModule::LoadMissingPlayers() -> void
 {
     static auto lastBatchTime = std::chrono::steady_clock::now();
     auto now = std::chrono::steady_clock::now();
@@ -220,7 +212,7 @@ auto hypixel::HypixelStatsModule::LoadMissingPlayers() -> void
     }
 }
 
-auto hypixel::HypixelStatsModule::GetPlayerData(const std::string& playerName) -> Player
+auto HypixelModule::GetPlayerData(const std::string& playerName) -> Player
 {
     if (auto it = this->playerCache.find(playerName); it != this->playerCache.end())
     {
@@ -233,15 +225,15 @@ auto hypixel::HypixelStatsModule::GetPlayerData(const std::string& playerName) -
     return playerData;
 }
 
-auto hypixel::HypixelStatsModule::GetHpColor(const float hp) const -> std::string
+auto HypixelModule::GetHpColor(const float hp) const -> std::string
 {
-    if (hp >= 20.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
-    if (hp >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
-    if (hp >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::YELLOW);
-    return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
+    if (hp >= 20.0f) return MinecraftCode::DARK_GREEN;
+    if (hp >= 10.0f) return MinecraftCode::GREEN;
+    if (hp >= 5.0f)  return MinecraftCode::YELLOW;
+    return MinecraftCode::RED;
 }
 
-auto hypixel::HypixelStatsModule::GetTeamFromTeamManager(const std::string& playerName) const -> Team
+auto HypixelModule::GetTeamFromTeamManager(const std::string& playerName) const -> Team
 {
     auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
             [&](const auto& entry) 
@@ -260,7 +252,7 @@ auto hypixel::HypixelStatsModule::GetTeamFromTeamManager(const std::string& play
         }
 }
 
-auto hypixel::HypixelStatsModule::GetTeamEntry(const std::string& playerName) -> Team*
+auto HypixelModule::GetTeamEntry(const std::string& playerName) -> Team*
 {
     auto it = std::find_if(teamManager.begin(), teamManager.end(),
         [&](const Team& team) 
@@ -271,20 +263,7 @@ auto hypixel::HypixelStatsModule::GetTeamEntry(const std::string& playerName) ->
     return it != teamManager.end() ? &(*it) : nullptr;
 }
 
-auto hypixel::HypixelStatsModule::SentByServer(const std::string& line) const -> bool
-{
-    I32 count = 0;
-    for (const char c : line)
-    {
-        if (c == ':') 
-        {
-            count++;
-        }
-    }
-    return count;
-}
-
-auto hypixel::HypixelStatsModule::OrginizeTeams() -> void
+auto HypixelModule::OrginizeTeams() -> void
 {
     this->sortedTeams.clear();
 
