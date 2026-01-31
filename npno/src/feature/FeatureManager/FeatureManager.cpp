@@ -1,8 +1,18 @@
 #include "FeatureManager.hpp"
 
 FeatureManager::FeatureManager()
-	: flag{ std::make_unique<Flag>() }
-	, command{ std::make_unique<Command>() }
-	module{ std::make_unique<Module>() }
+	: commandManager{ std::make_unique<CommandManager>() }
+	, flagManager{ std::make_unique<FlagManager>() }
+	, moduleManager{ std::make_unique<ModuleManager>() }
 {
+
+}
+
+FeatureManager::~FeatureManager() = default;
+
+auto FeatureManager::Update() const -> void
+{
+	this->commandManager->Update();
+	this->flagManager->Update();
+	this->moduleManager->Update();
 }

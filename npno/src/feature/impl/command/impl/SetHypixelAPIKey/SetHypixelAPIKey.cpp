@@ -1,22 +1,15 @@
-#include "SetHypixelAPIKeyCommand.h"
+#include "SetHypixelAPIKey.hpp"
 
-SetHypixelAPIKeyCommand::SetHypixelAPIKeyCommand()
-	: Command{ 
-		"sethypixelapikey",
-		std::format("{}/sethypixelapikey {}<hypixel api key>", 
-			MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
-			MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA))
-		}
+SetHypixelAPIKey::SetHypixelAPIKey()
+	: Command{ "sethypixelapikey", std::format("{}/sethypixelapikey {}<hypixel api key>", MinecraftCode::DARK_AQUA, MinecraftCode::AQUA) }
 {
 
 }
 
-SetHypixelAPIKeyCommand::~SetHypixelAPIKeyCommand() = default;
+SetHypixelAPIKey::~SetHypixelAPIKey() = default;
 
-auto SetHypixelAPIKeyCommand::OnCommand(const std::string& input) -> void
+auto SetHypixelAPIKey::OnCommand(const std::vector<std::string>& args) -> void
 {
-	const std::vector<std::string> args = this->GetArguments(input);
-
 	if (args[0] != this->name)
 	{
 		return;
@@ -31,20 +24,17 @@ auto SetHypixelAPIKeyCommand::OnCommand(const std::string& input) -> void
 	HypixelAPI::SetAPIKey(args[1]);
 	mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
 		std::format("{}Set hypixel api key to {}{}",
-			MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA), 
-			MinecraftCode::codeToString.at(MinecraftCode::Code::AQUA),
-			args[1])));
+			MinecraftCode::DARK_AQUA,
+			MinecraftCode::AQUA,
+			args[1]
+		)));
 
 	if (HypixelAPI::CheckKey())
 	{
-		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
-			std::format("{}Hypixel API key is valid",
-				MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN))));
+		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(std::format("{}Hypixel API key is valid", MinecraftCode::GREEN)));
 	}
 	else
 	{
-		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
-			std::format("{}Hypixel API key is invalid",
-				MinecraftCode::codeToString.at(MinecraftCode::Code::RED))));
+		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(std::format("{}Hypixel API key is invalid", MinecraftCode::RED)));
 	}
 }

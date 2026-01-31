@@ -3,8 +3,13 @@
 #include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
 
 #include "../../util/MinecraftCode/MinecraftCode.hpp"
+#include "../../util/api/HypixelAPI/HypixelAPI.hpp"
 
+#include <sstream>
 #include <print>
+#include <string>
+#include <vector>
+#include <regex>
 #include <memory>
 #include <mutex>
 

@@ -1,10 +1,10 @@
-#include "CommandManager.h"
+#include "CommandManager.hpp"
 
-#include "../SetHypixelAPIKeyCommand/SetHypixelAPIKeyCommand.h"
+#include "../impl?SetHypixelAPIKey/SetHypixelAPIKey.hpp"
 
 CommandManager::CommandManager()
 {
-	this->RegisterCommand<SetHypixelAPIKeyCommand>();
+	this->RegisterCommand<SetHypixelAPIKey>();9
 }
 
 CommandManager::~CommandManager() = default;
@@ -13,7 +13,7 @@ auto CommandManager::Update() const -> void
 {
 	for (const std::unique_ptr<Command>& command : this->commands)
 	{
-		command->Proc();
+		command->Update();
 	}
 }
 

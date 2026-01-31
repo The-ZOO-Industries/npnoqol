@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Command/Command.h"
+#include "../../Command/Command.hpp"
 
-class SetHypixelAPIKeyCommand final : public Command
+class SetHypixelAPIKey final : public Command
 {
 public:
-	SetHypixelAPIKeyCommand();
+	SetHypixelAPIKey();
 
-	~SetHypixelAPIKeyCommand() override;
+	~SetHypixelAPIKey() override;
 
-	auto OnCommand(const std::string& input) -> void override;
+	auto OnCommand(const std::vector<std::string>& args) -> void override;
 };

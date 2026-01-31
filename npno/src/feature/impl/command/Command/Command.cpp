@@ -1,68 +1,52 @@
-#include "Command.h"
+#include "Command.hpp"
 
-#include <sstream>
-#include <print>
-
-Command::Command(const std::string name, const std::string usage)
-	: name{ name }
-	, usage{ 
-        std::format("{}Usage: {}",
-        MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN),
-        usage)
-    }
+Command::Command(const std::string& name, const std::string& usage)
+	: Feature()
+	, name{ name }
+    , usage{ std::format("{}Usage: {}", MinecraftCode::GREEN, usage) }
 {
-	static std::once_flag oflag;
-	std::call_once(oflag, []
-		{
-			mc = std::make_unique<Minecraft>();
-		});
+
 }
 
 Command::~Command() = default;
 
-auto Command::Proc() -> void
+auto Command::Update() -> void
 {
     const std::vector<std::unique_ptr<ChatLine>>& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
+    const std::string line = chatLines[0]->GetLineString()->GetFormattedText();
 
-    const std::string text = chatLines[0]->GetLineString()->GetFormattedText();
-
-	bool refresh = false;
-    if (text.find(std::format("{}", this->name)) != std::string::npos and !text.contains(":"))
+    const std::regex nameRegex{ this->name, std::regex_constants::icase };
+    if (!this->SentByHypixel(line) and std::regex_search(line, nameRegex))
     {
         mc->GetIngameGUI()->GetPersistantChatGUI()->DeleteChatLine(chatLines[0]->GetChatLineID());
 
-        this->OnCommand(this->ExtractBetweenQuotes(text));
+        this->OnCommand(this->GetArguments(this->ExtractBetweenQuotes(line)));
 
-        refresh = true;
-    }
-
-    if (refresh)
-    {
         mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
     }
 }
 
-std::string Command::ExtractBetweenQuotes(const std::string& text)
+auto Command::ExtractBetweenQuotes(const std::string& line) const -> std::string
 {
-    const Size first = text.find('\'');
+    const Size first{ line.find('\'') };
     if (first == std::string::npos)
     {
         return "";
     }
 
-    const Size second = text.find('\'', first + 1);
+    const Size second{ line.find('\'', first + 1) };
     if (second == std::string::npos)
     {
         return "";
     }
 
-    return text.substr(first + 1, second - first - 1);
+    return line.substr(first + 1, second - first - 1);
 }
 
-std::vector<std::string> Command::GetArguments(const std::string& string)
+auto Command::GetArguments(const std::string& command) const -> std::vector<std::string>
 {
     std::vector<std::string> args;
-    std::istringstream stream(string);
+    std::istringstream stream(command);
     std::string word;
 
     while (stream >> word) 

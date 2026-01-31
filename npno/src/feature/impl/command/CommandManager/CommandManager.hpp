@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../Command/Command.h"
-
-#include <vector>
-#include <memory>
+#include "../Command/Command.hpp"
 
 class CommandManager final
 {
