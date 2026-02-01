@@ -33,6 +33,7 @@ public:
 protected:
 	auto IsBot(const std::unique_ptr<EntityPlayer>& player) const -> bool;
 	auto SentByHypixel(const std::string& line) const -> bool;
+	auto ToRegex(const std::vector<std::string>& lines) const -> std::vector<std::regex>;
 
 	inline static std::unique_ptr<Minecraft> mc{};
 

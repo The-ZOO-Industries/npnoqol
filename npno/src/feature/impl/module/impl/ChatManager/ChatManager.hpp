@@ -1,22 +1,16 @@
 #pragma once
 
-#include "../../HypixelStatsModule/HypixelStatsModule.h"
+#include "../../HypixelModule/HypixelModule.hpp"
 
-namespace hypixel
+class ChatManager final : public HypixelModule
 {
-    class ChatManager final : public HypixelStatsModule
-    {
-    public:
-        ChatManager();
+public:
+    ChatManager();
 
-        ~ChatManager() override;
+    ~ChatManager() override;
 
-        auto Update() -> void override;
+    auto Update() -> void override;
 
-    private:
-        auto AddBlacklistedLine(const std::string& line) -> void;
-        auto AddBlacklistedLines(const std::vector<std::string>& lines) -> void;
-
-        std::vector<std::string> blacklistedLines;
-    };
-}
+private:
+    std::vector<std::regex> blacklistedLines;
+};

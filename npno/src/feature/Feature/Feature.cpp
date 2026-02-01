@@ -32,6 +32,18 @@ auto Feature::SentByHypixel(const std::string& line) const -> bool
 	return line.contains(":");
 }
 
+auto Feature::ToRegex(const std::vector<std::string>& lines) const -> std::vector<std::regex>
+{
+	std::vector<std::regex> regexes;
+
+	for (const std::string& line : lines)
+	{
+		regexes.emplace_back(line, std::regex_constants::icase);
+	}
+	
+	return regexes;
+}
+
 auto Feature::Welcome() const -> void
 {
 	if (!this->SanityCheck())
