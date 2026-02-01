@@ -1,45 +1,52 @@
-#include "GamemodeManager.h"
+#include "GamemodeManager.hpp"
 
-hypixel::GamemodeManager::GamemodeManager()
-    : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
+GamemodeManager::GamemodeManager()
+    : HypixelStatsModule{ true, HypixelGamemode::ALL }
 {
     
 }
 
-hypixel::GamemodeManager::~GamemodeManager() = default;
+GamemodeManager::~GamemodeManager() = default;
 
-auto hypixel::GamemodeManager::Update() -> void
+auto GamemodeManager::Update() -> void
 {
-    for (const std::string& line : Chat::GetNewLines())
+    for (const std::string& line : ChatUtil::GetNewLines())
     {
-        std::string jsonPart = ExtractJson(line);
-        if (jsonPart.empty()) continue;
-
+        const std::string jsonPart{ ExtractJson(line) };
         if (nlohmann::json::accept(jsonPart))
         {
-            const auto json = nlohmann::json::parse(jsonPart);
+            const nlohmann::json json{ nlohmann::json::parse(jsonPart) };
 
             if (json.contains("gametype"))
             {
-                HypixelGamemode::Gamemode gamemode = HypixelGamemode::stringToGamemode.at(json["gametype"].get<std::string>());
-                HypixelAPI::SetCurrentGamemode(gamemode);
+                currentGamemode = json.at("gametype");
             }
 
             if (json.contains("mode"))
             {
-				HypixelAPI::SetCurrentMode(json["mode"].get<std::string>());
+                currentMode = json.at("mode");
             }
             else
             {
-                HypixelAPI::SetCurrentMode("unknown");
+                currentMode = "unknown";
             }
         }
     }
 }
 
-auto hypixel::GamemodeManager::ExtractJson(const std::string& line) -> std::string
+auto GamemodeManager::GetCurrentGamemode() -> std::string
 {
-    auto pos = line.find('{');
+    return currentGamemode;
+}
+
+auto GamemodeManager::GetCurrentMode() -> std::string
+{
+    return currentMode;
+}
+
+auto GamemodeManager::ExtractJson(const std::string& line) -> std::string
+{
+    const Size pos{ line.find('{') };
     if (pos != std::string::npos) 
     {
         return line.substr(pos);

@@ -1,19 +1,22 @@
 #pragma once
 
-#include "../../HypixelStatsModule/HypixelStatsModule.h"
+#include "../../HypixelModule/HypixelModule.hpp"
 
-namespace hypixel
+class GamemodeManager final : public HypixelModule
 {
-    class GamemodeManager final : public HypixelStatsModule
-    {
-    public:
-        GamemodeManager();
+public:
+    GamemodeManager();
 
-        ~GamemodeManager() override;
+    ~GamemodeManager() override;
 
-        auto Update() -> void override;
+    auto Update() -> void override;
 
-    private:
-        auto ExtractJson(const std::string& line) -> std::string;
-    };
-}
+    static auto GetCurrentGamemode() -> std::string;
+    static auto GetCurrentMode() -> std::string;
+
+private:
+    auto ExtractJson(const std::string& line) -> std::string;
+
+    inline static std::string currentGamemode{};
+    inline static std::string currentMode{};
+};
