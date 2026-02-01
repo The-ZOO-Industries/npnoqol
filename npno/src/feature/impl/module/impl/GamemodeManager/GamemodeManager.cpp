@@ -30,6 +30,11 @@ auto GamemodeManager::Update() -> void
             {
                 currentMode = "unknown";
             }
+
+
+            mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
+                std::format("{}You entered {}{}", MinecraftCode::AQUA, MinecraftCode::DARK_AQUA, currentGamemode)
+            ));
         }
     }
 }

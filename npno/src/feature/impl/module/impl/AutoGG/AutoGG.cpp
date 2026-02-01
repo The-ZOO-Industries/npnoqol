@@ -13,19 +13,13 @@ AutoGG::~AutoGG() = default;
 
 auto AutoGG::Update() -> void
 {
-    const std::vector<std::unique_ptr<ChatLine>>& chatLines{ mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines() };
-    const std::string& line{ chatLines[0]->GetLineString()->GetFormattedText() };
-
-    if (this->SentByHypixel(line))
+    for (const std::string& line : ChatUtil::GetNewLines())
     {
-        for (const std::regex& blackListedLine : this->autoGGLines)
+        for (const std::regex& autoGGLine : this->autoGGLines)
         {
-            if (std::regex_search(line, blackListedLine))
+            if (std::regex_search(line, autoGGLine))
             {
                 mc->GetThePlayer()->SendChatMessage(std::format("{} {}", "/ac", this->RandomCase("good game")));
-
-                mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
-
                 return;
             }
         }

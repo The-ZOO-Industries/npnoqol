@@ -7,7 +7,6 @@ namespace Hypixel
 {
     enum class Gamemode : I8
     {
-        ALL,
         LOBBY,
         QUAKECRAFT,
         WALLS,
@@ -43,12 +42,11 @@ namespace Hypixel
 
     inline const std::unordered_map<Gamemode, std::string> GamemodeToString
     {
-        {Gamemode::ALL, "ALL"},
         {Gamemode::LOBBY, "LOBBY"},
         {Gamemode::QUAKECRAFT, "QUAKECRAFT"},
         {Gamemode::WALLS, "WALLS"},
         {Gamemode::PAINTBALL, "PAINTBALL"},
-        {Gamemode::BLITZSURVIVALGAMES, "BLITZSURVIVALGAMES"},
+        {Gamemode::BLITZSURVIVALGAMES, "SURVIVAL_GAMES"}, 
         {Gamemode::TNTGAMES, "TNTGAMES"},
         {Gamemode::VAMPIREZ, "VAMPIREZ"},
         {Gamemode::WALLS3, "WALLS3"},

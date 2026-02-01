@@ -33,10 +33,7 @@ auto ModuleManager::Update() const -> void
 	{
 		if (auto* hypixelModule = dynamic_cast<HypixelModule*>(module.get()))
 		{
-			if (hypixelModule->GetGamemode() != Hypixel::Gamemode::ALL)
-			{
-				hypixelModule->SetEnable(Hypixel::ToString(hypixelModule->GetGamemode()) == GamemodeManager::GetCurrentGamemode());
-			}
+			hypixelModule->SetEnable(Hypixel::ToString(hypixelModule->GetGamemode()) == GamemodeManager::GetCurrentGamemode());
 
 			if (!hypixelModule->IsEnable())
 			{

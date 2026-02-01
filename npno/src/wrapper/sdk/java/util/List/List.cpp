@@ -10,10 +10,7 @@ List::~List() = default;
 
 void List::Init()
 {
-	std::call_once(oflag, [this]
-		{
-			getMethodID = Jvm::env->GetMethodID(this->javaClass, "get", "(I)Ljava/lang/Object;");
-		});
+	getMethodID = Jvm::env->GetMethodID(this->javaClass, "get", "(I)Ljava/lang/Object;");
 }
 
 jobject List::Get(const I32 index) const

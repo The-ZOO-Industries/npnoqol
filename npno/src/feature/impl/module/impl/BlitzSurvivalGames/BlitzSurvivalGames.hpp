@@ -6,7 +6,6 @@ class BlitzSurvivalGames final : public HypixelModule
 {
 public:
     BlitzSurvivalGames();
-
     ~BlitzSurvivalGames() override;
 
     auto Update() -> void override;
@@ -20,9 +19,7 @@ private:
     };
 
     auto LoadPlayersData(const std::vector<std::string>& playerNames) -> void override;
-
     auto HandleMode() -> void override;
-
     auto UpdateChat() const -> void;
 
     auto FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string override;
@@ -31,16 +28,8 @@ private:
     auto GetWinsColor(const std::string& wins) const -> std::string;
     auto GetKDRColor(const std::string& kdr) const -> std::string;
 
-    auto AssignTeamNumbers() -> void;
-
-    auto GetTeamIndex(const std::string& playerName) const -> I32;
     auto AssignTeamColors() -> void;
 
-    auto GetPlayerTeamName(const std::string& playerName) const -> std::string;
-    auto GetPlayerTeamColor(const std::string& playerName) const -> std::string;
-    auto GetTeamCount() const -> I32;
-
-    std::unordered_map<std::string, I32> teamNumbers;
     std::unordered_map<std::string, std::string> teamColors;
     U32 nextColorIndex{ 0 };
 

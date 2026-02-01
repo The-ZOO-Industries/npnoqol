@@ -34,8 +34,6 @@ auto HypixelModule::UpdateTabList() -> void
 {
     const std::unique_ptr<EntityPlayerSP>& thePlayer{ mc->GetThePlayer() };
     const std::unique_ptr<WorldClient>& theWorld{ mc->GetTheWorld() };
-    const std::unique_ptr<GuiIngame>& ingameGUI{ mc->GetIngameGUI() };
-
     const std::vector<std::unique_ptr<NetworkPlayerInfo>>& playerInfoMap{ thePlayer->GetSendQueue()->GetPlayerInfoMap() };
 
     for (Size i{ 0 }; i < playerInfoMap.size(); ++i)
@@ -56,101 +54,16 @@ auto HypixelModule::UpdateTabList() -> void
 
 auto HypixelModule::UpdateNameTags() -> void
 {
-    const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
-    const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
-
-    scoreboard->SetObjectiveInDisplaySlot(Scoreboard::DisplaySlot::BELOW_NAME, nullptr);
-
-    for (const std::unique_ptr<ScorePlayerTeam>& scoreTeam : scoreboard->GetTeams())
-    {
-        const std::string hypixelTeamName = scoreTeam->GetTeamName();
-
-        for (const std::string& playerName : scoreTeam->GetMembershipCollection())
-        {
-            if (!theWorld->GetPlayerEntityByName(playerName)->GetInstance())
-            {
-                continue;
-            }
-
-            if (!hypixelTeamName.starts_with("npno_"))
-            {
-                if (!this->GetTeamEntry(playerName))
-                {
-                    Team team{};
-                    team.playerName = playerName;
-                    team.hypixelTeam = hypixelTeamName;
-                    this->teamManager.push_back(std::move(team));
-                }
-                else
-                {
-                    this->GetTeamEntry(playerName)->hypixelTeam = hypixelTeamName;
-                }
-            }
-        }
-    }
-
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        const std::string& playerName = player->GetName();
-
-        if (!this->GetTeamEntry(playerName))
-        {
-            Team team{};
-            team.playerName = playerName;
-            team.hypixelTeam = scoreboard->GetTeam(playerName)->GetTeamName();
-            this->teamManager.push_back(std::move(team));
-        }
-    }
-
+    this->FillTeamManagerWithHypixelTeams();
     this->OrginizeTeams();
-
-    I32 teamCounter = 0;
-    for (const auto& [hypixelTeamName, players] : sortedTeams)
-    {
-        for (const Team& teamEntry : players)
-        {
-            Team* entry = this->GetTeamEntry(teamEntry.playerName);
-            if (entry)
-            {
-                entry->npnoTeam = std::format("npno_{}", teamCounter++);
-            }
-        }
-    }
-
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
-    {
-        const std::string& playerName = player->GetName();
-
-        if (this->IsBot(player))
-        {
-            continue;
-        }
-
-        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(this->GetTeamFromTeamManager(playerName).npnoTeam) };
-
-        if (!team->GetInstance())
-        {
-            team = scoreboard->CreateTeam(this->GetTeamFromTeamManager(playerName).npnoTeam);
-            if (!team->GetInstance()) continue;
-        }
-
-        if (!scoreboard->GetTeam(playerName)->GetTeamName().starts_with("npno_"))
-        {
-            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName));
-
-            const bool unused = scoreboard->AddPlayerToTeam(playerName, this->GetTeamFromTeamManager(playerName).npnoTeam);
-        }
-
-        const std::pair<std::string, std::string> nametag = this->FormatNametag(player);
-        team->SetNamePrefix(JavaUtil::FixString(nametag.first));
-        team->SetNameSuffix(JavaUtil::FixString(nametag.second));
-    }
+    this->AssignNpnoTeams();
+    this->ApplyTeamsAndNametags();
 }
 
 auto HypixelModule::LoadMissingPlayers() -> void
 {
-    static auto lastBatchTime = std::chrono::steady_clock::now();
-    auto now = std::chrono::steady_clock::now();
+    static std::chrono::steady_clock::time_point lastBatchTime{ std::chrono::steady_clock::now() };
+    std::chrono::steady_clock::time_point now{ std::chrono::steady_clock::now() };
 
     if (now - lastBatchTime < std::chrono::seconds(2))
     {
@@ -160,8 +73,8 @@ auto HypixelModule::LoadMissingPlayers() -> void
     lastBatchTime = now;
 
     std::vector<std::string> playerNames;
-    constexpr I32 MAX_BATCH_SIZE = 10;
-    constexpr I32 MAX_RETRY_COUNT = 5;
+    constexpr I32 MAX_BATCH_SIZE{ 10 };
+    constexpr I32 MAX_RETRY_COUNT{ 5 };
 
     for (const std::unique_ptr<EntityPlayer>& player : mc->GetTheWorld()->GetPlayerEntities())
     {
@@ -170,7 +83,7 @@ auto HypixelModule::LoadMissingPlayers() -> void
             continue;
         }
 
-        const std::string& playerName = player->GetName();
+        const std::string& playerName{ player->GetName() };
         auto it = this->playerCache.find(playerName);
 
         if (it == this->playerCache.end())
@@ -182,15 +95,15 @@ auto HypixelModule::LoadMissingPlayers() -> void
             loadingPlayer.lastRequestTime = now;
             this->playerCache[playerName] = loadingPlayer;
         }
-        else if (it->second.error && !it->second.isLoading)
+        else if (it->second.error and !it->second.isLoading)
         {
             if (it->second.retryCount >= MAX_RETRY_COUNT)
             {
                 continue;
             }
 
-            I32 retryDelay = 5 * (1 << it->second.retryCount);
-            auto timeSinceLastRequest = std::chrono::duration_cast<std::chrono::seconds>(now - it->second.lastRequestTime).count();
+            const I32 retryDelay{ 5 * (1 << it->second.retryCount) };
+            const I64 timeSinceLastRequest{ std::chrono::duration_cast<std::chrono::seconds>(now - it->second.lastRequestTime).count() };
 
             if (timeSinceLastRequest >= retryDelay)
             {
@@ -233,51 +146,101 @@ auto HypixelModule::GetHpColor(const float hp) const -> std::string
     return MinecraftCode::RED;
 }
 
-auto HypixelModule::GetTeamFromTeamManager(const std::string& playerName) const -> Team
-{
-    auto it = std::find_if(this->teamManager.begin(), this->teamManager.end(),
-            [&](const auto& entry) 
-            {
-                return entry.playerName == playerName;
-            }
-        );
-
-        if (it != this->teamManager.end()) 
-        {
-            return *it;
-        } 
-        else 
-        {
-            return Team{};
-        }
-}
-
-auto HypixelModule::GetTeamEntry(const std::string& playerName) -> Team*
-{
-    auto it = std::find_if(teamManager.begin(), teamManager.end(),
-        [&](const Team& team) 
-        { 
-            return team.playerName == playerName;
-        });
-
-    return it != teamManager.end() ? &(*it) : nullptr;
-}
-
 auto HypixelModule::OrginizeTeams() -> void
 {
     this->sortedTeams.clear();
 
-    for (const auto& player : teamManager)
+    for (const auto& [playerName, team] : teamManager)
     {
-        sortedTeams[player.hypixelTeam].push_back(player);
+        if (!team.hypixelTeam.empty())
+        {
+            this->sortedTeams[team].push_back(playerName);
+        }
     }
+}
 
-    for (auto& [teamName, players] : sortedTeams)
+auto HypixelModule::FillTeamManagerWithHypixelTeams() -> void
+{
+    const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
+    const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
+
+    for (const std::unique_ptr<ScorePlayerTeam>& scoreTeam : scoreboard->GetTeams())
     {
-        std::sort(players.begin(), players.end(), 
-            [](const Team& a, const Team& b) 
+        const std::string hypixelTeamName{ scoreTeam->GetTeamName() };
+
+        for (const std::string& playerName : scoreTeam->GetMembershipCollection())
+        {
+            if (!theWorld->GetPlayerEntityByName(playerName)->GetInstance())
             {
-                return a.playerName < b.playerName;
-            });
+                continue;
+            }
+
+            if (this->IsBot(theWorld->GetPlayerEntityByName(playerName)))
+            {
+                continue;
+            }
+
+            if (!hypixelTeamName.starts_with("npno_"))
+            {
+                auto it = this->teamManager.find(playerName);
+                if (it == this->teamManager.end())
+                {
+                    Team team{};
+                    team.hypixelTeam = hypixelTeamName;
+                    this->teamManager.insert({ playerName, std::move(team) });
+                }
+                else if (it->second.hypixelTeam.empty())
+                {
+                    it->second.hypixelTeam = hypixelTeamName;
+                }
+            }
+        }
+    }
+}
+
+auto HypixelModule::AssignNpnoTeams() -> void
+{
+    I32 teamCounter{ 0 };
+    for (auto& [team, players] : sortedTeams)
+    {
+        const std::string npnoTeamName{ std::format("npno_{}", teamCounter++) };
+        for (std::string& playerName : players)
+        {
+            this->teamManager[playerName].npnoTeam = npnoTeamName;
+        }
+    }
+}
+
+auto HypixelModule::ApplyTeamsAndNametags() -> void
+{
+    const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
+    const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
+
+    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    {
+        const std::string& playerName{ player->GetName() };
+
+        if (this->IsBot(player))
+        {
+            continue;
+        }
+
+        const Team& playerTeam{ this->teamManager[playerName] };
+
+        std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(playerTeam.npnoTeam) };
+        if (!team->GetInstance())
+        {
+            team = scoreboard->CreateTeam(playerTeam.npnoTeam);
+        }
+
+        if (!scoreboard->GetTeam(playerName)->GetTeamName().starts_with("npno_"))
+        {
+            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName));
+            const bool unused{ scoreboard->AddPlayerToTeam(playerName, playerTeam.npnoTeam) };
+        }
+
+        const std::pair<std::string, std::string> nametag{ this->FormatNametag(player) };
+        team->SetNamePrefix(JavaUtil::FixString(nametag.first));
+        team->SetNameSuffix(JavaUtil::FixString(nametag.second));
     }
 }

@@ -14,7 +14,12 @@ Feature::Feature()
 
 Feature::~Feature()
 {
-	this->Farewell();
+	static std::once_flag desctructorFlag{};
+
+	std::call_once(desctructorFlag, [this]() 
+		{
+			this->Farewell();
+		});
 }
 
 auto Feature::SanityCheck() const -> bool
@@ -29,7 +34,7 @@ auto Feature::IsBot(const std::unique_ptr<EntityPlayer>& player) const -> bool
 
 auto Feature::SentByHypixel(const std::string& line) const -> bool
 {
-	return line.contains(":");
+	return !line.contains(":");
 }
 
 auto Feature::ToRegex(const std::vector<std::string>& lines) const -> std::vector<std::regex>
@@ -52,7 +57,7 @@ auto Feature::Welcome() const -> void
 	}
 
 	mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
-		std::format("{}Welcome to the ZOO {}{}",
+		std::format("{}Welcome to the zoo {}{}",
 			MinecraftCode::AQUA,
 			MinecraftCode::DARK_AQUA,
 			mc->GetThePlayer()->GetName()
@@ -67,7 +72,7 @@ auto Feature::Farewell() const -> void
 	}
 
 	mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(
-		std::format("{}I hope you envoyed your trip in the ZOO {}{}",
+		std::format("{}I hope you envoyed your trip in the zoo {}{}",
 			MinecraftCode::AQUA,
 			MinecraftCode::DARK_AQUA,
 			mc->GetThePlayer()->GetName()

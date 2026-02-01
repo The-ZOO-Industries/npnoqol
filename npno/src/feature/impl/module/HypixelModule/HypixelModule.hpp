@@ -5,7 +5,7 @@
 class HypixelModule : public Module
 {
 public:
-    explicit HypixelModule(const bool enable, const Hypixel::Gamemode gamemode = Hypixel::Gamemode::ALL);
+    explicit HypixelModule(const bool enable, const Hypixel::Gamemode gamemode = Hypixel::Gamemode::LOBBY);
 
     virtual ~HypixelModule();
 
@@ -34,9 +34,23 @@ protected:
 
     struct Team
     {
-        std::string playerName;
+        std::vector<std::string> players;
         std::string hypixelTeam;
         std::string npnoTeam;
+
+        auto operator==(const Team& other) const -> bool
+        {
+            return hypixelTeam == other.hypixelTeam and npnoTeam == other.npnoTeam;
+        }
+
+        auto operator<(const Team& other) const -> bool
+        {
+            if (hypixelTeam != other.hypixelTeam)
+            {
+                return hypixelTeam < other.hypixelTeam;
+            }
+            return npnoTeam < other.npnoTeam;
+        }
     };
 
     auto UpdateTabList() -> void;
@@ -55,14 +69,17 @@ protected:
 
     virtual auto HandleMode() -> void = 0;
 
-    virtual auto GetTeamFromTeamManager(const std::string& playerName) const -> Team final;
-    virtual auto GetTeamEntry(const std::string& playerName) -> Team* final;
-    virtual auto OrginizeTeams() -> void final;
+    std::map<Team, std::vector<std::string>> sortedTeams;
+    std::unordered_map<std::string, Team> teamManager;
 
     std::unordered_map<std::string, Player> playerCache;
     std::set<std::string> loadingPlayers;
-    std::unordered_map<std::string, std::vector<Team>> sortedTeams;
-    std::vector<Team> teamManager;
 
     Hypixel::Gamemode gamemode;
+
+private:
+    auto OrginizeTeams() -> void;
+    auto FillTeamManagerWithHypixelTeams() -> void;
+    auto AssignNpnoTeams() -> void;
+    auto ApplyTeamsAndNametags() -> void;
 };

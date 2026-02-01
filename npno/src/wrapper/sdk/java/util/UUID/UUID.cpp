@@ -10,11 +10,8 @@ UUID_J::~UUID_J() = default;
 
 void UUID_J::Init()
 {
-    std::call_once(oflag, [this]
-        {
-            versionMethodID = Jvm::env->GetMethodID(this->javaClass, "version", "()I");
-            toStringMethodID  = Jvm::env->GetMethodID(this->javaClass, "toString", "()Ljava/lang/String;");
-        });
+    versionMethodID = Jvm::env->GetMethodID(this->javaClass, "version", "()I");
+    toStringMethodID = Jvm::env->GetMethodID(this->javaClass, "toString", "()Ljava/lang/String;");
 }
 
 jint UUID_J::Version() const
