@@ -14,6 +14,7 @@
 #include <mutex>
 #include <algorithm>
 #include <set>
+#include <random>
 
 #include <npno/Type.hpp>
 #include <nlohmann/json.hpp>

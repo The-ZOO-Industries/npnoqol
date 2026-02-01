@@ -1,30 +1,38 @@
-#include "AutoGG.h"
+#include "AutoGG.hpp"
 
-hypixel::AutoGG::AutoGG()
-    : HypixelStatsModule{ true, HypixelGamemode::Gamemode::ALL }
+AutoGG::AutoGG()
+    : HypixelStatsModule{ true, HypixelGamemode::ALL }
 {
-    
+    this->autoGGLines = this->ToRegex(
+    {
+        "1st - "
+    });
 }
 
-hypixel::AutoGG::~AutoGG() = default;
+AutoGG::~AutoGG() = default;
 
-auto hypixel::AutoGG::Update() -> void
+auto AutoGG::Update() -> void
 {
-    for(const std::string& line : Chat::GetNewLines())
+    const std::vector<std::unique_ptr<ChatLine>>& chatLines{ mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines() };
+    const std::string& line{ chatLines[0]->GetLineString()->GetFormattedText() };
+
+    if (this->SentByHypixel(line))
     {
-        for (const std::string& autoGGLine : HypixelAPI::GetAutoGGLines())
+        for (const std::regex& blackListedLine : this->autoGGLines)
         {
-            if (line.find(autoGGLine) != std::string::npos and this->SentByServer(line))
+            if (std::regex_search(line, blackListedLine))
             {
-                const std::string randomizedMessage = std::format("{} {}", "/ac", this->RandomCase("good game"));
-                mc->GetThePlayer()->SendChatMessage(randomizedMessage);
+                mc->GetThePlayer()->SendChatMessage(std::format("{} {}", "/ac", this->RandomCase("good game")));
+
+                mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
+
                 return;
             }
         }
-	}
+    }
 }
 
-auto hypixel::AutoGG::RandomCase(const std::string& message) const -> std::string
+auto AutoGG::RandomCase(const std::string& message) const -> std::string
 {
     std::string result = message;
     

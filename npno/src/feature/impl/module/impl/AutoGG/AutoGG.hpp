@@ -1,19 +1,18 @@
 #pragma once
 
-#include "../../HypixelStatsModule/HypixelStatsModule.h"
+#include "../../HypixelModule/HypixelModule.hpp"
 
-namespace hypixel
+class AutoGG final : public HypixelModule
 {
-    class AutoGG final : public HypixelStatsModule
-    {
-    public:
-        AutoGG();
+public:
+    AutoGG();
 
-        ~AutoGG() override;
+    ~AutoGG() override;
 
-        auto Update() -> void override;
+    auto Update() -> void override;
 
-    private:
-        auto RandomCase(const std::string& message) const -> std::string;
-    };
-}
+private:
+    auto RandomCase(const std::string& message) const -> std::string;
+
+    std::vector<std::regex> autoGGLines;
+};
