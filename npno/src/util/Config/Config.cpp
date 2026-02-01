@@ -1,10 +1,5 @@
 #include "Config.hpp"
 
-#include <print>
-#include <fstream>
-
-#include <nlohmann/json.hpp>
-
 std::string Config::GetHypixelAPIKey()
 {
     std::ifstream file("config.json");

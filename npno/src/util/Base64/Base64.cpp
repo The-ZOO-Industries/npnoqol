@@ -1,8 +1,5 @@
 #include "Base64.hpp"
 
-#include <vector>
-#include <stdexcept>
-
 bool Base64::IsBase64(unsigned char c) 
 {
     return (isalnum(c) || (c == '+') || (c == '/'));

@@ -1,10 +1,8 @@
 #include "ChatUtil.hpp"
 
-#include <fstream>
-
 Chat::Chat()
 {
-    const char* userProfile = std::getenv("USERPROFILE");
+    const char* userProfile{ std::getenv("USERPROFILE") };
 
     logFilePath = std::filesystem::path(userProfile) /
         ".lunarclient" / "profiles" / "lunar" / "1.8" / "logs" / "latest.log";

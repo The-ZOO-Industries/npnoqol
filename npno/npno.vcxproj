@@ -49,7 +49,7 @@
     <ClInclude Include="src\feature\impl\module\Module\Module.hpp" />
     <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp" />
     <ClInclude Include="src\util\Base64\Base64.hpp" />
-    <ClInclude Include="src\util\Chat\ChatUtil.hpp" />
+    <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp" />
     <ClInclude Include="src\util\Config\Config.hpp" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp" />
@@ -108,7 +108,7 @@
     <ClCompile Include="src\feature\impl\module\Module\Module.cpp" />
     <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp" />
     <ClCompile Include="src\util\Base64\Base64.cpp" />
-    <ClCompile Include="src\util\Chat\ChatUtil.cpp" />
+    <ClCompile Include="src\util\ChatUtil\ChatUtil.cpp" />
     <ClCompile Include="src\util\Config\Config.cpp" />
     <ClCompile Include="src\util\HypixelRank\HypixelRank.cpp" />
     <ClCompile Include="src\util\Network\Network.cpp" />

@@ -1,13 +1,14 @@
 #pragma once
 
-#include "../../Network/Network.hp"
-#include "../../Config/Config.hp"
-#include "../../HypixelRank/HypixelRank.hp"
-#include "../../HypixelGamemode/HypixelGamemode.hp"
+#include "../../Network/Network.hpp"
+#include "../../Config/Config.hpp"
+#include "../../HypixelRank/HypixelRank.hpp"
+#include "../../HypixelGamemode/HypixelGamemode.hpp"
 
 #include <string>
 #include <vector>
 #include <map>
+#include <print>
 
 #include <nlohmann/json.hpp>
 

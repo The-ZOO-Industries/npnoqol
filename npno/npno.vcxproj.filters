@@ -96,7 +96,7 @@
     <ClInclude Include="src\util\Base64\Base64.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Chat\ChatUtil.hpp">
+    <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\util\Config\Config.hpp">
@@ -269,7 +269,7 @@
     <ClCompile Include="src\util\Base64\Base64.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Chat\ChatUtil.cpp">
+    <ClCompile Include="src\util\ChatUtil\ChatUtil.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Config\Config.cpp">

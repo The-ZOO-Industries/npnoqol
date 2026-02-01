@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <fstream>
 
 class Chat final
 {
@@ -14,8 +15,8 @@ public:
 	static auto GetNewLines() -> std::vector<std::string>;
 
 private:
-	inline static std::vector<std::string> newLines;
-	inline static std::vector<std::string> allLines;
+	inline static std::vector<std::string> newLines{};
+	inline static std::vector<std::string> allLines{};
 
 	std::filesystem::path logFilePath;
 };

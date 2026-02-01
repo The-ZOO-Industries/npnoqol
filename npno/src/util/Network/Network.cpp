@@ -3,13 +3,6 @@
 #include "../Config/Config.hpp"
 #include "../api/HypixelAPI/HypixelAPI.hpp"
 
-#include <print>
-#include <thread>
-#include <chrono>
-
-#include <curl/curl.h>
-#include <nlohmann/json.hpp>
-
 auto Network::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) -> size_t
 {
     size_t totalSize = size * nmemb;

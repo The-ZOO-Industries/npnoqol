@@ -3,8 +3,12 @@
 #include <string>
 #include <vector>
 #include <future>
+#include <print>
+#include <thread>
+#include <chrono>
 
 #include <npno/Type.hpp>
+#include <curl/curl.h>
 #include <nlohmann/json.hpp>
 
 class Network final
@@ -17,8 +21,8 @@ public:
 private:
     static auto WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) -> size_t;
 
-    inline static std::string url = "https://api.hypixel.net";
+    inline static std::string url{ "https://api.hypixel.net" };
 
-    inline static constexpr I32 MAX_RETRIES = 3;
-    inline static constexpr I32 BASE_DELAY_MS = 100;
+    inline static constexpr I32 MAX_RETRIES{ 3 };
+    inline static constexpr I32 BASE_DELAY_MS{ 100 };
 };
