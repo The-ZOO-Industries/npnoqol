@@ -21,6 +21,7 @@ public:
         bool skinDenicker{ false };
     };
 
+    static auto AddNickPlayer(const std::string& player) -> void;
     static auto GetNickList() -> std::map<std::string, Nick>;
 
 private:

@@ -1,4 +1,4 @@
-#include "HypixelAPI.h"
+#include "HypixelAPI.hpp"
 
 #include <print>
 
@@ -79,49 +79,6 @@ auto HypixelAPI::GetPlayerStats(const std::string& playerName) -> nlohmann::json
     }
 
     return nlohmann::json{};
-}
-
-auto HypixelAPI::AddNickPlayer(const std::string& playerName) -> void
-{
-    Nick player{};
-    player.warned = false;
-
-    nickList.insert({ playerName, player });
-}
-
-auto HypixelAPI::GetNickList() -> std::map<std::string, Nick>&
-{
-    return nickList;
-}
-
-auto HypixelAPI::AddAutoGGLine(const std::string& line) -> void
-{
-    autoGGLines.push_back(line);
-}
-
-auto HypixelAPI::GetAutoGGLines() -> std::vector<std::string>
-{
-    return autoGGLines;
-}
-
-auto HypixelAPI::GetCurrentGamemode() -> HypixelGamemode::Gamemode
-{
-    return currentGamemode;
-}
-
-auto HypixelAPI::SetCurrentGamemode(const HypixelGamemode::Gamemode gamemode) -> void
-{
-    currentGamemode = gamemode;
-}
-
-auto HypixelAPI::GetCurrentMode() -> std::string
-{
-    return currentMode;
-}
-
-auto HypixelAPI::SetCurrentMode(const std::string& mode) -> void
-{
-    currentMode = mode;
 }
 
 auto HypixelAPI::SetAPIKey(const std::string& key) -> void

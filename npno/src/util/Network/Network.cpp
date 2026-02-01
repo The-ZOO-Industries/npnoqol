@@ -1,7 +1,7 @@
-#include "Network.h"
+#include "Network.hpp"
 
-#include "../Config/Config.h"
-#include "../api/HypixelAPI/HypixelAPI.h"
+#include "../Config/Config.hpp"
+#include "../api/HypixelAPI/HypixelAPI.hpp"
 
 #include <print>
 #include <thread>

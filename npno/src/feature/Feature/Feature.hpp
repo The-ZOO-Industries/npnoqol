@@ -2,8 +2,13 @@
 
 #include "../../src/wrapper/sdk/net/minecraft/client/Minecraft/Minecraft.h"
 
-#include "../../util/MinecraftCode/MinecraftCode.hpp"
 #include "../../util/api/HypixelAPI/HypixelAPI.hpp"
+#include "../../util/Base64/Base64.hpp"
+#include "../../util/ChatUtil/ChatUtil.hpp"
+#include "../../util/HypixelGamemode/HypixelGamemode.hpp"
+#include "../../util/HypixelRank/HypixelRank.hpp"
+#include "../../util/MinecraftCode/MinecraftCode.hpp"
+#include "../../util/Network/Network.hpp"
 
 #include <sstream>
 #include <print>
@@ -15,6 +20,7 @@
 #include <algorithm>
 #include <set>
 #include <random>
+#include <cmath>
 
 #include <npno/Type.hpp>
 #include <nlohmann/json.hpp>

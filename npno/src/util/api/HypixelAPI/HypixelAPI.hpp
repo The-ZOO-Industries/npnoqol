@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../Network/Network.h"
-#include "../../Config/Config.h"
-#include "../../HypixelRank/HypixelRank.h"
-#include "../../HypixelGamemode/HypixelGamemode.h"
+#include "../../Network/Network.hp"
+#include "../../Config/Config.hp"
+#include "../../HypixelRank/HypixelRank.hp"
+#include "../../HypixelGamemode/HypixelGamemode.hp"
 
 #include <string>
 #include <vector>

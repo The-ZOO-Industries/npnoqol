@@ -1,18 +1,14 @@
-#include "BlitzSurvivalGames.h"
+#include "BlitzSurvivalGames.hpp"
 
-hypixel::BlitzSurvivalGames::BlitzSurvivalGames()
-    : HypixelStatsModule{
-        false,
-        HypixelGamemode::Gamemode::BLITZSURVIVALGAMES,
-        "1st - "
-    }
+BlitzSurvivalGames::BlitzSurvivalGames()
+    : HypixelModule{ false, HypixelGamemode::BLITZSURVIVALGAMES }
 {
     this->mode = Mode::LOBBY;
 }
 
-hypixel::BlitzSurvivalGames::~BlitzSurvivalGames() = default;
+BlitzSurvivalGames::~BlitzSurvivalGames() = default;
 
-auto hypixel::BlitzSurvivalGames::Update() -> void
+auto BlitzSurvivalGames::Update() -> void
 {
     this->HandleMode();
     if (this->mode == Mode::LOBBY) return;
@@ -30,7 +26,7 @@ auto hypixel::BlitzSurvivalGames::Update() -> void
     this->UpdateChat();
 }
 
-auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
+auto BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerNames) -> void
 {
     const std::vector<nlohmann::json>& responses = Network::GetBatchPlayerStats(playerNames);
 
@@ -45,13 +41,13 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
             if (HypixelAPI::IsNicked(response))
             {
                 playerData.prefix = std::format("{}[NICK]{}",
-                    MinecraftCode::codeToString.at(MinecraftCode::Code::RED),
-                    MinecraftCode::codeToString.at(MinecraftCode::Code::WHITE)
+                    MinecraftCode::RED,
+                    MinecraftCode::WHITE
                 );
                 playerData.isNick = true;
                 playerData.cacheTime = std::chrono::steady_clock::now();
 
-                HypixelAPI::AddNickPlayer(playerName);
+                NickManager::AddNickPlayer(playerName);
 
                 this->playerCache[playerName] = playerData;
                 continue;
@@ -97,9 +93,9 @@ auto hypixel::BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>
     }
 }
 
-auto hypixel::BlitzSurvivalGames::HandleMode() -> void
+auto BlitzSurvivalGames::HandleMode() -> void
 {
-    const std::string currentMode = HypixelAPI::GetCurrentMode();
+    const std::string currentMode = GamemodeManager::GetCurrentMode();
 
     if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or (this->mode == Mode::TEAMS and currentMode == "solo_normal"))
     {
@@ -120,7 +116,7 @@ auto hypixel::BlitzSurvivalGames::HandleMode() -> void
     }
 }
 
-auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
+auto BlitzSurvivalGames::UpdateChat() const -> void
 {
     const std::vector<std::unique_ptr<ChatLine>>& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
 
@@ -155,7 +151,7 @@ auto hypixel::BlitzSurvivalGames::UpdateChat() const -> void
     }
 }
 
-auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
+auto BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
 {
     Player playerData = this->GetPlayerData(player->GetName());
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
@@ -168,8 +164,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
         {
             teamPrefix = std::format("{}{}O{} ",
                 teamColor,
-                MinecraftCode::codeToString.at(MinecraftCode::Code::OBFUSCATED),
-                MinecraftCode::codeToString.at(MinecraftCode::Code::RESET)
+                MinecraftCode::OBFUSCATED,
+                MinecraftCode::RESET
             );
         }
     }
@@ -178,8 +174,8 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
     {
         return std::format(" {}{}? {}{} {}{:.1f}",
             teamPrefix,
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED),
-            MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+            MinecraftCode::DARK_RED,
+            MinecraftCode::DARK_AQUA,
             player->GetName(),
             this->GetHpColor(health),
             health
@@ -206,20 +202,20 @@ auto hypixel::BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlay
         player->GetName(),
         this->GetHpColor(health),
         health,
-        MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA),
+        MinecraftCode::DARK_AQUA,
         this->GetKDRColor(playerData.suffix),
         playerData.suffix
     );
 }
 
-auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
+auto BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
 {
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
     std::pair<std::string, std::string> nametag;
 
     nametag.first = std::format("{} ",
-        MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_AQUA)
+        MinecraftCode::DARK_AQUA
     );
 
     nametag.second = std::format(" {}{:.1f} ",
@@ -239,40 +235,40 @@ auto hypixel::BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlay
     return nametag;
 }
 
-auto hypixel::BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::string
+auto BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::string
 {
-    if (wins.empty()) return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+    if (wins.empty()) return MinecraftCode::GRAY;
 
     if (!std::all_of(wins.begin(), wins.end(), ::isdigit))
     {
-        return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+        return MinecraftCode::GRAY;
     }
 
     I32 winsValue = std::stoi(wins);
-    if (winsValue >= 2500) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED);
-    if (winsValue >= 1000) return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
-    if (winsValue >= 500)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GOLD);
-    if (winsValue >= 200)  return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
-    if (winsValue >= 100)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    if (winsValue >= 2500) return MinecraftCode::DARK_RED;
+    if (winsValue >= 1000) return MinecraftCode::RED;
+    if (winsValue >= 500)  return MinecraftCode::GOLD;
+    if (winsValue >= 200)  return MinecraftCode::DARK_GREEN;
+    if (winsValue >= 100)  return MinecraftCode::GREEN;
 
     return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
 }
 
-auto hypixel::BlitzSurvivalGames::GetKDRColor(const std::string& kdr) const -> std::string
+auto BlitzSurvivalGames::GetKDRColor(const std::string& kdr) const -> std::string
 {
-    if (kdr.empty()) return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+    if (kdr.empty()) return MinecraftCode::GRAY;
 
     float kdrValue = std::stof(kdr);
-    if (kdrValue >= 10.0f) return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_RED);
-    if (kdrValue >= 5.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::RED);
-    if (kdrValue >= 3.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GOLD);
-    if (kdrValue >= 2.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::DARK_GREEN);
-    if (kdrValue >= 1.0f)  return MinecraftCode::codeToString.at(MinecraftCode::Code::GREEN);
+    if (kdrValue >= 10.0f) return MinecraftCode::DARK_RED;
+    if (kdrValue >= 5.0f)  return MinecraftCode::RED;
+    if (kdrValue >= 3.0f)  return MinecraftCode::GOLD;
+    if (kdrValue >= 2.0f)  return MinecraftCode::DARK_GREEN;
+    if (kdrValue >= 1.0f)  return MinecraftCode::GREEN;
 
-    return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+    return MinecraftCode::GRAY);
 }
 
-auto hypixel::BlitzSurvivalGames::AssignTeamNumbers() -> void
+auto BlitzSurvivalGames::AssignTeamNumbers() -> void
 {
     this->teamNumbers.clear();
 
@@ -283,7 +279,7 @@ auto hypixel::BlitzSurvivalGames::AssignTeamNumbers() -> void
     }
 }
 
-auto hypixel::BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) const -> I32
+auto BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) const -> I32
 {
     std::string teamName = this->GetTeamFromTeamManager(playerName).hypixelTeam;
 
@@ -301,36 +297,36 @@ auto hypixel::BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) co
     return -1;
 }
 
-auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
+auto BlitzSurvivalGames::AssignTeamColors() -> void
 {
-    const std::vector<MinecraftCode::Code> baseColors =
+    const std::vector<MinecraftCode> baseColors =
     {
-        MinecraftCode::Code::DARK_AQUA,
-        MinecraftCode::Code::BLACK,
-        MinecraftCode::Code::DARK_BLUE,
-        MinecraftCode::Code::DARK_GREEN,
-        MinecraftCode::Code::DARK_RED,
-        MinecraftCode::Code::DARK_PURPLE,
-        MinecraftCode::Code::GOLD,
-        MinecraftCode::Code::GRAY,
-        MinecraftCode::Code::BLUE,
-        MinecraftCode::Code::GREEN,
-        MinecraftCode::Code::AQUA,
-        MinecraftCode::Code::RED,
-        MinecraftCode::Code::LIGHT_PURPLE,
-        MinecraftCode::Code::YELLOW,
-        MinecraftCode::Code::WHITE
+        MinecraftCode::DARK_AQUA,
+        MinecraftCode::BLACK,
+        MinecraftCode::DARK_BLUE,
+        MinecraftCode::DARK_GREEN,
+        MinecraftCode::DARK_RED,
+        MinecraftCode::DARK_PURPLE,
+        MinecraftCode::GOLD,
+        MinecraftCode::GRAY,
+        MinecraftCode::BLUE,
+        MinecraftCode::GREEN,
+        MinecraftCode::AQUA,
+        MinecraftCode::RED,
+        MinecraftCode::LIGHT_PURPLE,
+        MinecraftCode::YELLOW,
+        MinecraftCode::WHITE
     };
 
     for (const auto& [teamName, _] : this->sortedTeams)
     {
         if (this->teamColors.find(teamName) == teamColors.end())
         {
-            std::string color = MinecraftCode::codeToString.at(baseColors[nextColorIndex % baseColors.size()]);
+            std::string color = MinecraftCode::baseColors[nextColorIndex % baseColors.size()];
 
             if (this->nextColorIndex >= baseColors.size())
             {
-                color = MinecraftCode::codeToString.at(MinecraftCode::Code::BOLD) + color;
+                color = MinecraftCode::BOLD + color;
             }
 
             this->teamColors[teamName] = color;
@@ -339,12 +335,12 @@ auto hypixel::BlitzSurvivalGames::AssignTeamColors() -> void
     }
 }
 
-auto hypixel::BlitzSurvivalGames::GetPlayerTeamName(const std::string& playerName) const -> std::string
+auto BlitzSurvivalGames::GetPlayerTeamName(const std::string& playerName) const -> std::string
 {
     return this->GetTeamFromTeamManager(playerName).hypixelTeam;
 }
 
-auto hypixel::BlitzSurvivalGames::GetPlayerTeamColor(const std::string& playerName) const -> std::string
+auto BlitzSurvivalGames::GetPlayerTeamColor(const std::string& playerName) const -> std::string
 {
     const std::string teamName = this->GetPlayerTeamName(playerName);
 
@@ -357,7 +353,7 @@ auto hypixel::BlitzSurvivalGames::GetPlayerTeamColor(const std::string& playerNa
     return "";
 }
 
-auto hypixel::BlitzSurvivalGames::GetTeamCount() const -> I32
+auto BlitzSurvivalGames::GetTeamCount() const -> I32
 {
     return static_cast<I32>(this->sortedTeams.size());
 }

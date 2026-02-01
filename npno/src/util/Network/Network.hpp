@@ -4,7 +4,7 @@
 #include <vector>
 #include <future>
 
-#include <npno/Loader.hpp>
+#include <npno/Type.hpp>
 #include <nlohmann/json.hpp>
 
 class Network final

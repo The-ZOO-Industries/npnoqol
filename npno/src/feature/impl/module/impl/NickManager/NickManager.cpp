@@ -104,6 +104,11 @@ auto NickManager::IsNickHash(const std::string& hash) -> bool
     return std::find(this->nickHashes.begin(), this->nickHashes.end(), hash) != this->nickHashes.end();
 }
 
+auto NickManager::AddNickPlayer(const std::string& player) -> void
+{
+    nickList.insert({player, {}});
+}
+
 auto NickManager::GetNickList() -> std::map<std::string, Nick>
 {
     return nickList;

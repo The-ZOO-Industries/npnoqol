@@ -90,28 +90,28 @@
     <ClInclude Include="src\feature\impl\module\ModuleManager\ModuleManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.h">
+    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Base64\Base64.h">
+    <ClInclude Include="src\util\Base64\Base64.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Chat\Chat.h">
+    <ClInclude Include="src\util\Chat\ChatUtil.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Config\Config.h">
+    <ClInclude Include="src\util\Config\Config.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\HypixelRank\HypixelRank.h">
+    <ClInclude Include="src\util\HypixelRank\HypixelRank.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\util\MinecraftCode\MinecraftCode.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Network\Network.h">
+    <ClInclude Include="src\util\Network\Network.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\wrapper\JavaClass\JavaClass.h">
@@ -269,7 +269,7 @@
     <ClCompile Include="src\util\Base64\Base64.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Chat\Chat.cpp">
+    <ClCompile Include="src\util\Chat\ChatUtil.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Config\Config.cpp">
