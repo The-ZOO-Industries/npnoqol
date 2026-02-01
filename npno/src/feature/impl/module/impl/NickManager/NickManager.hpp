@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../HypixelModule/HypixelModule.hpp"
+#include "../../Module/Module.hpp"
 
-class NickManager final : public HypixelModule
+class NickManager final : public Module
 {
 public:
     NickManager();
@@ -10,6 +10,7 @@ public:
     ~NickManager() override;
 
     auto Update() -> void override;
+    auto ClearCache() -> void override {};
 
     struct Nick
     {

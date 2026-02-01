@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../feature/FeratureManager/FeratureManager.hpp"
+#include "../feature/FeatureManager/FeatureManager.hpp"
 
 class Base final
 {
@@ -9,10 +9,10 @@ public:
 
     ~Base();
 
-    auto Run() const -> void;
+    auto Run() -> void;
 
 private:
-    std::unique_ptr<FeratureManager> ;
+    std::unique_ptr<FeatureManager> featureManager;
 
     bool running;
 };

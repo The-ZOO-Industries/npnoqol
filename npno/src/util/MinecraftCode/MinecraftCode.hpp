@@ -1,40 +1,51 @@
 #pragma once
 
 #include <string>
+#include <map>
 
-namespace HypixelGamemode
+namespace MinecraftCode
 {
-    inline const std::string ALL = "ALL";
+    inline const std::string BLACK{ "§0" };
+    inline const std::string DARK_BLUE{ "§1" };
+    inline const std::string DARK_GREEN{ "§2" };
+    inline const std::string DARK_AQUA{ "§3" };
+    inline const std::string DARK_RED{ "§4" };
+    inline const std::string DARK_PURPLE{ "§5" };
+    inline const std::string GOLD{ "§6" };
+    inline const std::string GRAY{ "§7" };
+    inline const std::string DARK_GRAY{ "§8" };
+    inline const std::string BLUE{ "§9" };
+    inline const std::string GREEN{ "§a" };
+    inline const std::string AQUA{ "§b" };
+    inline const std::string RED{ "§c" };
+    inline const std::string LIGHT_PURPLE{ "§d" };
+    inline const std::string YELLOW{ "§e" };
+    inline const std::string WHITE{ "§f" };
 
-    inline const std::string LOBBY = "LOBBY";
-    inline const std::string QUAKECRAFT = "QUAKECRAFT";
-    inline const std::string WALLS = "WALLS";
-    inline const std::string PAINTBALL = "PAINTBALL";
-    inline const std::string BLITZSURVIVALGAMES = "BLITZSURVIVALGAMES";
-    inline const std::string TNTGAMES = "TNTGAMES";
-    inline const std::string VAMPIREZ = "VAMPIREZ";
-    inline const std::string WALLS3 = "WALLS3";
-    inline const std::string ARCADE = "ARCADE";
-    inline const std::string ARENA = "ARENA";
-    inline const std::string UHC = "UHC";
-    inline const std::string MCGO = "MCGO";
-    inline const std::string BATTLEGROUND = "BATTLEGROUND";
-    inline const std::string SUPER_SMASH = "SUPER_SMASH";
-    inline const std::string GINGERBREAD = "GINGERBREAD";
-    inline const std::string HOUSING = "HOUSING";
-    inline const std::string SKYWARS = "SKYWARS";
-    inline const std::string TRUE_COMBAT = "TRUE_COMBAT";
-    inline const std::string SPEED_UHC = "SPEED_UHC";
-    inline const std::string SKYCLASH = "SKYCLASH";
-    inline const std::string LEGACY = "LEGACY";
-    inline const std::string PROTOTYPE = "PROTOTYPE";
-    inline const std::string BEDWARS = "BEDWARS";
-    inline const std::string MURDER_MYSTERY = "MURDER_MYSTERY";
-    inline const std::string BUILD_BATTLE = "BUILD_BATTLE";
-    inline const std::string DUELS = "DUELS";
-    inline const std::string SKYBLOCK = "SKYBLOCK";
-    inline const std::string PIT = "PIT";
-    inline const std::string REPLAY = "REPLAY";
-    inline const std::string SMP = "SMP";
-    inline const std::string WOOL_GAMES = "WOOL_GAMES";
+    inline const std::string OBFUSCATED{ "§k" };
+    inline const std::string BOLD{ "§l" };
+    inline const std::string STRIKETHROUGH{ "§m" };
+    inline const std::string UNDERLINE{ "§n" };
+    inline const std::string ITALIC{ "§o" };
+    inline const std::string RESET{ "§r" };
+
+    inline const std::map<std::string, std::string> ColorByName
+    {
+        {"BLACK", BLACK},
+        {"DARK_BLUE", DARK_BLUE},
+        {"DARK_GREEN", DARK_GREEN},
+        {"DARK_AQUA", DARK_AQUA},
+        {"DARK_RED", DARK_RED},
+        {"DARK_PURPLE", DARK_PURPLE},
+        {"GOLD", GOLD},
+        {"GRAY", GRAY},
+        {"DARK_GRAY", DARK_GRAY},
+        {"BLUE", BLUE},
+        {"GREEN", GREEN},
+        {"AQUA", AQUA},
+        {"RED", RED},
+        {"LIGHT_PURPLE", LIGHT_PURPLE},
+        {"YELLOW", YELLOW},
+        {"WHITE", WHITE}
+    };
 }

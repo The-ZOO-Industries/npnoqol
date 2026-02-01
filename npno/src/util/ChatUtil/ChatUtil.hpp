@@ -3,12 +3,12 @@
 #include <filesystem>
 #include <fstream>
 
-class Chat final
+class ChatUtil final
 {
 public:
-	Chat();
+	ChatUtil();
 
-	~Chat();
+	~ChatUtil();
 
 	auto Update() -> void;
 

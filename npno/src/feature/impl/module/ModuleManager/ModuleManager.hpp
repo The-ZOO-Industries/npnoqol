@@ -2,7 +2,7 @@
 
 #include "../Module/Module.hpp"
 
-#include "../../util/ChatUtil/ChatUtil.hpp"
+#include "../../../../util/ChatUtil/ChatUtil.hpp"
 
 class ModuleManager final
 {

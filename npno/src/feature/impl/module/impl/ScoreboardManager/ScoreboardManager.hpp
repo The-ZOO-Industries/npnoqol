@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../HypixelModule/HypixelModule.hpp"
+#include "../../Module/Module.hpp"
 
-class ScoreboardManager final : public HypixelModule
+class ScoreboardManager final : public Module
 {
 public:
     ScoreboardManager();
@@ -10,4 +10,5 @@ public:
     ~ScoreboardManager() override;
 
     auto Update() -> void override;
+    auto ClearCache() -> void override {};
 };

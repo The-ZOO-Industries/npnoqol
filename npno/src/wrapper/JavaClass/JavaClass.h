@@ -6,7 +6,7 @@
 #include <mutex>
 
 #include <jni/jni.h>
-#include <npno/Loader.hpp>
+#include <npno/Type.hpp>
 
 class JavaClass
 {

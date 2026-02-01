@@ -1,6 +1,6 @@
 #include "HypixelModule.hpp"
 
-HypixelModule::HypixelModule(const bool enable, const HypixelGamemode gamemode)
+HypixelModule::HypixelModule(const bool enable, const Hypixel::Gamemode gamemode)
     : Module{ enable }
     , gamemode{ gamemode }
 {
@@ -19,7 +19,7 @@ auto HypixelModule::SanityCheck() const -> bool
         mc->GetThePlayer()->GetSendQueue()->GetInstance();
 }
 
-auto HypixelModule::GetGamemode() const -> HypixelGamemode::Gamemode
+auto HypixelModule::GetGamemode() const -> Hypixel::Gamemode
 {
     return this->gamemode;
 }

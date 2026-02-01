@@ -1,10 +1,10 @@
 #include "CommandManager.hpp"
 
-#include "../impl?SetHypixelAPIKey/SetHypixelAPIKey.hpp"
+#include "../impl/SetHypixelAPIKey/SetHypixelAPIKey.hpp"
 
 CommandManager::CommandManager()
 {
-	this->RegisterCommand<SetHypixelAPIKey>();9
+	this->RegisterCommand<SetHypixelAPIKey>();
 }
 
 CommandManager::~CommandManager() = default;

@@ -5,7 +5,7 @@
 class HypixelModule : public Module
 {
 public:
-    explicit HypixelModule(const bool enable = true, const HypixelGamemode gamemode = HypixelGamemode::ALL);
+    explicit HypixelModule(const bool enable, const Hypixel::Gamemode gamemode = Hypixel::Gamemode::ALL);
 
     virtual ~HypixelModule();
 
@@ -13,16 +13,17 @@ public:
 
     auto SanityCheck() const -> bool override;
 
+    auto GetGamemode() const -> Hypixel::Gamemode;
+
 protected:
     struct Player
     {
-        std::string prefi{ "" };
-        std::string rank{ "" };
-        std::string suffix{ "" };
+        std::string prefix;
+        std::string rank;
+        std::string suffix;
 
         bool isNick{ false };
         bool error{ false };
-
         bool isLoading{ false };
 
         I32 retryCount{ 0 };
@@ -33,15 +34,13 @@ protected:
 
     struct Team
     {
-        std::string playerName{ "" };
-        std::string hypixelTeam{ "" };
-        std::string npnoTeam{ "" };
+        std::string playerName;
+        std::string hypixelTeam;
+        std::string npnoTeam;
     };
 
     auto UpdateTabList() -> void;
     auto UpdateNameTags() -> void;
-
-    auto IsBot(const std::unique_ptr<EntityPlayer>& player) -> bool;
 
     virtual auto GetPlayerData(const std::string& playerName) -> Player;
 
@@ -57,17 +56,13 @@ protected:
     virtual auto HandleMode() -> void = 0;
 
     virtual auto GetTeamFromTeamManager(const std::string& playerName) const -> Team final;
-
     virtual auto GetTeamEntry(const std::string& playerName) -> Team* final;
-
     virtual auto OrginizeTeams() -> void final;
 
     std::unordered_map<std::string, Player> playerCache;
-
     std::set<std::string> loadingPlayers;
-
     std::unordered_map<std::string, std::vector<Team>> sortedTeams;
     std::vector<Team> teamManager;
 
-    HypixelGamemode gamemode;
+    Hypixel::Gamemode gamemode;
 };

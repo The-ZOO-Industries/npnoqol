@@ -12,13 +12,13 @@
 
 ModuleManager::ModuleManager()
 {	
-	this->RegisterModule<hypixel::AutoGG>();
-	this->RegisterModule<hypixel::ChatManager>();
-	this->RegisterModule<hypixel::GamemodeManager>();
-	this->RegisterModule<hypixel::NickManager>();
-	this->RegisterModule<hypixel::ScoreboardManager>();
+	this->RegisterModule<AutoGG>();
+	this->RegisterModule<ChatManager>();
+	this->RegisterModule<GamemodeManager>();
+	this->RegisterModule<NickManager>();
+	this->RegisterModule<ScoreboardManager>();
 
-	this->RegisterModule<hypixel::BlitzSurvivalGames>();
+	this->RegisterModule<BlitzSurvivalGames>();
 
 	chatUtil = std::make_unique<ChatUtil>();
 }
@@ -33,9 +33,9 @@ auto ModuleManager::Update() const -> void
 	{
 		if (auto* hypixelModule = dynamic_cast<HypixelModule*>(module.get()))
 		{
-			if (hypixelModule->GetGamemode() != HypixelGamemode::ALL)
+			if (hypixelModule->GetGamemode() != Hypixel::Gamemode::ALL)
 			{
-				hypixelModule->SetEnable(hypixelModule->GetGamemode() == GamemodeManager::GetCurrentGamemode());
+				hypixelModule->SetEnable(Hypixel::ToString(hypixelModule->GetGamemode()) == GamemodeManager::GetCurrentGamemode());
 			}
 
 			if (!hypixelModule->IsEnable())

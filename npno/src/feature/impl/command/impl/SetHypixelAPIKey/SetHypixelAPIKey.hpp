@@ -9,5 +9,7 @@ public:
 
 	~SetHypixelAPIKey() override;
 
+	auto ClearCache() -> void override {};
+
 	auto OnCommand(const std::vector<std::string>& args) -> void override;
 };

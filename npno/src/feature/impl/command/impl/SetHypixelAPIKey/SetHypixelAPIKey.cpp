@@ -10,11 +10,6 @@ SetHypixelAPIKey::~SetHypixelAPIKey() = default;
 
 auto SetHypixelAPIKey::OnCommand(const std::vector<std::string>& args) -> void
 {
-	if (args[0] != this->name)
-	{
-		return;
-	}
-
 	if (args.size() != 2)
 	{
 		mc->GetThePlayer()->AddChatMessage(std::make_unique<ChatComponentText>(this->usage));

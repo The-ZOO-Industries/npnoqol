@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../HypixelModule/HypixelModule.hpp"
+#include "../../Module/Module.hpp"
 
-class AutoGG final : public HypixelModule
+class AutoGG final : public Module
 {
 public:
     AutoGG();
@@ -10,6 +10,7 @@ public:
     ~AutoGG() override;
 
     auto Update() -> void override;
+    auto ClearCache() -> void override {};
 
 private:
     auto RandomCase(const std::string& message) const -> std::string;

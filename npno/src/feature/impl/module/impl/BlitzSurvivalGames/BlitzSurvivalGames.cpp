@@ -1,7 +1,10 @@
 #include "BlitzSurvivalGames.hpp"
 
+#include "../GamemodeManager/GamemodeManager.hpp"
+#include "../NickManager/NickManager.hpp"
+
 BlitzSurvivalGames::BlitzSurvivalGames()
-    : HypixelModule{ false, HypixelGamemode::BLITZSURVIVALGAMES }
+    : HypixelModule{ false, Hypixel::Gamemode::BLITZSURVIVALGAMES }
 {
     this->mode = Mode::LOBBY;
 }
@@ -14,15 +17,11 @@ auto BlitzSurvivalGames::Update() -> void
     if (this->mode == Mode::LOBBY) return;
 
     this->LoadMissingPlayers();
-
     this->UpdateNameTags();
-
     this->OrginizeTeams();
     this->AssignTeamNumbers();
     this->AssignTeamColors();
-
     this->UpdateTabList();
-
     this->UpdateChat();
 }
 
@@ -40,15 +39,11 @@ auto BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerN
         {
             if (HypixelAPI::IsNicked(response))
             {
-                playerData.prefix = std::format("{}[NICK]{}",
-                    MinecraftCode::RED,
-                    MinecraftCode::WHITE
-                );
+                playerData.prefix = std::format("{}[NICK]{}", MinecraftCode::RED, MinecraftCode::WHITE);
                 playerData.isNick = true;
                 playerData.cacheTime = std::chrono::steady_clock::now();
 
                 NickManager::AddNickPlayer(playerName);
-
                 this->playerCache[playerName] = playerData;
                 continue;
             }
@@ -76,15 +71,7 @@ auto BlitzSurvivalGames::LoadPlayersData(const std::vector<std::string>& playerN
         catch (...)
         {
             auto it = this->playerCache.find(playerName);
-            if (it != this->playerCache.end())
-            {
-                playerData.retryCount = it->second.retryCount + 1;
-            }
-            else
-            {
-                playerData.retryCount = 1;
-            }
-
+            playerData.retryCount = (it != this->playerCache.end()) ? it->second.retryCount + 1 : 1;
             playerData.error = true;
             playerData.isLoading = false;
             playerData.lastRequestTime = std::chrono::steady_clock::now();
@@ -97,58 +84,40 @@ auto BlitzSurvivalGames::HandleMode() -> void
 {
     const std::string currentMode = GamemodeManager::GetCurrentMode();
 
-    if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or (this->mode == Mode::TEAMS and currentMode == "solo_normal"))
+    if ((this->mode == Mode::SOLO and currentMode == "teams_normal") or
+        (this->mode == Mode::TEAMS and currentMode == "solo_normal"))
     {
         this->ClearCache();
     }
 
-    if (currentMode == "solo_normal")
-    {
-        this->mode = Mode::SOLO;
-    }
-    else if (currentMode == "teams_normal")
-    {
-        this->mode = Mode::TEAMS;
-    }
-    else
-    {
-        this->mode = Mode::LOBBY;
-    }
+    if (currentMode == "solo_normal") this->mode = Mode::SOLO;
+    else if (currentMode == "teams_normal") this->mode = Mode::TEAMS;
+    else this->mode = Mode::LOBBY;
 }
 
 auto BlitzSurvivalGames::UpdateChat() const -> void
 {
-    const std::vector<std::unique_ptr<ChatLine>>& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
-
+    const auto& chatLines = mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines();
     bool refresh = false;
+
     for (I32 i{ 0 }; i < 10; ++i)
     {
-        if (!chatLines[i]->GetInstance())
-        {
-            continue;
-        }
+        if (!chatLines[i]->GetInstance()) continue;
 
-        const std::string text = chatLines[i]->GetLineString()->GetFormattedText();
-
+        std::string text = chatLines[i]->GetLineString()->GetFormattedText();
         if (text.find("§k") != std::string::npos and !text.contains(":"))
         {
+            size_t pos{};
+            while ((pos = text.find("§k")) != std::string::npos)
+                text.erase(pos, 3);
 
-            std::string cleanedText = text;
-            size_t pos;
-            while ((pos = cleanedText.find("§k")) != std::string::npos)
-            {
-                cleanedText.erase(pos, 3);
-            }
-            chatLines[i]->SetLineString(std::make_unique<ChatComponentText>(cleanedText));
-
+            chatLines[i]->SetLineString(std::make_unique<ChatComponentText>(text));
             refresh = true;
         }
     }
 
     if (refresh)
-    {
         mc->GetIngameGUI()->GetPersistantChatGUI()->RefreshChat();
-    }
 }
 
 auto BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& player) -> std::string
@@ -156,17 +125,13 @@ auto BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& play
     Player playerData = this->GetPlayerData(player->GetName());
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
 
-    std::string teamPrefix = "";
+    std::string teamPrefix{};
     if (this->mode == Mode::TEAMS and this->GetTeamCount() > 3)
     {
         const std::string teamColor = this->GetPlayerTeamColor(player->GetName());
         if (!teamColor.empty())
         {
-            teamPrefix = std::format("{}{}O{} ",
-                teamColor,
-                MinecraftCode::OBFUSCATED,
-                MinecraftCode::RESET
-            );
+            teamPrefix = std::format("{}{}O{} ", teamColor, MinecraftCode::OBFUSCATED, MinecraftCode::RESET);
         }
     }
 
@@ -211,25 +176,16 @@ auto BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& play
 auto BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& player) -> std::pair<std::string, std::string>
 {
     const float health = player->GetHealth() + player->GetAbsorptionAmount();
-
-    std::pair<std::string, std::string> nametag;
-
-    nametag.first = std::format("{} ",
-        MinecraftCode::DARK_AQUA
-    );
-
-    nametag.second = std::format(" {}{:.1f} ",
-        this->GetHpColor(health),
-        health
-    );
+    std::pair<std::string, std::string> nametag{
+        std::format("{} ", MinecraftCode::DARK_AQUA),
+        std::format(" {}{:.1f} ", this->GetHpColor(health), health)
+    };
 
     if (this->mode == Mode::TEAMS)
     {
         const std::string teamColor = this->GetPlayerTeamColor(player->GetName());
         if (!teamColor.empty())
-        {
-            nametag.first = nametag.first + teamColor;
-        }
+            nametag.first += teamColor;
     }
 
     return nametag;
@@ -237,12 +193,7 @@ auto BlitzSurvivalGames::FormatNametag(const std::unique_ptr<EntityPlayer>& play
 
 auto BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::string
 {
-    if (wins.empty()) return MinecraftCode::GRAY;
-
-    if (!std::all_of(wins.begin(), wins.end(), ::isdigit))
-    {
-        return MinecraftCode::GRAY;
-    }
+    if (wins.empty() or !std::all_of(wins.begin(), wins.end(), ::isdigit)) return MinecraftCode::GRAY;
 
     I32 winsValue = std::stoi(wins);
     if (winsValue >= 2500) return MinecraftCode::DARK_RED;
@@ -250,8 +201,7 @@ auto BlitzSurvivalGames::GetWinsColor(const std::string& wins) const -> std::str
     if (winsValue >= 500)  return MinecraftCode::GOLD;
     if (winsValue >= 200)  return MinecraftCode::DARK_GREEN;
     if (winsValue >= 100)  return MinecraftCode::GREEN;
-
-    return MinecraftCode::codeToString.at(MinecraftCode::Code::GRAY);
+    return MinecraftCode::GRAY;
 }
 
 auto BlitzSurvivalGames::GetKDRColor(const std::string& kdr) const -> std::string
@@ -264,43 +214,20 @@ auto BlitzSurvivalGames::GetKDRColor(const std::string& kdr) const -> std::strin
     if (kdrValue >= 3.0f)  return MinecraftCode::GOLD;
     if (kdrValue >= 2.0f)  return MinecraftCode::DARK_GREEN;
     if (kdrValue >= 1.0f)  return MinecraftCode::GREEN;
-
-    return MinecraftCode::GRAY);
+    return MinecraftCode::GRAY;
 }
 
 auto BlitzSurvivalGames::AssignTeamNumbers() -> void
 {
     this->teamNumbers.clear();
-
-    U32 counter = 1;
-    for (const auto& [teamName, players] : this->sortedTeams)
-    {
+    U32 counter{ 1 };
+    for (const auto& [teamName, _] : this->sortedTeams)
         this->teamNumbers[teamName] = counter++;
-    }
-}
-
-auto BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) const -> I32
-{
-    std::string teamName = this->GetTeamFromTeamManager(playerName).hypixelTeam;
-
-    if (teamName.find("§") != std::string::npos)
-    {
-        return -1;
-    }
-
-    auto it = teamNumbers.find(teamName);
-    if (it != teamNumbers.end())
-    {
-        return it->second;
-    }
-
-    return -1;
 }
 
 auto BlitzSurvivalGames::AssignTeamColors() -> void
 {
-    const std::vector<MinecraftCode> baseColors =
-    {
+    const std::vector<std::string> baseColors{
         MinecraftCode::DARK_AQUA,
         MinecraftCode::BLACK,
         MinecraftCode::DARK_BLUE,
@@ -320,19 +247,25 @@ auto BlitzSurvivalGames::AssignTeamColors() -> void
 
     for (const auto& [teamName, _] : this->sortedTeams)
     {
-        if (this->teamColors.find(teamName) == teamColors.end())
+        if (this->teamColors.find(teamName) == this->teamColors.end())
         {
-            std::string color = MinecraftCode::baseColors[nextColorIndex % baseColors.size()];
-
+            std::string color = baseColors[nextColorIndex % baseColors.size()];
             if (this->nextColorIndex >= baseColors.size())
-            {
                 color = MinecraftCode::BOLD + color;
-            }
 
             this->teamColors[teamName] = color;
             ++this->nextColorIndex;
         }
     }
+}
+
+auto BlitzSurvivalGames::GetTeamIndex(const std::string& playerName) const -> I32
+{
+    std::string teamName = this->GetTeamFromTeamManager(playerName).hypixelTeam;
+    if (teamName.find("§") != std::string::npos) return -1;
+
+    auto it = teamNumbers.find(teamName);
+    return (it != teamNumbers.end()) ? it->second : -1;
 }
 
 auto BlitzSurvivalGames::GetPlayerTeamName(const std::string& playerName) const -> std::string
@@ -343,14 +276,8 @@ auto BlitzSurvivalGames::GetPlayerTeamName(const std::string& playerName) const 
 auto BlitzSurvivalGames::GetPlayerTeamColor(const std::string& playerName) const -> std::string
 {
     const std::string teamName = this->GetPlayerTeamName(playerName);
-
     auto it = teamColors.find(teamName);
-    if (it != teamColors.end())
-    {
-        return it->second;
-    }
-
-    return "";
+    return (it != teamColors.end()) ? it->second : "";
 }
 
 auto BlitzSurvivalGames::GetTeamCount() const -> I32

@@ -1,7 +1,7 @@
 #include "NickManager.hpp"
 
 NickManager::NickManager()
-    : HypixelModule{ true, HypixelGamemode::ALL }
+    : Module{ true }
 {
     this->nickHashes = 
     {

@@ -1,45 +1,47 @@
 #include "HypixelRank.hpp"
 
+#include "../MinecraftCode/MinecraftCode.hpp"
+
 auto HypixelRank::GetRankPrefix(const nlohmann::json& json) -> std::string
 {
     const auto playerIt = json.find("player");
     if (playerIt == json.end() or !playerIt->is_object())
     {
-        return "";
+        return {};
     }
 
-    const auto& p = *playerIt;
+    const auto& player = *playerIt;
 
-    auto getColor = [](MinecraftCode code) -> std::string
+    auto getColorByName = [](const std::string& name) -> std::string
         {
-            auto it = MinecraftCode::codeToString.find(code);
-            return (it != MinecraftCode::codeToString.end()) ? it->second : "";
+            const auto it = MinecraftCode::ColorByName.find(name);
+            return it != MinecraftCode::ColorByName.end() ? it->second : std::string{};
         };
 
-    std::string plusColor = getColor(MinecraftCodeRED);
+    std::string plusColor{ MinecraftCode::RED };
 
-    if (p.contains("rankPlusColor") and p["rankPlusColor"].is_string())
+    if (player.contains("rankPlusColor") and player["rankPlusColor"].is_string())
     {
-        auto it = colorMap.find(p["rankPlusColor"].get<std::string>());
-        if (it != colorMap.end())
+        const auto color = getColorByName(player["rankPlusColor"].get<std::string>());
+        if (!color.empty())
         {
-            plusColor = it->second;
+            plusColor = color;
         }
     }
 
-    std::string monthlyRank = p.value("monthlyPackageRank", "");
-    std::string packageRank = p.value("newPackageRank", "");
+    std::string monthlyRank{ player.value("monthlyPackageRank", "") };
+    std::string packageRank{ player.value("newPackageRank", "") };
 
     if (monthlyRank == "SUPERSTAR")
     {
-        std::string rankColor = getColor(MinecraftCode::GOLD);
+        std::string rankColor{ MinecraftCode::GOLD };
 
-        if (p.contains("monthlyRankColor") and p["monthlyRankColor"].is_string())
+        if (player.contains("monthlyRankColor") and player["monthlyRankColor"].is_string())
         {
-            auto it = colorMap.find(p["monthlyRankColor"].get<std::string>());
-            if (it != colorMap.end())
+            const auto color = getColorByName(player["monthlyRankColor"].get<std::string>());
+            if (!color.empty())
             {
-                rankColor = it->second;
+                rankColor = color;
             }
         }
 
@@ -48,28 +50,23 @@ auto HypixelRank::GetRankPrefix(const nlohmann::json& json) -> std::string
 
     if (packageRank == "MVP_PLUS")
     {
-        std::string aqua = getColor(MinecraftCode::AQUA);
-        return aqua + "[MVP" + plusColor + "+" + aqua + "]";
+        return MinecraftCode::AQUA + "[MVP" + plusColor + "+" + MinecraftCode::AQUA + "]";
     }
 
     if (packageRank == "MVP")
     {
-        std::string aqua = getColor(MinecraftCode::AQUA);
-        return aqua + "[MVP]";
+        return MinecraftCode::AQUA + "[MVP]";
     }
 
     if (packageRank == "VIP_PLUS")
     {
-        std::string green = getColor(MinecraftCode::GREEN);
-        std::string gold = getColor(MinecraftCode::GOLD);
-        return green + "[VIP" + gold + "+" + green + "]";
+        return MinecraftCode::GREEN + "[VIP" + MinecraftCode::GOLD + "+" + MinecraftCode::GREEN + "]";
     }
 
     if (packageRank == "VIP")
     {
-        std::string green = getColor(MinecraftCode::GREEN);
-        return green + "[VIP]";
+        return MinecraftCode::GREEN + "[VIP]";
     }
 
-    return "";
+    return {};
 }

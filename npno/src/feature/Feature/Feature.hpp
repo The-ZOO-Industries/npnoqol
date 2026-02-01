@@ -21,6 +21,8 @@
 #include <set>
 #include <random>
 #include <cmath>
+#include <unordered_map>
+#include <chrono>
 
 #include <npno/Type.hpp>
 #include <nlohmann/json.hpp>

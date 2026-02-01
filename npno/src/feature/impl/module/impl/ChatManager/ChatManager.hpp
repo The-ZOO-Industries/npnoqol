@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../HypixelModule/HypixelModule.hpp"
+#include "../../Module/Module.hpp"
 
-class ChatManager final : public HypixelModule
+class ChatManager final : public Module
 {
 public:
     ChatManager();
@@ -10,6 +10,7 @@ public:
     ~ChatManager() override;
 
     auto Update() -> void override;
+    auto ClearCache() -> void override {};
 
 private:
     std::vector<std::regex> blacklistedLines;

@@ -1,7 +1,7 @@
 #include "AutoGG.hpp"
 
 AutoGG::AutoGG()
-    : HypixelStatsModule{ true, HypixelGamemode::ALL }
+    : Module{ true }
 {
     this->autoGGLines = this->ToRegex(
     {

@@ -1,6 +1,6 @@
 #include "ChatUtil.hpp"
 
-Chat::Chat()
+ChatUtil::ChatUtil()
 {
     const char* userProfile{ std::getenv("USERPROFILE") };
 
@@ -14,9 +14,9 @@ Chat::Chat()
     newLines.clear();
 }
 
-Chat::~Chat() = default;
+ChatUtil::~ChatUtil() = default;
 
-auto Chat::Update() -> void
+auto ChatUtil::Update() -> void
 {
     std::ifstream ifs(logFilePath);
     if (!ifs.is_open()) return;
@@ -43,7 +43,7 @@ auto Chat::Update() -> void
     allLines = std::move(currentLines);
 }
 
-auto Chat::GetNewLines() -> std::vector<std::string>
+auto ChatUtil::GetNewLines() -> std::vector<std::string>
 {
     return newLines;
 }

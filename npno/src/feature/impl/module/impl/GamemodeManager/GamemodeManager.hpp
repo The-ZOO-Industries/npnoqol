@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../HypixelModule/HypixelModule.hpp"
+#include "../../Module/Module.hpp"
 
-class GamemodeManager final : public HypixelModule
+class GamemodeManager final : public Module
 {
 public:
     GamemodeManager();
@@ -10,6 +10,7 @@ public:
     ~GamemodeManager() override;
 
     auto Update() -> void override;
+    auto ClearCache() -> void override {};
 
     static auto GetCurrentGamemode() -> std::string;
     static auto GetCurrentMode() -> std::string;

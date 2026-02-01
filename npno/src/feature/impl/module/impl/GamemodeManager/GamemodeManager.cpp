@@ -1,7 +1,7 @@
 #include "GamemodeManager.hpp"
 
 GamemodeManager::GamemodeManager()
-    : HypixelStatsModule{ true, HypixelGamemode::ALL }
+    : Module{ true }
 {
     
 }

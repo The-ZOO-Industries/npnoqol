@@ -1,7 +1,7 @@
 #include "ChatManager.hpp"
 
 ChatManager::ChatManager()
-    : HypixelGamemodeModule{ true, HypixelGamemode::ALL }
+    : Module{ true }
 {
     this->blacklistedLines = this->ToRegex(
     {

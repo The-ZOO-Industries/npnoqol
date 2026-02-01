@@ -1,7 +1,7 @@
 #include "ScoreboardManager.hpp"
 
 ScoreboardManager::ScoreboardManager()
-    : HypixelModule{ true, HypixelGamemode::ALL }
+    : Module{ true }
 {
 
 }
