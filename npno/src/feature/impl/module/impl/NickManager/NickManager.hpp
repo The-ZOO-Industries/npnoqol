@@ -11,6 +11,18 @@ public:
 
     auto Update() -> void override;
 
+    struct Nick
+    {
+        std::string realName{ "" };
+        std::string nick{ "" };
+
+        bool warned{ false };
+
+        bool skinDenicker{ false };
+    };
+
+    static auto GetNickList() -> std::map<std::string, Nick>;
+
 private:
     auto Warn(const std::string& name, const std::string& realName) -> void;
 
@@ -19,6 +31,7 @@ private:
     auto ParseSkinData(const std::string& playerName, const std::string& skinHash, const std::string& profileName) -> void;
     auto IsNickHash(const std::string& hash) -> bool;
 
-    std::set<std::string> nickHashes;
-    std::set<std::string> parsedPlayers;
+    std::vector<std::string> nickHashes;
+
+    inline static std::map<std::string, Nick> nickList{};
 };

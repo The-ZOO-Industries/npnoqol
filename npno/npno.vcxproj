@@ -52,6 +52,7 @@
     <ClInclude Include="src\util\Chat\Chat.h" />
     <ClInclude Include="src\util\Config\Config.h" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
+    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp" />
     <ClInclude Include="src\util\HypixelRank\HypixelRank.h" />
     <ClInclude Include="src\util\MinecraftCode\MinecraftCode.hpp" />
     <ClInclude Include="src\util\Network\Network.h" />

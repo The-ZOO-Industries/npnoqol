@@ -213,6 +213,9 @@
     <ClInclude Include="src\feature\FeatureManager\FeatureManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">

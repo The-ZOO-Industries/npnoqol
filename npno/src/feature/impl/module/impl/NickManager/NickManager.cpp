@@ -1,7 +1,7 @@
 #include "NickManager.hpp"
 
 NickManager::NickManager()
-    : HypixelModule{ true, HypixelGamemode::Gamemode::ALL }
+    : HypixelModule{ true, HypixelGamemode::ALL }
 {
     this->nickHashes = 
     {
@@ -44,7 +44,7 @@ auto NickManager::Update() -> void
 {
     this->SkinDenicker();
 
-    for (auto& [name, player] : HypixelAPI::GetNickList())
+    for (auto& [name, player] : nickList)
     {
         if (!player.warned)
         {
@@ -56,34 +56,26 @@ auto NickManager::Update() -> void
 
 auto NickManager::SkinDenicker() -> void
 {
-    for (const std::unique_ptr<EntityPlayer>& player : mc->GetTheWorld()->GetPlayerEntities())
+    for (auto& [name, player] : nickList)
     {
-        if (this->IsBot(player))
+        if (player.skinDenicker)
         {
             continue;
         }
 
-        if (this->parsedPlayers.find(player->GetName()) != this->parsedPlayers.end())
-        {
-             continue;
-        }
-
-        this->parsedPlayers.insert(player->GetName());
-
-        const std::unique_ptr<GameProfile>& profile = player->GetGameProfile();
+        const std::unique_ptr<GameProfile>& profile = mc->GetTheWorld()->GetPlayerEntityByName(name)->GetGameProfile();
 
         for (const std::unique_ptr<Property>& property : profile->GetProperties()->GetValues())
         {
             if (JavaUtil::JStringToString(property->GetName()) == "textures")
             {
-                const std::string encoded = JavaUtil::JStringToString(property->GetValue());
-                const std::string decoded = Base64::Decode(encoded);
+                const std::string encoded{ JavaUtil::JStringToString(property->GetValue()) };
+                const std::string decoded{ Base64::Decode(encoded) };
 
                 try
                 {
-                    auto json = nlohmann::json::parse(decoded);
-                    std::string skinUrl = json.at("textures").at("SKIN").at("url");
-                    this->ParseSkinData(player->GetName(), skinUrl, profile->GetName());
+                    std::string skinUrl = nlohmann::json::parse(decoded).at("textures").at("SKIN").at("url");
+                    this->ParseSkinData(name, skinUrl, profile->GetName());
                 }
                 catch (...)
                 {
@@ -100,7 +92,6 @@ auto NickManager::ParseSkinData(const std::string& playerName, const std::string
 {
     if (!this->IsNickHash(skinHash) and !profileName.empty() and profileName != playerName)
     {
-        std::map<std::string, HypixelAPI::Nick>& nickList = HypixelAPI::GetNickList();
         if (nickList.find(playerName) != nickList.end())
         {
             nickList[playerName].realName = profileName;
@@ -110,7 +101,12 @@ auto NickManager::ParseSkinData(const std::string& playerName, const std::string
 
 auto NickManager::IsNickHash(const std::string& hash) -> bool
 {
-    return this->nickHashes.find(hash) != this->nickHashes.end();
+    return std::find(this->nickHashes.begin(), this->nickHashes.end(), hash) != this->nickHashes.end();
+}
+
+auto NickManager::GetNickList() -> std::map<std::string, Nick>
+{
+    return nickList;
 }
 
 auto NickManager::Warn(const std::string& name, const std::string& realName) -> void
