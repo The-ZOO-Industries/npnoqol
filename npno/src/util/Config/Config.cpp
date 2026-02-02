@@ -1,9 +1,4 @@
-#include "Config.h"
-
-#include <print>
-#include <fstream>
-
-#include <nlohmann/json.hpp>
+#include "Config.hpp"
 
 std::string Config::GetHypixelAPIKey()
 {

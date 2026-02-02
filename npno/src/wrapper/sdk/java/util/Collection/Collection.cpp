@@ -16,11 +16,8 @@ Collection::~Collection() = default;
 
 void Collection::Init() 
 {
-    std::call_once(oflag, [this] 
-        {
-        sizeMethodID = Jvm::env->GetMethodID(this->javaClass, "size", "()I");
-        toArrayMethodID = Jvm::env->GetMethodID(this->javaClass, "toArray", "()[Ljava/lang/Object;");
-        });
+    sizeMethodID = Jvm::env->GetMethodID(this->javaClass, "size", "()I");
+    toArrayMethodID = Jvm::env->GetMethodID(this->javaClass, "toArray", "()[Ljava/lang/Object;");
 }
 
 jint Collection::Size() const 
@@ -30,5 +27,5 @@ jint Collection::Size() const
 
 jobjectArray Collection::ToArray() const 
 {
-    return static_cast<jobjectArray>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, toArrayMethodID)));
+    return static_cast<jobjectArray>(Jvm::env->CallObjectMethod(this->instance, toArrayMethodID));
 }

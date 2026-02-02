@@ -16,8 +16,6 @@ public:
     [[nodiscard]] jstring ToString() const;  
 
 private:
-    inline static std::once_flag oflag{};
-
     inline static jmethodID versionMethodID{ nullptr };
     inline static jmethodID toStringMethodID{ nullptr };
 };

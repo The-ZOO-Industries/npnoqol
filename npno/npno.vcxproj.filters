@@ -45,76 +45,73 @@
     <ClInclude Include="ext\nlohmann\json_fwd.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="ext\npno\Loader.hpp">
+    <ClInclude Include="src\Base\Base.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Base\Base.h">
+    <ClInclude Include="src\feature\impl\command\Command\Command.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\command\Command\Command.h">
+    <ClInclude Include="src\feature\impl\command\CommandManager\CommandManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\command\CommandManager\CommandManager.h">
+    <ClInclude Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.h">
+    <ClInclude Include="src\feature\impl\flag\Flag\Flag.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\flag\Flag\Flag.h">
+    <ClInclude Include="src\feature\impl\flag\FlagManager\FlagManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\flag\FlagManager\FlagManager.h">
+    <ClInclude Include="src\feature\impl\module\impl\AutoGG\AutoGG.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\AutoGG\AutoGG.h">
+    <ClInclude Include="src\feature\impl\module\impl\ChatManager\ChatManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\ChatManager\ChatManager.h">
+    <ClInclude Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.h">
+    <ClInclude Include="src\feature\impl\module\impl\NickManager\NickManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\NickManager\NickManager.h">
+    <ClInclude Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.h">
+    <ClInclude Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.h">
+    <ClInclude Include="src\feature\impl\module\HypixelModule\HypixelModule.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.h">
+    <ClInclude Include="src\feature\impl\module\Module\Module.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\Module\Module.h">
+    <ClInclude Include="src\feature\impl\module\ModuleManager\ModuleManager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\module\ModuleManager\ModuleManager.h">
+    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.h">
+    <ClInclude Include="src\util\Base64\Base64.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Base64\Base64.h">
+    <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Chat\Chat.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Config\Config.h">
+    <ClInclude Include="src\util\Config\Config.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\HypixelRank\HypixelRank.h">
+    <ClInclude Include="src\util\HypixelRank\HypixelRank.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\MinecraftCode\MinecraftCode.h">
+    <ClInclude Include="src\util\MinecraftCode\MinecraftCode.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Network\Network.h">
+    <ClInclude Include="src\util\Network\Network.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\wrapper\JavaClass\JavaClass.h">
@@ -207,51 +204,63 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\world\World\World.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\feature\Feature\Feature.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\npno\Type.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\FeatureManager\FeatureManager.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\command\Command\Command.cpp">
+    <ClCompile Include="src\feature\impl\command\Command\Command.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\command\CommandManager\CommandManager.cpp">
+    <ClCompile Include="src\feature\impl\command\CommandManager\CommandManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\command\SetHypixelAPIKeyCommand\SetHypixelAPIKeyCommand.cpp">
+    <ClCompile Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\flag\Flag\Flag.cpp">
+    <ClCompile Include="src\feature\impl\flag\Flag\Flag.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\flag\FlagManager\FlagManager.cpp">
+    <ClCompile Include="src\feature\impl\flag\FlagManager\FlagManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\AutoGG\AutoGG.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\AutoGG\AutoGG.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\ChatManager\ChatManager.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\ChatManager\ChatManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\GamemodeManager\GamemodeManager.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\NickManager\NickManager.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\NickManager\NickManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\all\ScoreboardManager\ScoreboardManager.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\gamemode\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
+    <ClCompile Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\hypixel\HypixelStatsModule\HypixelStatsModule.cpp">
+    <ClCompile Include="src\feature\impl\module\HypixelModule\HypixelModule.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\Module\Module.cpp">
+    <ClCompile Include="src\feature\impl\module\Module\Module.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\module\ModuleManager\ModuleManager.cpp">
+    <ClCompile Include="src\feature\impl\module\ModuleManager\ModuleManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp">
@@ -260,7 +269,7 @@
     <ClCompile Include="src\util\Base64\Base64.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\util\Chat\Chat.cpp">
+    <ClCompile Include="src\util\ChatUtil\ChatUtil.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\util\Config\Config.cpp">
@@ -360,6 +369,15 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\Feature\Feature.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Base\dllmain.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\FeatureManager\FeatureManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

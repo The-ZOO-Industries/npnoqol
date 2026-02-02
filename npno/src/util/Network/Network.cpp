@@ -1,14 +1,7 @@
-#include "Network.h"
+#include "Network.hpp"
 
-#include "../Config/Config.h"
-#include "../api/HypixelAPI/HypixelAPI.h"
-
-#include <print>
-#include <thread>
-#include <chrono>
-
-#include <curl/curl.h>
-#include <nlohmann/json.hpp>
+#include "../Config/Config.hpp"
+#include "../api/HypixelAPI/HypixelAPI.hpp"
 
 auto Network::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) -> size_t
 {

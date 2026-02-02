@@ -22,15 +22,20 @@ std::vector<std::unique_ptr<Property>> PropertyMap::GetValues() const
 {
     std::vector<std::unique_ptr<Property>> properties;
 
-    std::unique_ptr<Collection> collection = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, valuesMethodID));
-    const jobjectArray array = collection->ToArray();
+    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, valuesMethodID);
 
-    for (jint i = 0; i < collection->Size(); ++i)
+    const std::unique_ptr<Collection> getProperty = std::make_unique<Collection>(collectionLocal);
+    const jobjectArray arrayLocal = static_cast<jobjectArray>(getProperty->ToArray());
+
+    for (jint i = 0; i < getProperty->Size(); ++i)
     {
-        properties.push_back(std::make_unique<Property>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
+        properties.push_back(std::make_unique<Property>(elementLocal));
+        Jvm::env->DeleteLocalRef(elementLocal);
     }
 
-    Jvm::env->DeleteGlobalRef(array);
+    Jvm::env->DeleteLocalRef(arrayLocal);
+    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return properties;
 }

@@ -1,33 +1,27 @@
-#include "Base.h"
+#include "Base.hpp"
 
 #include "../wrapper/Jvm/Jvm.h"
 
 #include <chrono>
 #include <thread>
+#include <windows.h>
 
 Base::Base()
     : running{ Jvm::Init() }
 {
     if (running)
     {
-        //this->flagManager = std::make_unique<FlagManager>();
-        this->moduleManager = std::make_unique<ModuleManager>();
-		this->commandManager = std::make_unique<CommandManager>();
+        this->featureManager = std::make_unique<FeatureManager>();
     }
 }
 
-Base::~Base()
-{
-    Jvm::ShutDown();
-}
+Base::~Base() = default;
 
-void Base::Run()
+auto Base::Run() -> void
 {
     while (this->running)
     {
-        //this->flagManager->Update();
-        this->moduleManager->Update();
-		this->commandManager->Update();
+        this->featureManager->Update();
 
         if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
         {

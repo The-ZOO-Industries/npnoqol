@@ -24,10 +24,10 @@ std::vector<std::unique_ptr<NetworkPlayerInfo>> NetHandlerPlayClient::GetPlayerI
 
     const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getPlayerInfoMapMethodID);
 
-    const std::unique_ptr<Collection> getTeams = std::make_unique<Collection>(collectionLocal);
-    const jobjectArray arrayLocal = static_cast<jobjectArray>(getTeams->ToArray());
+    const std::unique_ptr<Collection> getPlayer = std::make_unique<Collection>(collectionLocal);
+    const jobjectArray arrayLocal = static_cast<jobjectArray>(getPlayer->ToArray());
 
-    for (jint i = 0; i < getTeams->Size(); ++i)
+    for (jint i = 0; i < getPlayer->Size(); ++i)
     {
         const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
         playerList.push_back(std::make_unique<NetworkPlayerInfo>(elementLocal));

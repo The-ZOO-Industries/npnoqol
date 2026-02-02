@@ -1,7 +1,4 @@
-#include "Base64.h"
-
-#include <vector>
-#include <stdexcept>
+#include "Base64.hpp"
 
 bool Base64::IsBase64(unsigned char c) 
 {
