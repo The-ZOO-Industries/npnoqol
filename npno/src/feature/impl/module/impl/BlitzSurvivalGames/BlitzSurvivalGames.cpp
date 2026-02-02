@@ -139,7 +139,7 @@ auto BlitzSurvivalGames::FormatTabName(const std::unique_ptr<EntityPlayer>& play
     {
         const std::string teamName{ teamManager[player->GetName()].hypixelTeam };
         const auto it{ this->teamColors.find(teamName) };
-        if (it != this->teamColors.end())
+        if (it != this->teamColors.end() and teamColors.size() != 1)
         {
             teamPrefix = std::format("{}{}O{} ", 
                 it->second, 

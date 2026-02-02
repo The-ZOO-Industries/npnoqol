@@ -16,7 +16,7 @@ auto Command::Update() -> void
     const std::string line = chatLines[0]->GetLineString()->GetFormattedText();
 
     const std::regex nameRegex{ this->name, std::regex_constants::icase };
-    if (!this->SentByHypixel(line) and std::regex_search(line, nameRegex))
+    if (this->SentByHypixel(line) and std::regex_search(line, nameRegex))
     {
         mc->GetIngameGUI()->GetPersistantChatGUI()->DeleteChatLine(chatLines[0]->GetChatLineID());
 

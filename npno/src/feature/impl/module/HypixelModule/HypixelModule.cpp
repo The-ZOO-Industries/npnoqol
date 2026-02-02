@@ -189,9 +189,10 @@ auto HypixelModule::FillTeamManagerWithHypixelTeams() -> void
                     team.hypixelTeam = hypixelTeamName;
                     this->teamManager.insert({ playerName, std::move(team) });
                 }
-                else if (it->second.hypixelTeam.empty())
+                else if (it->second.hypixelTeam != hypixelTeamName)
                 {
                     it->second.hypixelTeam = hypixelTeamName;
+                    it->second.npnoTeam.clear();
                 }
             }
         }
@@ -203,11 +204,15 @@ auto HypixelModule::AssignNpnoTeams() -> void
     I32 teamCounter{ 0 };
     for (auto& [team, players] : sortedTeams)
     {
-        const std::string npnoTeamName{ std::format("npno_{}", teamCounter++) };
         for (std::string& playerName : players)
         {
-            this->teamManager[playerName].npnoTeam = npnoTeamName;
+            auto& playerTeam = this->teamManager[playerName];
+            if (playerTeam.npnoTeam.empty())
+            {
+                playerTeam.npnoTeam = std::format("npno_{}", teamCounter);
+            }
         }
+        ++teamCounter;
     }
 }
 
@@ -216,16 +221,12 @@ auto HypixelModule::ApplyTeamsAndNametags() -> void
     const std::unique_ptr<WorldClient> theWorld{ mc->GetTheWorld() };
     const std::unique_ptr<Scoreboard> scoreboard{ theWorld->GetScoreboard() };
 
-    for (const std::unique_ptr<EntityPlayer>& player : theWorld->GetPlayerEntities())
+    for (const auto& [playerName, playerTeam] : this->teamManager)
     {
-        const std::string& playerName{ player->GetName() };
-
-        if (this->IsBot(player))
+        if (playerTeam.npnoTeam.empty())
         {
             continue;
         }
-
-        const Team& playerTeam{ this->teamManager[playerName] };
 
         std::unique_ptr<ScorePlayerTeam> team{ scoreboard->GetTeam(playerTeam.npnoTeam) };
         if (!team->GetInstance())
@@ -233,14 +234,23 @@ auto HypixelModule::ApplyTeamsAndNametags() -> void
             team = scoreboard->CreateTeam(playerTeam.npnoTeam);
         }
 
-        if (!scoreboard->GetTeam(playerName)->GetTeamName().starts_with("npno_"))
+        std::unique_ptr<ScorePlayerTeam> currentTeam{ scoreboard->GetTeam(playerName) };
+        if (currentTeam->GetInstance() and !currentTeam->GetTeamName().starts_with("npno_"))
         {
-            scoreboard->RemovePlayerFromTeam(playerName, scoreboard->GetTeam(playerName));
+            scoreboard->RemovePlayerFromTeam(playerName, currentTeam);
+        }
+
+        if (!scoreboard->GetPlayersTeam(playerName) || scoreboard->GetPlayersTeam(playerName)->GetTeamName() != playerTeam.npnoTeam)
+        {
             const bool unused{ scoreboard->AddPlayerToTeam(playerName, playerTeam.npnoTeam) };
         }
 
-        const std::pair<std::string, std::string> nametag{ this->FormatNametag(player) };
-        team->SetNamePrefix(JavaUtil::FixString(nametag.first));
-        team->SetNameSuffix(JavaUtil::FixString(nametag.second));
+        const std::unique_ptr<EntityPlayer>& player{ theWorld->GetPlayerEntityByName(playerName) };
+        if (player->GetInstance() and !this->IsBot(player))
+        {
+            const std::pair<std::string, std::string> nametag{ this->FormatNametag(player) };
+            team->SetNamePrefix(JavaUtil::FixString(nametag.first));
+            team->SetNameSuffix(JavaUtil::FixString(nametag.second));
+        }
     }
 }
