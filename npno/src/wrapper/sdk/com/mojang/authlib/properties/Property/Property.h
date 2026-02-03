@@ -9,14 +9,6 @@ public:
 
     virtual ~Property() override;
 
-    virtual void Init() override;
-
-    [[nodiscard]] jstring GetValue() const;
-    [[nodiscard]] jstring GetName() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jmethodID getValueMethodID{ nullptr };
-    inline static jmethodID getNameMethodID{ nullptr };
+    [[nodiscard]] std::string GetValue() const;
+    [[nodiscard]] std::string GetName() const;
 };

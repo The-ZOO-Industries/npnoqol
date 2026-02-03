@@ -11,12 +11,5 @@ public:
 
     virtual ~PropertyMap() override;
 
-    virtual void Init() override;
-
     [[nodiscard]] std::vector<std::unique_ptr<Property>> GetValues() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jmethodID valuesMethodID{ nullptr };
 };

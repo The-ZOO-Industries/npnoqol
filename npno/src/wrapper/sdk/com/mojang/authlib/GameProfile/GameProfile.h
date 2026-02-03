@@ -11,15 +11,7 @@ public:
 
 	virtual ~GameProfile() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::string GetName() const;
 
 	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getNameMethodID{ nullptr };
-	inline static jmethodID getPropertiesMethodID{ nullptr };
 };

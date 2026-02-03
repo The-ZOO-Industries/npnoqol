@@ -1,30 +1,23 @@
 #include "GameProfile.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 GameProfile::GameProfile(const jobject instance)
-    : JavaClass("com/mojang/authlib/GameProfile", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 GameProfile::~GameProfile() = default;
 
-void GameProfile::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
-            getPropertiesMethodID = Jvm::env->GetMethodID(this->javaClass, "getProperties", "()Lcom/mojang/authlib/properties/PropertyMap;");
-        });
-}
-
 std::string GameProfile::GetName() const
 {
-    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNameMethodID)));
+    jni::frame f;
+    
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::GameProfile(this->instance).getName.call()));
 }
 
 std::unique_ptr<PropertyMap> GameProfile::GetProperties() const
 {
-    return std::make_unique<PropertyMap>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getPropertiesMethodID)));
+    jni::frame f;
+
+    return std::make_unique<PropertyMap>(jni::make_global(maps::GameProfile(this->instance).getProperties.call()));
 }

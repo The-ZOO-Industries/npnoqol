@@ -1,51 +1,33 @@
 #include "World.h"
 
-#include "../../src/wrapper/sdk/java/util/List/List.h"
-
 World::World(const jobject instance)
-    : JavaClass("net/minecraft/world/World", instance)
+    : JavaClass(instance)
 {
-    this->Init();
-}
 
-World::World(const char* name, const jobject instance)
-    : JavaClass(name, instance)
-{
-    this->Init();
 }
 
 World::~World() = default;
 
-void World::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            worldInfoFieldID = Jvm::env->GetFieldID(this->javaClass, "worldInfo", "Lnet/minecraft/world/storage/WorldInfo;");
-            playerEntitiesFieldID = Jvm::env->GetFieldID(this->javaClass, "playerEntities", "Ljava/util/List;");
-        });
-}
-
 std::unique_ptr<WorldInfo> World::GetWorldInfo() const
 {
-    return std::make_unique<WorldInfo>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectField(this->instance, worldInfoFieldID)));
+    jni::frame f;
+
+    return std::make_unique<WorldInfo>(jni::make_global(maps::World(this->instance).worldInfo.get()));
 }
 
 std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
 {
+    jni::frame f;
+    
     std::vector<std::unique_ptr<EntityPlayer>> playerList;
 
-    const jobject playerEntitiesLocal = Jvm::env->GetObjectField(this->instance, playerEntitiesFieldID);
+    maps::List playerEntities = maps::World(this->instance).playerEntities.get();
+    std::vector<maps::Object> vec = playerEntities.toArray().to_vector();
 
-    const std::unique_ptr<List> playerEntities = std::make_unique<List>(playerEntitiesLocal);
-
-    const jint size = playerEntities->Size();
-    for (jint i = 0; i < size; ++i)
+    for (maps::Object& obj : vec)
     {
-        const jobject playerLocal = playerEntities->Get(i);
-        playerList.emplace_back(std::make_unique<EntityPlayer>(playerLocal));
-        Jvm::env->DeleteLocalRef(playerLocal);
+        playerList.emplace_back(std::make_unique<EntityPlayer>(jni::make_global(obj)));
     }
 
-    Jvm::env->DeleteLocalRef(playerEntitiesLocal);
     return playerList;
 }

@@ -9,10 +9,5 @@ public:
 
 	virtual ~List() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] jobject Get(const I32 index) const;
-
-private:
-	inline static jmethodID getMethodID{ nullptr };
 };

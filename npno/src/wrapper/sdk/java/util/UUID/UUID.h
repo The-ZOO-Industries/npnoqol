@@ -9,13 +9,7 @@ public:
 
     virtual ~UUID_J() override;
 
-    virtual void Init() override;
-
     [[nodiscard]] jint Version() const;
 
-    [[nodiscard]] jstring ToString() const;  
-
-private:
-    inline static jmethodID versionMethodID{ nullptr };
-    inline static jmethodID toStringMethodID{ nullptr };
+    [[nodiscard]] jstring ToString() const;
 };

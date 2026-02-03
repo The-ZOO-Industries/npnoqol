@@ -9,11 +9,4 @@ public:
 	explicit ChatComponentText(const std::string& text);
 
 	virtual ~ChatComponentText() override;
-
-	virtual void Init() override;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID constructorMethodID{ nullptr };
 };

@@ -6,8 +6,8 @@ bool Jvm::Init()
 {
     jsize count;
     if (JNI_GetCreatedJavaVMs(&vm, 1, &count) != JNI_OK || !count) return false;
+    
     const jint result = vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_8);
-
     if (result == JNI_EDETACHED)
     {
         vm->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr);
@@ -15,19 +15,23 @@ bool Jvm::Init()
 
     if (vm->GetEnv(reinterpret_cast<void**>(&jvmti), JVMTI_VERSION_1_2) != JNI_OK) return false;
 
-    std::println("[INFO] JavaVM address: {}", static_cast<const void*>(vm));
-    std::println("[INFO] JNIEnv address: {}", static_cast<const void*>(env));
-    std::println("[INFO] jvmtiEnv address: {}", static_cast<const void*>(jvmti));
-
     GetLoadedClasses();
 
-    std::println("[INFO] JVM initialized successfully");
+    jni::init();
+    jni::set_thread_env(env);
+    
+    jni::set_custom_find_class([](const char* name) -> jclass 
+    {
+        return Jvm::GetClass(name);
+    });
 
     return true;
 }
 
 void Jvm::ShutDown()
 {
+    jni::shutdown();
+    
     for (const auto& [name, clazz] : classes)
     {
         if (clazz) env->DeleteGlobalRef(clazz);

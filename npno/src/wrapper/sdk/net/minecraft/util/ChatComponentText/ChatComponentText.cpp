@@ -1,25 +1,17 @@
 #include "ChatComponentText.h"
 
 ChatComponentText::ChatComponentText(const jobject instance)
-    : IChatComponent("net/minecraft/util/ChatComponentText", instance)
+    : IChatComponent(instance)
 {
-    this->Init();
+
 }
 
 ChatComponentText::ChatComponentText(const std::string& text)
-    : IChatComponent("net/minecraft/util/ChatComponentText", nullptr)
+    : IChatComponent(nullptr)
 {
-    this->Init();
+    jni::frame f;
 
-    this->instance = Jvm::env->NewGlobalRef(Jvm::env->NewObject(this->javaClass, constructorMethodID, JavaUtil::StringToJString(JavaUtil::FixString(text))));
+    this->instance = Jvm::env->NewGlobalRef(static_cast<jobject>(maps::ChatComponentText::new_object(&maps::ChatComponentText::constructor, JavaUtil::StringToJString(JavaUtil::FixString(text)))));
 }
 
 ChatComponentText::~ChatComponentText() = default;
-
-void ChatComponentText::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            constructorMethodID = Jvm::env->GetMethodID(this->javaClass, "<init>", "(Ljava/lang/String;)V");
-        });
-}

@@ -1,28 +1,23 @@
 #include "Property.h"
 
 Property::Property(const jobject instance)
-    : JavaClass("com/mojang/authlib/properties/Property", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 Property::~Property() = default;
 
-void Property::Init()
+std::string Property::GetValue() const
 {
-    std::call_once(oflag, [this]
-        {
-            getValueMethodID = Jvm::env->GetMethodID(this->javaClass, "getValue", "()Ljava/lang/String;");
-            getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
-        });
+    jni::frame f;
+
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::Property(this->instance).getValue.call()));
 }
 
-jstring Property::GetValue() const
+std::string Property::GetName() const
 {
-    return static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getValueMethodID));
-}
+    jni::frame f;
 
-jstring Property::GetName() const
-{
-    return static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNameMethodID));
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::Property(this->instance).getName.call()));
 }
