@@ -9,10 +9,17 @@ FlagManager::~FlagManager() = default;
 
 auto FlagManager::Update() const -> void
 {    
-    for (const std::unique_ptr<Flag>& flag : this->flags)
+	bool getPlayers{ false };
+	for (const std::unique_ptr<Flag>& flag : this->flags)
 	{   
 		if (flag->SanityCheck())
 		{
+			if (!getPlayers)
+			{
+				Flag::UpdatePlayers();
+				getPlayers = true;
+			}
+
 			flag->Update();
 		}
 		else
@@ -20,8 +27,6 @@ auto FlagManager::Update() const -> void
 			flag->ClearCache();
 		}
 	}
-
-    Flag::UpdatePlayers();
 }
 
 template<typename F>
