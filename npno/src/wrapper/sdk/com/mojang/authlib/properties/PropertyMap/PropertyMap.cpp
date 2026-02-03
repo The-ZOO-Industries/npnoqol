@@ -11,7 +11,7 @@ PropertyMap::~PropertyMap() = default;
 std::vector<std::unique_ptr<Property>> PropertyMap::GetValues() const
 {
     jni::frame f;
-    
+
     std::vector<std::unique_ptr<Property>> properties;
 
     maps::Collection collection = maps::PropertyMap(this->instance).values.call();
@@ -19,7 +19,7 @@ std::vector<std::unique_ptr<Property>> PropertyMap::GetValues() const
 
     for (maps::Object& obj : vec)
     {
-        properties.push_back(std::make_unique<Property>(jni::make_global(obj)));
+        properties.push_back(std::make_unique<Property>(jobject(maps::Property(obj, true))));
     }
 
     return properties;

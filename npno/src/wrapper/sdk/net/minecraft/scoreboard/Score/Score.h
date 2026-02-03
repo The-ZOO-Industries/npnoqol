@@ -13,11 +13,3 @@ public:
 
 	[[nodiscard]] std::string GetPlayerName() const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(Score, "net/minecraft/scoreboard/Score")
-        jni::method<jint, "getScorePoints"> getScorePoints{ *this };
-        jni::method<String, "getPlayerName"> getPlayerName{ *this };
-    END_KLASS_DEF()
-}

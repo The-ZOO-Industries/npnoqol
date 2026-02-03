@@ -1,126 +1,125 @@
 #include "Entity.h"
 
 Entity::Entity(const jobject instance)
-	: JavaClass(instance)
+    : JavaClass(instance)
 {
-
 }
 
 Entity::~Entity() = default;
 
-bool Entity::IsSprinting() const
+auto Entity::IsSprinting() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).isSprinting.call());
+    return static_cast<bool>(maps::Entity(this->instance).isSprinting.call());
 }
 
-bool Entity::IsSneaking() const
+auto Entity::IsSneaking() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).isSneaking.call());
+    return static_cast<bool>(maps::Entity(this->instance).isSneaking.call());
 }
 
-bool Entity::IsInvisible() const
+auto Entity::IsInvisible() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).isInvisible.call());
+    return static_cast<bool>(maps::Entity(this->instance).isInvisible.call());
 }
 
-bool Entity::IsEating() const
+auto Entity::IsEating() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).isEating.call());
+    return static_cast<bool>(maps::Entity(this->instance).isEating.call());
 }
 
-bool Entity::IsRiding() const
+auto Entity::IsRiding() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).isRiding.call());
+    return static_cast<bool>(maps::Entity(this->instance).isRiding.call());
 }
 
-bool Entity::IsOnGround() const
+auto Entity::IsOnGround() const -> bool
 {
-	return static_cast<bool>(maps::Entity(this->instance).onGround.get());
+    return static_cast<bool>(maps::Entity(this->instance).onGround.get());
 }
 
-float Entity::GetRotationYaw() const
+auto Entity::GetRotationYaw() const -> float
 {
-	return static_cast<float>(maps::Entity(this->instance).rotationYaw.get());
+    return static_cast<float>(maps::Entity(this->instance).rotationYaw.get());
 }
 
-float Entity::GetRotationPitch() const
+auto Entity::GetRotationPitch() const -> float
 {
-	return static_cast<float>(maps::Entity(this->instance).rotationPitch.get());
+    return static_cast<float>(maps::Entity(this->instance).rotationPitch.get());
 }
 
-float Entity::GetLastRotationYaw() const
+auto Entity::GetLastRotationYaw() const -> float
 {
-	return static_cast<float>(maps::Entity(this->instance).prevRotationYaw.get());
+    return static_cast<float>(maps::Entity(this->instance).prevRotationYaw.get());
 }
 
-float Entity::GetLastRotationPitch() const
+auto Entity::GetLastRotationPitch() const -> float
 {
-	return static_cast<float>(maps::Entity(this->instance).prevRotationPitch.get());
+    return static_cast<float>(maps::Entity(this->instance).prevRotationPitch.get());
 }
 
-std::unique_ptr<UUID_J> Entity::GetUniqueID() const
+auto Entity::GetUniqueID() const -> std::unique_ptr<UUID_J>
 {
-	jni::frame f;
+    jni::frame f;
 
-	return std::make_unique<UUID_J>(jni::make_global(maps::Entity(this->instance).getUniqueID.call()));
+    return std::make_unique<UUID_J>(jobject(maps::UUID(maps::Entity(this->instance).getUniqueID.call(), true)));
 }
 
-std::string Entity::GetName() const
+auto Entity::GetName() const -> std::string
 {
-	jni::frame f;
+    jni::frame f;
 
-	return JavaUtil::JStringToString(static_cast<jstring>(maps::Entity(this->instance).getName.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::Entity(this->instance).getName.call()));
 }
 
-void Entity::AddChatMessage(const std::unique_ptr<IChatComponent>& chatComponent) const
+auto Entity::AddChatMessage(const std::unique_ptr<IChatComponent>& chatComponent) const -> void
 {
-	jni::frame f;
+    jni::frame f;
 
-	maps::IChatComponent chatParam(chatComponent->GetInstance());
-	maps::Entity(this->instance).addChatMessage.call(chatParam);
+    maps::IChatComponent chatParam{ jobject(maps::IChatComponent(chatComponent->GetInstance(), true)) };
+    maps::Entity(this->instance).addChatMessage.call(chatParam);
 }
 
-double Entity::GetPosX() const
+auto Entity::GetPosX() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).posX.get());
+    return static_cast<double>(maps::Entity(this->instance).posX.get());
 }
 
-double Entity::GetPosY() const
+auto Entity::GetPosY() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).posY.get());
+    return static_cast<double>(maps::Entity(this->instance).posY.get());
 }
 
-double Entity::GetPosZ() const
+auto Entity::GetPosZ() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).posZ.get());
+    return static_cast<double>(maps::Entity(this->instance).posZ.get());
 }
 
-double Entity::GetLastTickPosX() const
+auto Entity::GetLastTickPosX() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).lastTickPosX.get());
+    return static_cast<double>(maps::Entity(this->instance).lastTickPosX.get());
 }
 
-double Entity::GetLastTickPosY() const
+auto Entity::GetLastTickPosY() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).lastTickPosY.get());
+    return static_cast<double>(maps::Entity(this->instance).lastTickPosY.get());
 }
 
-double Entity::GetLastTickPosZ() const
+auto Entity::GetLastTickPosZ() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).lastTickPosZ.get());
+    return static_cast<double>(maps::Entity(this->instance).lastTickPosZ.get());
 }
 
-double Entity::GetMotionX() const
+auto Entity::GetMotionX() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).motionX.get());
+    return static_cast<double>(maps::Entity(this->instance).motionX.get());
 }
 
-double Entity::GetMotionY() const
+auto Entity::GetMotionY() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).motionY.get());
+    return static_cast<double>(maps::Entity(this->instance).motionY.get());
 }
 
-double Entity::GetMotionZ() const
+auto Entity::GetMotionZ() const -> double
 {
-	return static_cast<double>(maps::Entity(this->instance).motionZ.get());
+    return static_cast<double>(maps::Entity(this->instance).motionZ.get());
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mappings.hpp"
+#include "../mappings.hpp"
 #include "../JavaUtil/JavaUtil.h"
 
 #include <memory>

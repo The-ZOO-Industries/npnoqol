@@ -27,14 +27,14 @@ std::vector<std::unique_ptr<PotionEffect>> EntityLivingBase::GetActivePotionEffe
 {
 	jni::frame f;
 
-	std::vector<std::unique_ptr<PotionEffect>> potionList;
+	std::vector<std::unique_ptr<PotionEffect>> potionList{};
 
-	maps::Collection collection = maps::EntityLivingBase(this->instance).getActivePotionEffects.call();
-	std::vector<maps::Object> vec = collection.toArray().to_vector();
+	maps::Collection collection = maps::NetHandlerPlayClient(this->instance).getPlayerInfoMap.call();
+	std::vector<maps::Object> vec = maps::Collection(collection, true).toArray.call().to_vector();
 
 	for (maps::Object& obj : vec)
 	{
-		potionList.push_back(std::make_unique<PotionEffect>(jni::make_global(obj)));
+		potionList.push_back(std::make_unique<PotionEffect>(jobject(maps::PotionEffect(obj, true))));
 	}
 
 	return potionList;

@@ -1,30 +1,30 @@
 #include "ScoreObjective.h"
 
 ScoreObjective::ScoreObjective(const jobject instance)
-	: JavaClass(instance)
+    : JavaClass(instance)
 {
 
 }
 
 ScoreObjective::~ScoreObjective() = default;
 
-std::string ScoreObjective::GetName() const
+auto ScoreObjective::GetName() const -> std::string
 {
-	jni::frame f;
+    jni::frame f;
 
-	return JavaUtil::JStringToString(static_cast<jstring>(maps::ScoreObjective(this->instance).getName.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::ScoreObjective(this->instance).getName.call()));
 }
 
-std::string ScoreObjective::GetDisplayName() const
+auto ScoreObjective::GetDisplayName() const -> std::string
 {
-	jni::frame f;
+    jni::frame f;
 
-	return JavaUtil::JStringToString(static_cast<jstring>(maps::ScoreObjective(this->instance).getDisplayName.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::ScoreObjective(this->instance).getDisplayName.call()));
 }
 
-void ScoreObjective::SetDisplayName(const std::string& name) const
+auto ScoreObjective::SetDisplayName(const std::string& name) const -> void
 {
-	jni::frame f;
-	
-	maps::ScoreObjective(this->instance).setDisplayName.call(JavaUtil::StringToJString(name));
+    jni::frame f;
+
+    maps::ScoreObjective(this->instance).setDisplayName.call(JavaUtil::StringToJString(name));
 }

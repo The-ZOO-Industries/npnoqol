@@ -22,5 +22,5 @@ std::string PotionEffect::GetEffectName() const
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::PotionEffect(this->instance).getEffectName.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::PotionEffect(this->instance).getEffectName.call()));
 }

@@ -5,29 +5,29 @@ Minecraft::Minecraft()
 {
     jni::frame f;
 
-    maps::Minecraft mc;
-    this->instance = Jvm::env->NewGlobalRef(static_cast<jobject>(mc.theMinecraft.get()));
+    maps::Minecraft mc{};
+    this->instance = Jvm::env->NewGlobalRef(jobject(mc.theMinecraft.get()));
 }
 
 Minecraft::~Minecraft() = default;
 
-std::unique_ptr<EntityPlayerSP> Minecraft::GetThePlayer() const
+auto Minecraft::GetThePlayer() const -> std::unique_ptr<EntityPlayerSP>
 {
     jni::frame f;
 
-    return std::make_unique<EntityPlayerSP>(jni::make_global(maps::Minecraft(this->instance).thePlayer.get()));
+    return std::make_unique<EntityPlayerSP>(jobject(maps::EntityPlayerSP(maps::Minecraft(this->instance).thePlayer.get(), true)));
 }
 
-std::unique_ptr<WorldClient> Minecraft::GetTheWorld() const
+auto Minecraft::GetTheWorld() const -> std::unique_ptr<WorldClient>
 {
     jni::frame f;
 
-    return std::make_unique<WorldClient>(jni::make_global(maps::Minecraft(this->instance).theWorld.get()));
+    return std::make_unique<WorldClient>(jobject(maps::WorldClient(maps::Minecraft(this->instance).theWorld.get(), true)));
 }
 
-std::unique_ptr<GuiIngame> Minecraft::GetIngameGUI() const
+auto Minecraft::GetIngameGUI() const -> std::unique_ptr<GuiIngame>
 {
     jni::frame f;
 
-    return std::make_unique<GuiIngame>(jni::make_global(maps::Minecraft(this->instance).ingameGUI.get()));
+    return std::make_unique<GuiIngame>(jobject(maps::GuiIngame(maps::Minecraft(this->instance).ingameGUI.get(), true)));
 }

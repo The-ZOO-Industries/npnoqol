@@ -8,96 +8,94 @@ Scoreboard::Scoreboard(const jobject instance)
 
 Scoreboard::~Scoreboard() = default;
 
-bool Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const 
+auto Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const -> bool
 {
     jni::frame f;
 
     return maps::Scoreboard(this->instance).addPlayerToTeam.call(JavaUtil::StringToJString(playerName), JavaUtil::StringToJString(teamName));
 }
 
-std::unique_ptr<ScorePlayerTeam> Scoreboard::GetTeam(const std::string& teamName) const 
+auto Scoreboard::GetTeam(const std::string& teamName) const -> std::unique_ptr<ScorePlayerTeam>
 {
     jni::frame f;
 
-    return std::make_unique<ScorePlayerTeam>(jni::make_global(maps::Scoreboard(this->instance).getTeam.call(JavaUtil::StringToJString(teamName))));
+    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).getTeam.call(JavaUtil::StringToJString(teamName)), true)));
 }
 
-std::unique_ptr<ScorePlayerTeam> Scoreboard::GetPlayersTeam(const std::string& playerName) const
+auto Scoreboard::GetPlayersTeam(const std::string& playerName) const -> std::unique_ptr<ScorePlayerTeam>
 {
     jni::frame f;
 
-    return std::make_unique<ScorePlayerTeam>(jni::make_global( maps::Scoreboard(this->instance).getPlayersTeam.call(JavaUtil::StringToJString(playerName))));
+    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).getPlayersTeam.call(JavaUtil::StringToJString(playerName)), true)));
 }
 
-std::unique_ptr<ScorePlayerTeam> Scoreboard::CreateTeam(const std::string& teamName) const 
+auto Scoreboard::CreateTeam(const std::string& teamName) const -> std::unique_ptr<ScorePlayerTeam>
 {
     jni::frame f;
 
-    return std::make_unique<ScorePlayerTeam>(jni::make_global(maps::Scoreboard(this->instance).createTeam.call(JavaUtil::StringToJString(teamName))));
+    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).createTeam.call(JavaUtil::StringToJString(teamName)), true)));
 }
 
-std::unique_ptr<ScoreObjective> Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const
+auto Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const -> std::unique_ptr<ScoreObjective>
 {
     jni::frame f;
 
-    return std::make_unique<ScoreObjective>(jni::make_global(maps::Scoreboard(this->instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot))));
+    return std::make_unique<ScoreObjective>(jobject(maps::ScoreObjective(maps::Scoreboard(this->instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot)), true)));
 }
 
-std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
+auto Scoreboard::GetTeams() const -> std::vector<std::unique_ptr<ScorePlayerTeam>>
 {
     jni::frame f;
 
-    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList;
-
+    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList{};
     maps::Collection collection = maps::Scoreboard(this->instance).getTeams.call();
-    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
+    std::vector<maps::Object> vec = maps::Collection(collection, true).toArray.call().to_vector();
     for (maps::Object& obj : vec)
     {
-        teamList.push_back(std::make_unique<ScorePlayerTeam>(jni::make_global(obj)));
+        teamList.push_back(std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(obj, true))));
     }
-
     return teamList;
 }
 
-std::vector<std::unique_ptr<Score>> Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const
+auto Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const -> std::vector<std::unique_ptr<Score>>
 {
     jni::frame f;
 
-    std::vector<std::unique_ptr<Score>> scoreList;
+    std::vector<std::unique_ptr<Score>> scoreList{};
 
-    maps::ScoreObjective objParam(objective->GetInstance());
+    maps::ScoreObjective objParam{ jobject(maps::ScoreObjective(objective->GetInstance(), true)) };
     maps::Collection collection = maps::Scoreboard(this->instance).getSortedScores.call(objParam);
-    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
+    std::vector<maps::Object> vec = maps::Collection(collection, true).toArray.call().to_vector();
     for (maps::Object& obj : vec)
     {
-        scoreList.push_back(std::make_unique<Score>(jni::make_global(obj)));
+        scoreList.push_back(std::make_unique<Score>(jobject(maps::Score(obj, true))));
     }
 
     return scoreList;
 }
 
-void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const 
+auto Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const -> void
 {
     jni::frame f;
 
-    maps::ScorePlayerTeam teamParam(team->GetInstance());
+    maps::ScorePlayerTeam teamParam{ jobject(maps::ScorePlayerTeam(team->GetInstance(), true)) };
     maps::Scoreboard(this->instance).removeTeam.call(teamParam);
 }
 
-void Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const
+auto Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const -> void
 {
     jni::frame f;
 
-    maps::ScorePlayerTeam teamParam(team->GetInstance());
+    maps::ScorePlayerTeam teamParam{ jobject(maps::ScorePlayerTeam(team->GetInstance(), true)) };
     maps::Scoreboard(this->instance).removePlayerFromTeam.call(JavaUtil::StringToJString(playerName), teamParam);
 }
 
-void Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const
+auto Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const -> void
 {
     jni::frame f;
 
-    maps::ScoreObjective objParam(objective ? objective->GetInstance() : nullptr);
+    maps::ScoreObjective objParam{ jobject(objective ? maps::ScoreObjective(objective->GetInstance(), true) : nullptr) };
     maps::Scoreboard(this->instance).setObjectiveInDisplaySlot.call(static_cast<jint>(slot), objParam);
 }

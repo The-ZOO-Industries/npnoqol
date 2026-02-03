@@ -9,12 +9,5 @@ public:
 
 	virtual ~List() override;
 
-	[[nodiscard]] jobject Get(const I32 index) const;
+	[[nodiscard]] jobject Get(const jint index) const;
 };
-
-namespace maps
-{
-	BEGIN_KLASS_DEF_EX(List, "java/util/List", Collection)
-        jni::method<Object, "get", jni::NOT_STATIC, jint> get{ *this };
-    END_KLASS_DEF()
-}

@@ -30,12 +30,12 @@ std::string EntityPlayer::GetCustomNameTag() const
 {
 	jni::frame f;
 
-	return JavaUtil::JStringToString(static_cast<jstring>(maps::EntityPlayer(this->instance).getCustomNameTag.call()));
+	return JavaUtil::JStringToString((jstring)jobject(maps::EntityPlayer(this->instance).getCustomNameTag.call()));
 }
 
 std::unique_ptr<GameProfile> EntityPlayer::GetGameProfile() const
 {
 	jni::frame f;
 
-	return std::make_unique<GameProfile>(jni::make_global(maps::EntityPlayer(this->instance).getGameProfile.call()));
+	return std::make_unique<GameProfile>(jobject(maps::EntityPlayerSP(maps::EntityPlayer(this->instance).getGameProfile.call(), true)));
 }

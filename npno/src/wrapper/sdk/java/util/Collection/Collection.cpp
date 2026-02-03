@@ -15,5 +15,5 @@ jint Collection::Size() const
 
 jobjectArray Collection::ToArray() const 
 {
-    return static_cast<jobjectArray>(maps::Collection(this->instance).toArray.call());
+    return (jobjectArray)jobject(maps::Collection(this->instance).toArray.call());
 }

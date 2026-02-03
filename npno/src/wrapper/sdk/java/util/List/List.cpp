@@ -10,5 +10,7 @@ List::~List() = default;
 
 jobject List::Get(const jint index) const
 {
-	return maps::List(this->instance).get.call(index);
+    jni::frame f;
+
+    return jobject(maps::List(this->instance).get.call(index));
 }

@@ -10,10 +10,3 @@ public:
 
 	virtual ~ChatComponentText() override;
 };
-
-namespace maps
-{
-	BEGIN_KLASS_DEF_EX(ChatComponentText, "net/minecraft/util/ChatComponentText", IChatComponent)
-        jni::constructor<String> constructor{ *this };
-    END_KLASS_DEF()
-}

@@ -11,7 +11,11 @@ ChatComponentText::ChatComponentText(const std::string& text)
 {
     jni::frame f;
 
-    this->instance = Jvm::env->NewGlobalRef(static_cast<jobject>(maps::ChatComponentText::new_object(&maps::ChatComponentText::constructor, JavaUtil::StringToJString(JavaUtil::FixString(text)))));
+    maps::String jTextStr((jstring)JavaUtil::StringToJString(JavaUtil::FixString(text)));
+
+    maps::ChatComponentText newObj = maps::ChatComponentText::new_object(&maps::ChatComponentText_members::constructor, jTextStr);
+
+    this->instance = Jvm::env->NewGlobalRef(jobject(newObj));
 }
 
 ChatComponentText::~ChatComponentText() = default;

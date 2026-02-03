@@ -15,11 +15,3 @@ public:
 
 	void SendChatMessage(const std::string& message) const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF_EX(EntityPlayerSP, "net/minecraft/client/entity/EntityPlayerSP", EntityPlayer)
-        jni::field<NetHandlerPlayClient, "sendQueue"> sendQueue{ *this };
-        jni::method<void, "sendChatMessage", jni::NOT_STATIC, String> sendChatMessage{ *this };
-    END_KLASS_DEF()
-}

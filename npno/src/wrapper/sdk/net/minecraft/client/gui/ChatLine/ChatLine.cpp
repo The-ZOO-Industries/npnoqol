@@ -17,12 +17,13 @@ std::unique_ptr<IChatComponent> ChatLine::GetLineString() const
 {
     jni::frame f;
 
-    return std::make_unique<IChatComponent>(jni::make_global(maps::ChatLine(this->instance).lineString.get()));
+    return std::make_unique<IChatComponent>(jobject(maps::IChatComponent(maps::ChatLine(this->instance).lineString.get(), true)));
 }
 
 void ChatLine::SetLineString(const std::unique_ptr<IChatComponent>& newLine)
 {
     jni::frame f;
-    
-    maps::ChatLine(this->instance).lineString.set(newLine->GetInstance());
+
+    maps::IChatComponent componentParam(newLine->GetInstance());
+    maps::ChatLine(this->instance).lineString.set(componentParam);
 }

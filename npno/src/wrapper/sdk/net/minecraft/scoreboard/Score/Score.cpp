@@ -17,5 +17,5 @@ std::string Score::GetPlayerName() const
 {
 	jni::frame f;
 
-	return JavaUtil::JStringToString(static_cast<jstring>(maps::Score(this->instance).getPlayerName.call()));
+	return JavaUtil::JStringToString((jstring)jobject(maps::Score(this->instance).getPlayerName.call()));
 }

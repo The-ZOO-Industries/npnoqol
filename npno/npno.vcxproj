@@ -27,6 +27,7 @@
     <ClInclude Include="ext\jni\jni_md.h" />
     <ClInclude Include="ext\jni\jvmti.h" />
     <ClInclude Include="ext\jni\jvmticmlr.h" />
+    <ClInclude Include="ext\meta_jni\meta_jni.hpp" />
     <ClInclude Include="ext\nlohmann\json.hpp" />
     <ClInclude Include="ext\nlohmann\json_fwd.hpp" />
     <ClInclude Include="ext\npno\Type.hpp" />
@@ -50,7 +51,10 @@
     <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp" />
     <ClInclude Include="src\util\Base64\Base64.hpp" />
     <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp" />
+    <ClInclude Include="src\util\Config\AutoGGConfig.hpp" />
+    <ClInclude Include="src\util\Config\BlacklistedLinesConfig.hpp" />
     <ClInclude Include="src\util\Config\Config.hpp" />
+    <ClInclude Include="src\util\Config\NickSkinsConfig.hpp" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp" />
     <ClInclude Include="src\util\HypixelRank\HypixelRank.hpp" />
@@ -59,6 +63,7 @@
     <ClInclude Include="src\wrapper\JavaClass\JavaClass.h" />
     <ClInclude Include="src\wrapper\JavaUtil\JavaUtil.h" />
     <ClInclude Include="src\wrapper\Jvm\Jvm.h" />
+    <ClInclude Include="src\wrapper\mappings.hpp" />
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.h" />
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.h" />
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h" />

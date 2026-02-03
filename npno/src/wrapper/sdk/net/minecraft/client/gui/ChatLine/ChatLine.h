@@ -17,11 +17,3 @@ public:
 
     void SetLineString(const std::unique_ptr<IChatComponent>& newLine);
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(ChatLine, "net/minecraft/client/gui/ChatLine")
-        jni::field<jint, "chatLineID"> chatLineID{ *this };
-        jni::field<IChatComponent, "lineString"> lineString{ *this };
-    END_KLASS_DEF()
-}

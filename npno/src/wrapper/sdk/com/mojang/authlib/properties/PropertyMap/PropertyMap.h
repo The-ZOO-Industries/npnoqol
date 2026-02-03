@@ -3,6 +3,7 @@
 #include "../../src/wrapper/JavaClass/JavaClass.h"
 
 #include "../../src/wrapper/sdk/com/mojang/authlib/properties/Property/Property.h"
+#include "../../src/wrapper/sdk/java/util/List/List.h"
 
 class PropertyMap final : public JavaClass
 {
@@ -13,10 +14,3 @@ public:
 
     [[nodiscard]] std::vector<std::unique_ptr<Property>> GetValues() const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(PropertyMap, "com/mojang/authlib/properties/PropertyMap")
-        jni::method<Collection, "values"> values{ *this };
-    END_KLASS_DEF()
-}

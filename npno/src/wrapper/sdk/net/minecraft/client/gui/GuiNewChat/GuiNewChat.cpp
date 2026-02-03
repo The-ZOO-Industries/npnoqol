@@ -1,36 +1,39 @@
 #include "GuiNewChat.h"
 
 GuiNewChat::GuiNewChat(const jobject instance)
-	: JavaClass(instance)
+    : JavaClass(instance)
 {
-
 }
 
 GuiNewChat::~GuiNewChat() = default;
 
-std::vector<std::unique_ptr<ChatLine>> GuiNewChat::GetChatLines() const
+auto GuiNewChat::GetChatLines() const -> std::vector<std::unique_ptr<ChatLine>>
 {
-	jni::frame f;
-	
-	std::vector<std::unique_ptr<ChatLine>> chat;
+    jni::frame f;
 
-	maps::List lines = maps::GuiNewChat(this->instance).chatLines.get();
-	std::vector<maps::Object> vec = lines.toArray().to_vector();
+    std::vector<std::unique_ptr<ChatLine>> chat{};
 
-	for (maps::Object& obj : vec)
-	{
-		chat.push_back(std::make_unique<ChatLine>(jni::make_global(obj)));
-	}
+    maps::List lines = maps::GuiNewChat(this->instance).chatLines.get();
+    std::vector<maps::Object> vec = lines.toArray().to_vector();
 
-	return chat;
+    for (maps::Object& obj : vec)
+    {
+        chat.push_back(
+            std::make_unique<ChatLine>(
+                jobject(maps::ChatLine(obj, true))
+            )
+        );
+    }
+
+    return chat;
 }
 
-void GuiNewChat::RefreshChat() const
+auto GuiNewChat::RefreshChat() const -> void
 {
-	maps::GuiNewChat(this->instance).refreshChat.call();
+    maps::GuiNewChat(this->instance).refreshChat.call();
 }
 
-void GuiNewChat::DeleteChatLine(const I32 id) const
+auto GuiNewChat::DeleteChatLine(const I32 id) const -> void
 {
-	maps::GuiNewChat(this->instance).deleteChatLine.call(static_cast<jint>(id));
+    maps::GuiNewChat(this->instance).deleteChatLine.call(jint{ id });
 }

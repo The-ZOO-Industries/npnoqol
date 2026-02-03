@@ -8,9 +8,9 @@ GuiPlayerTabOverlay::GuiPlayerTabOverlay(const jobject instance)
 
 GuiPlayerTabOverlay::~GuiPlayerTabOverlay() = default;
 
-std::string GuiPlayerTabOverlay::GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const 
+auto GuiPlayerTabOverlay::GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const -> std::string
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::GuiPlayerTabOverlay(this->instance).getPlayerName.call(infoParam(playerInfo->GetInstance()));
+    return JavaUtil::JStringToString(static_cast<jstring>(jobject(maps::GuiPlayerTabOverlay(this->instance).getPlayerName.call((playerInfo->GetInstance())))));
 }

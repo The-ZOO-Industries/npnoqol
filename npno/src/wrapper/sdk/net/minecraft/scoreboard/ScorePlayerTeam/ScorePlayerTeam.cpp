@@ -12,21 +12,21 @@ std::string ScorePlayerTeam::GetTeamName() const
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getTeamName.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getTeamName.call()));
 }
 
 std::string ScorePlayerTeam::GetNamePrefix() const 
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getColorPrefix.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getColorPrefix.call()));
 }
 
 std::string ScorePlayerTeam::GetNameSuffix() const 
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getColorSuffix.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getColorSuffix.call()));
 }
 
 std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const

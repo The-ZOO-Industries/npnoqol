@@ -17,12 +17,3 @@ public:
 
 	void SetDisplayName(const std::unique_ptr<IChatComponent>& newName);
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(NetworkPlayerInfo, "net/minecraft/client/network/NetworkPlayerInfo")
-        jni::method<GameProfile, "getGameProfile"> getGameProfile{ *this };
-        jni::method<IChatComponent, "getDisplayName"> getDisplayName{ *this };
-        jni::method<void, "setDisplayName", jni::NOT_STATIC, IChatComponent> setDisplayName{ *this };
-    END_KLASS_DEF()
-}

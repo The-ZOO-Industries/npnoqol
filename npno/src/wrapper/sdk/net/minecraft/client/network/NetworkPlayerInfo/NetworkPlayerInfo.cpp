@@ -1,31 +1,31 @@
 #include "NetworkPlayerInfo.h"
 
-NetworkPlayerInfo::NetworkPlayerInfo(const jobject instance) 
-    : JavaClass(instance) 
+NetworkPlayerInfo::NetworkPlayerInfo(const jobject instance)
+    : JavaClass(instance)
 {
 
 }
 
 NetworkPlayerInfo::~NetworkPlayerInfo() = default;
 
-std::unique_ptr<GameProfile> NetworkPlayerInfo::GetGameProfile() const 
+auto NetworkPlayerInfo::GetGameProfile() const -> std::unique_ptr<GameProfile>
 {
     jni::frame f;
 
-    return std::make_unique<GameProfile>(jni::make_global(maps::NetworkPlayerInfo(this->instance).getGameProfile.call()));
+    return std::make_unique<GameProfile>(jobject(maps::GameProfile(maps::NetworkPlayerInfo(this->instance).getGameProfile.call(), true)));
 }
 
-std::unique_ptr<IChatComponent> NetworkPlayerInfo::GetDisplayName() const 
+auto NetworkPlayerInfo::GetDisplayName() const -> std::unique_ptr<IChatComponent>
 {
     jni::frame f;
 
-    return std::make_unique<IChatComponent>(jni::make_global(maps::NetworkPlayerInfo(this->instance).getDisplayName.call()));
+    return std::make_unique<IChatComponent>(jobject(maps::IChatComponent(maps::NetworkPlayerInfo(this->instance).getDisplayName.call(), true)));
 }
 
-void NetworkPlayerInfo::SetDisplayName(const std::unique_ptr<IChatComponent>& newName)
+auto NetworkPlayerInfo::SetDisplayName(const std::unique_ptr<IChatComponent>& newName) -> void
 {
     jni::frame f;
-    
-    maps::IChatComponent nameParam(newName->GetInstance());
+
+    maps::IChatComponent nameParam{ jobject(maps::IChatComponent(newName->GetInstance(), true)) };
     maps::NetworkPlayerInfo(this->instance).setDisplayName.call(nameParam);
 }

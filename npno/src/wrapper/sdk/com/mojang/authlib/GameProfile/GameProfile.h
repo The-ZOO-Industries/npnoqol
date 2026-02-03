@@ -15,11 +15,3 @@ public:
 
 	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
 };
-
-namespace maps
-{
-	BEGIN_KLASS_DEF(GameProfile, "com/mojang/authlib/GameProfile")
-        jni::method<String, "getName"> getName{ *this };
-        jni::method<PropertyMap, "getProperties"> getProperties{ *this };
-    END_KLASS_DEF()
-}

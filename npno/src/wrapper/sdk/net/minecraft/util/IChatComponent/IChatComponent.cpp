@@ -12,12 +12,12 @@ std::string IChatComponent::GetFormattedText() const
 {
     jni::frame f;
 
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::IChatComponent(this->instance).getFormattedText.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::IChatComponent(this->instance).getFormattedText.call()));
 }
 
 std::string IChatComponent::GetUnformattedText() const
 {
     jni::frame f;
     
-    return JavaUtil::JStringToString(static_cast<jstring>(maps::IChatComponent(this->instance).getUnformattedText.call()));
+    return JavaUtil::JStringToString((jstring)jobject(maps::IChatComponent(this->instance).getUnformattedText.call()));
 }

@@ -36,9 +36,9 @@ auto NickManager::SkinDenicker() -> void
 
         for (const std::unique_ptr<Property>& property : profile->GetProperties()->GetValues())
         {
-            if (JavaUtil::JStringToString(property->GetName()) == "textures")
+            if (property->GetName() == "textures")
             {
-                const std::string encoded{ JavaUtil::JStringToString(property->GetValue()) };
+                const std::string encoded{ property->GetValue() };
                 const std::string decoded{ Base64::Decode(encoded) };
 
                 try

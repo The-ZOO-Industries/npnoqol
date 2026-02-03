@@ -20,14 +20,3 @@ public:
 
 	[[nodiscard]] std::unique_ptr<GameProfile> GetGameProfile() const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF_EX(EntityPlayer, "net/minecraft/entity/player/EntityPlayer", EntityLivingBase)
-        jni::method<jboolean, "isSpectator"> isSpectator{ *this };
-        jni::method<jboolean, "isBlocking"> isBlocking{ *this };
-        jni::method<jboolean, "canAttackPlayer", jni::NOT_STATIC, EntityPlayer> canAttackPlayer{ *this };
-        jni::method<String, "getCustomNameTag"> getCustomNameTag{ *this };
-        jni::method<GameProfile, "getGameProfile"> getGameProfile{ *this };
-    END_KLASS_DEF()
-}

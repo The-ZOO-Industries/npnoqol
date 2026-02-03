@@ -8,16 +8,17 @@ EntityPlayerSP::EntityPlayerSP(const jobject instance)
 
 EntityPlayerSP::~EntityPlayerSP() = default;
 
-std::unique_ptr<NetHandlerPlayClient> EntityPlayerSP::GetSendQueue() const 
+std::unique_ptr<NetHandlerPlayClient> EntityPlayerSP::GetSendQueue() const
 {
     jni::frame f;
 
-    return std::make_unique<NetHandlerPlayClient>(jni::make_global(maps::EntityPlayerSP(this->instance).sendQueue.get()));
+    return std::make_unique<NetHandlerPlayClient>(jobject(maps::NetHandlerPlayClient(maps::EntityPlayerSP(this->instance).sendQueue.get(), true)));
 }
 
 void EntityPlayerSP::SendChatMessage(const std::string& message) const
 {
     jni::frame f;
 
-    maps::EntityPlayerSP(this->instance).sendChatMessage.call(JavaUtil::StringToJString(JavaUtil::FixString(message)));
+    maps::String jmsg((jstring)JavaUtil::StringToJString(JavaUtil::FixString(message)));
+    maps::EntityPlayerSP(this->instance).sendChatMessage.call(jmsg);
 }

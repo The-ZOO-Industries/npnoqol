@@ -8,16 +8,16 @@ WorldClient::WorldClient(const jobject instance)
 
 WorldClient::~WorldClient() = default;
 
-std::unique_ptr<Scoreboard> WorldClient::GetScoreboard() const 
+auto WorldClient::GetScoreboard() const -> std::unique_ptr<Scoreboard>
 {
     jni::frame f;
 
-    return std::make_unique<Scoreboard>(jni::make_global(maps::WorldClient(this->instance).getScoreboard.call()));
+    return std::make_unique<Scoreboard>(jobject(maps::Scoreboard(maps::WorldClient(this->instance).getScoreboard.call(), true)));
 }
 
-std::unique_ptr<EntityPlayer> WorldClient::GetPlayerEntityByName(const std::string& name) const
+auto WorldClient::GetPlayerEntityByName(const std::string& name) const -> std::unique_ptr<EntityPlayer>
 {
     jni::frame f;
 
-    return std::make_unique<EntityPlayer>(jni::make_global(maps::WorldClient(this->instance).getPlayerEntityByName.call(JavaUtil::StringToJString(name))));
+    return std::make_unique<EntityPlayer>(jobject(maps::EntityPlayer(maps::WorldClient(this->instance).getPlayerEntityByName.call(JavaUtil::StringToJString(name)), true)));
 }

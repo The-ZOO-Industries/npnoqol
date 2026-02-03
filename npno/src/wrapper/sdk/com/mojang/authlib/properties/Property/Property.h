@@ -12,11 +12,3 @@ public:
     [[nodiscard]] std::string GetValue() const;
     [[nodiscard]] std::string GetName() const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(Property, "com/mojang/authlib/properties/Property")
-        jni::method<String, "getValue"> getValue{ *this };
-        jni::method<String, "getName"> getName{ *this };
-    END_KLASS_DEF()
-}

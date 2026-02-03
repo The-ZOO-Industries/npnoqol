@@ -14,12 +14,3 @@ public:
 
 	[[nodiscard]] std::string GetEffectName() const;
 };
-
-namespace maps
-{
-    BEGIN_KLASS_DEF(PotionEffect, "net/minecraft/potion/PotionEffect")
-        jni::method<jint, "getDuration"> getDuration{ *this };
-        jni::method<jint, "getAmplifier"> getAmplifier{ *this };
-        jni::method<String, "getEffectName"> getEffectName{ *this };
-    END_KLASS_DEF()
-}
