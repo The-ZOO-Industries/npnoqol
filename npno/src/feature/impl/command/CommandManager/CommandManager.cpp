@@ -13,7 +13,10 @@ auto CommandManager::Update() const -> void
 {
 	for (const std::unique_ptr<Command>& command : this->commands)
 	{
-		command->Update();
+		if (command->SanityCheck())
+		{
+			command->Update();
+		}
 	}
 }
 
