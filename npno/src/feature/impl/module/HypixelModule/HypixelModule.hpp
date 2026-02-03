@@ -11,8 +11,6 @@ public:
 
     auto ClearCache() -> void override;
 
-    auto SanityCheck() const -> bool override;
-
     auto GetGamemode() const -> Hypixel::Gamemode;
 
 protected:

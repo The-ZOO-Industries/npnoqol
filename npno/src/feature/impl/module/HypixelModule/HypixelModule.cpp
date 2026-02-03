@@ -9,16 +9,6 @@ HypixelModule::HypixelModule(const bool enable, const Hypixel::Gamemode gamemode
 
 HypixelModule::~HypixelModule() = default;
 
-auto HypixelModule::SanityCheck() const -> bool
-{
-    return
-        mc->GetThePlayer()->GetInstance() and
-        mc->GetTheWorld()->GetInstance() and
-        mc->GetIngameGUI()->GetInstance() and
-        mc->GetTheWorld()->GetScoreboard()->GetInstance() and
-        mc->GetThePlayer()->GetSendQueue()->GetInstance();
-}
-
 auto HypixelModule::GetGamemode() const -> Hypixel::Gamemode
 {
     return this->gamemode;

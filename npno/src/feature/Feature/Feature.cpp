@@ -24,7 +24,11 @@ Feature::~Feature()
 
 auto Feature::SanityCheck() const -> bool
 {
-	return mc->GetTheWorld()->GetInstance() and mc->GetThePlayer()->GetInstance();
+	return mc->GetTheWorld()->GetInstance() and mc->GetThePlayer()->GetInstance() 
+		and mc->GetIngameGUI()->GetInstance() and mc->GetIngameGUI()->GetPersistantChatGUI()->GetInstance()
+		and mc->GetIngameGUI()->GetPersistantChatGUI()->GetChatLines().size()
+		and mc->GetTheWorld()->GetScoreboard()->GetInstance()
+		and mc->GetThePlayer()->GetSendQueue()->GetInstance();
 }
 
 auto Feature::IsBot(const std::unique_ptr<EntityPlayer>& player) const -> bool
