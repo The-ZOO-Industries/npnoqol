@@ -3,7 +3,7 @@
 AutoGG::AutoGG()
     : Module{ true }
 {
-    this->autoGGLines = this->ToRegex(Config::GetAutoGGLines());
+    this->autoGGLines = Config::GetAutoGGLines();
 }
 
 AutoGG::~AutoGG() = default;

@@ -1,5 +1,9 @@
 #include "Config.hpp"
 
+#include "AutoGGConfig.hpp"
+#include "BlacklistedLinesConfig.hpp"
+#include "NickSkinsConfig.hpp"
+
 auto Config::GetHypixelAPIKey() -> std::string
 {
 	std::ifstream file{"config.json"};
@@ -66,21 +70,12 @@ auto Config::SetHypixelAPIKey(const std::string& apiKey) -> void
 	outFile << config.dump(4);
 }
 
-auto Config::GetAutoGGLines() -> std::vector<std::string>
+auto Config::GetAutoGGLines() -> std::vector<std::regex>
 {
-	std::ifstream file{"autogg.json"};
-	if (!file.is_open())
-	{
-		std::ofstream outFile{"autogg.json"};
-		nlohmann::json defaultConfig = nlohmann::json::array();
-		outFile << defaultConfig.dump(4);
-		return {};
-	}
-
 	try
 	{
-		const nlohmann::json json{nlohmann::json::parse(file)};
-		return json.get<std::vector<std::string>>();
+		const nlohmann::json json{nlohmann::json::parse(AUTO_GG_JSON)};
+		return json.get<std::vector<std::regex>>();
 	}
 	catch (...)
 	{
@@ -90,18 +85,9 @@ auto Config::GetAutoGGLines() -> std::vector<std::string>
 
 auto Config::GetBlackListedLines() -> std::vector<std::string>
 {
-	std::ifstream file{"blacklistes_lines.json"};
-	if (!file.is_open())
-	{
-		std::ofstream outFile{"blacklistes_lines.json"};
-		nlohmann::json defaultConfig = nlohmann::json::array();
-		outFile << defaultConfig.dump(4);
-		return {};
-	}
-
 	try
 	{
-		const nlohmann::json json{nlohmann::json::parse(file)};
+		const nlohmann::json json{nlohmann::json::parse(BLACKLISTED_LINES_JSON)};
 		return json.get<std::vector<std::string>>();
 	}
 	catch (...)
@@ -112,18 +98,9 @@ auto Config::GetBlackListedLines() -> std::vector<std::string>
 
 auto Config::GetNickSkins() -> std::vector<std::string>
 {
-	std::ifstream file{"nick_skins.json"};
-	if (!file.is_open())
-	{
-		std::ofstream outFile{"nick_skins.json"};
-		nlohmann::json defaultConfig = nlohmann::json::array();
-		outFile << defaultConfig.dump(4);
-		return {};
-	}
-
 	try
 	{
-		const nlohmann::json json{nlohmann::json::parse(file)};
+		const nlohmann::json json{nlohmann::json::parse(NICK_SKINS_JSON)};
 		return json.get<std::vector<std::string>>();
 	}
 	catch (...)
