@@ -1,65 +1,41 @@
 #include "EntityLivingBase.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 EntityLivingBase::EntityLivingBase(const jobject instance)
-	: Entity("net/minecraft/entity/EntityLivingBase", instance)
+	: Entity(instance)
 {
-	this->Init();
-}
-
-EntityLivingBase::EntityLivingBase(const char* name, const jobject instance)
-	: Entity(name, instance)
-{
-	this->Init();
+	
 }
 
 EntityLivingBase::~EntityLivingBase() = default;
 
-void EntityLivingBase::Init()
-{
-	std::call_once(oflag, [this]
-		{
-			getHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getHealth", "()F");
-			getMaxHealthMethodID = Jvm::env->GetMethodID(this->javaClass, "getMaxHealth", "()F");
-			getAbsorptionAmountMethodID = Jvm::env->GetMethodID(this->javaClass, "getAbsorptionAmount", "()F");
-			getActivePotionEffectsMethodID = Jvm::env->GetMethodID(this->javaClass, "getActivePotionEffects", "()Ljava/util/Collection;");
-		});
-}
-
 float EntityLivingBase::GetHealth() const
 {
-	return static_cast<float>(Jvm::env->CallFloatMethod(this->instance, getHealthMethodID));
+	return static_cast<float>(maps::EntityLivingBase(this->instance).getHealth.call());
 }
 
 float EntityLivingBase::GetMaxHealth() const
 {
-	return static_cast<float>(Jvm::env->CallFloatMethod(this->instance, getMaxHealthMethodID));
+	return static_cast<float>(maps::EntityLivingBase(this->instance).getMaxHealth.call());
 }
 
 float EntityLivingBase::GetAbsorptionAmount() const
 {
-	return static_cast<float>(Jvm::env->CallFloatMethod(this->instance, getAbsorptionAmountMethodID));
+	return static_cast<float>(maps::EntityLivingBase(this->instance).getAbsorptionAmount.call());
 }
 
 std::vector<std::unique_ptr<PotionEffect>> EntityLivingBase::GetActivePotionEffects() const
 {
+	jni::frame f;
+
 	std::vector<std::unique_ptr<PotionEffect>> potionList;
 
-	const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getActivePotionEffectsMethodID);
+	maps::Collection collection = maps::EntityLivingBase(this->instance).getActivePotionEffects.call();
+	std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-	const std::unique_ptr<Collection> collection = std::make_unique<Collection>(collectionLocal);
-	const jobjectArray arrayLocal = static_cast<jobjectArray>(collection->ToArray());
-
-	for (jint i = 0; i < collection->Size(); ++i)
+	for (maps::Object& obj : vec)
 	{
-		const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
-		potionList.push_back(std::make_unique<PotionEffect>(elementLocal));
-		Jvm::env->DeleteLocalRef(elementLocal);
+		potionList.push_back(std::make_unique<PotionEffect>(jni::make_global(obj)));
 	}
-
-	Jvm::env->DeleteLocalRef(arrayLocal);
-	Jvm::env->DeleteLocalRef(collectionLocal);
 
 	return potionList;
 }

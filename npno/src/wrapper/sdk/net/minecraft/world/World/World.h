@@ -16,3 +16,11 @@ public:
 
 	[[nodiscard]] virtual std::vector<std::unique_ptr<EntityPlayer>> GetPlayerEntities() const final;
 };
+
+namespace maps
+{
+	BEGIN_KLASS_DEF(World, "net/minecraft/world/storage/WorldInfo")
+        jni::field<WorldInfo, "worldInfo"> worldInfo{ *this };
+        jni::field<List, "playerEntities"> playerEntities{ *this };
+    END_KLASS_DEF()
+}

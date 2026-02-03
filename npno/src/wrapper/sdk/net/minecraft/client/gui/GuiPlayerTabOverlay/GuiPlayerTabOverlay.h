@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../src/wrapper/JavaClass/JavaClass.h"
 
 #include "../../src/wrapper/sdk/net/minecraft/client/network/NetworkPlayerInfo/NetworkPlayerInfo.h"
@@ -9,12 +11,12 @@ public:
 
 	virtual ~GuiPlayerTabOverlay() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::string GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getPlayerNameMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(GuiPlayerTabOverlay, "net/minecraft/client/gui/GuiPlayerTabOverlay")
+        jni::method<String, "getPlayerName", jni::NOT_STATIC, NetworkPlayerInfo> getPlayerName{ *this };
+    END_KLASS_DEF()
+}

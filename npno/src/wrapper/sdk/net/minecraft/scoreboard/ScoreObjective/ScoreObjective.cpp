@@ -1,34 +1,30 @@
 #include "ScoreObjective.h"
 
 ScoreObjective::ScoreObjective(const jobject instance)
-	: JavaClass("net/minecraft/scoreboard/ScoreObjective", instance)
+	: JavaClass(instance)
 {
-	this->Init();
+
 }
 
 ScoreObjective::~ScoreObjective() = default;
 
-void ScoreObjective::Init()
-{
-	std::call_once(oflag, [this]
-		{
-			getNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getName", "()Ljava/lang/String;");
-			getDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getDisplayName", "()Ljava/lang/String;");
-			setDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass, "setDisplayName", "(Ljava/lang/String;)V");
-		});
-}
-
 std::string ScoreObjective::GetName() const
 {
-	return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNameMethodID)));
+	jni::frame f;
+
+	return JavaUtil::JStringToString(static_cast<jstring>(maps::ScoreObjective(this->instance).getName.call()));
 }
 
 std::string ScoreObjective::GetDisplayName() const
 {
-	return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getDisplayNameMethodID)));
+	jni::frame f;
+
+	return JavaUtil::JStringToString(static_cast<jstring>(maps::ScoreObjective(this->instance).getDisplayName.call()));
 }
 
 void ScoreObjective::SetDisplayName(const std::string& name) const
 {
-	Jvm::env->CallVoidMethod(this->instance, setDisplayNameMethodID, JavaUtil::StringToJString(name));
+	jni::frame f;
+	
+	maps::ScoreObjective(this->instance).setDisplayName.call(JavaUtil::StringToJString(name));
 }

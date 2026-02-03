@@ -1,51 +1,36 @@
 #include "GuiNewChat.h"
 
-#include "../../src/wrapper/sdk/java/util/List/List.h"
-
 GuiNewChat::GuiNewChat(const jobject instance)
-	: JavaClass("net/minecraft/client/gui/GuiNewChat", instance)
+	: JavaClass(instance)
 {
-	this->Init();
+
 }
 
 GuiNewChat::~GuiNewChat() = default;
 
-void GuiNewChat::Init()
-{
-	std::call_once(oflag, [this]
-		{
-			chatLinesFieldID = Jvm::env->GetFieldID(this->javaClass, "chatLines", "Ljava/util/List;");
-
-			refreshChatMethodID = Jvm::env->GetMethodID(this->javaClass, "refreshChat", "()V");
-			deleteChatLineMethodID = Jvm::env->GetMethodID(this->javaClass, "deleteChatLine", "(I)V");
-		});
-}
-
 std::vector<std::unique_ptr<ChatLine>> GuiNewChat::GetChatLines() const
 {
+	jni::frame f;
+	
 	std::vector<std::unique_ptr<ChatLine>> chat;
 
-	const jobject chatLineLocal = Jvm::env->GetObjectField(this->instance, chatLinesFieldID);
+	maps::List lines = maps::GuiNewChat(this->instance).chatLines.get();
+	std::vector<maps::Object> vec = lines.toArray().to_vector();
 
-	const std::unique_ptr<List> chatLines = std::make_unique<List>(chatLineLocal);
-
-	for (jint i = 0; i < chatLines->Size(); ++i)
+	for (maps::Object& obj : vec)
 	{
-		const jobject lineLocal = chatLines->Get(i);
-		chat.emplace_back(std::make_unique<ChatLine>(lineLocal));
-		Jvm::env->DeleteLocalRef(lineLocal);
+		chat.push_back(std::make_unique<ChatLine>(jni::make_global(obj)));
 	}
 
-	Jvm::env->DeleteLocalRef(chatLineLocal);
 	return chat;
 }
 
 void GuiNewChat::RefreshChat() const
 {
-	Jvm::env->CallVoidMethod(this->instance, refreshChatMethodID);
+	maps::GuiNewChat(this->instance).refreshChat.call();
 }
 
 void GuiNewChat::DeleteChatLine(const I32 id) const
 {
-	Jvm::env->CallVoidMethod(this->instance, deleteChatLineMethodID, id);
+	maps::GuiNewChat(this->instance).deleteChatLine.call(static_cast<jint>(id));
 }

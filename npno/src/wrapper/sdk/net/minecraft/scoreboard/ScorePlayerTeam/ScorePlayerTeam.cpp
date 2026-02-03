@@ -1,71 +1,61 @@
 #include "ScorePlayerTeam.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 ScorePlayerTeam::ScorePlayerTeam(const jobject instance)
-    : JavaClass("net/minecraft/scoreboard/ScorePlayerTeam", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 ScorePlayerTeam::~ScorePlayerTeam() = default;
 
-void ScorePlayerTeam::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            getNamePrefixMethodID = Jvm::env->GetMethodID(this->javaClass, "getColorPrefix", "()Ljava/lang/String;");
-            getNameSuffixMethodID = Jvm::env->GetMethodID(this->javaClass, "getColorSuffix", "()Ljava/lang/String;");
-			getTeamNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeamName", "()Ljava/lang/String;");
-			getMembershipCollectionMethodID = Jvm::env->GetMethodID(this->javaClass, "getMembershipCollection", "()Ljava/util/Collection;");
-            setNamePrefixMethodID = Jvm::env->GetMethodID(this->javaClass, "setNamePrefix", "(Ljava/lang/String;)V");
-            setNameSuffixMethodID = Jvm::env->GetMethodID(this->javaClass, "setNameSuffix", "(Ljava/lang/String;)V");
-        });
-}
-
 std::string ScorePlayerTeam::GetTeamName() const 
 {
-    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getTeamNameMethodID)));
+    jni::frame f;
+
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getTeamName.call()));
 }
 
 std::string ScorePlayerTeam::GetNamePrefix() const 
 {
-    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNamePrefixMethodID)));
+    jni::frame f;
+
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getColorPrefix.call()));
 }
 
 std::string ScorePlayerTeam::GetNameSuffix() const 
 {
-    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getNameSuffixMethodID)));
+    jni::frame f;
+
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::ScorePlayerTeam(this->instance).getColorSuffix.call()));
 }
 
 std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const
 {
+    jni::frame f;
+
     std::vector<std::string> members;
 
-    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getMembershipCollectionMethodID);
+    maps::Collection collection = maps::ScorePlayerTeam(this->instance).getMembershipCollection.call();
+    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-    const std::unique_ptr<Collection> membershipCollection = std::make_unique<Collection>(collectionLocal);
-    const jobjectArray arrayLocal = static_cast<jobjectArray>(membershipCollection->ToArray());
-
-    for (jint i = 0; i < Jvm::env->GetArrayLength(arrayLocal); ++i)
+    for (maps::Object& obj : vec)
     {
-        const jstring elementLocal = static_cast<jstring>(Jvm::env->GetObjectArrayElement(arrayLocal, i));
-        members.push_back(JavaUtil::JStringToString(elementLocal));
-        Jvm::env->DeleteLocalRef(elementLocal);
+        members.push_back(JavaUtil::JStringToString(static_cast<jstring>(static_cast<jobject>(obj))));
     }
-
-    Jvm::env->DeleteLocalRef(arrayLocal);
-    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return members;
 }
 
 void ScorePlayerTeam::SetNamePrefix(const std::string& prefix) const
 {
-    Jvm::env->CallVoidMethod(this->instance, setNamePrefixMethodID, JavaUtil::StringToJString(prefix));
+    jni::frame f;
+
+    maps::ScorePlayerTeam(this->instance).setNamePrefix.call(JavaUtil::StringToJString(prefix));
 }
 
 void ScorePlayerTeam::SetNameSuffix(const std::string& suffix) const
 {
-    Jvm::env->CallVoidMethod(this->instance, setNameSuffixMethodID, JavaUtil::StringToJString(suffix));
+    jni::frame f;
+    
+    maps::ScorePlayerTeam(this->instance).setNameSuffix.call(JavaUtil::StringToJString(suffix));
 }

@@ -12,14 +12,14 @@ public:
 
 	virtual ~WorldClient() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::unique_ptr<Scoreboard> GetScoreboard() const;
 	[[nodiscard]] std::unique_ptr<EntityPlayer> GetPlayerEntityByName(const std::string& name) const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getScoreboardMethodID{ nullptr };
-	inline static jmethodID getPlayerEntityByNameMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF_EX(WorldClient, "net/minecraft/client/multiplayer/WorldClient", World)
+        jni::method<Scoreboard, "getScoreboard"> getScoreboard{ *this };
+        jni::method<EntityPlayer, "getPlayerEntityByName", jni::NOT_STATIC, String> getPlayerEntityByName{ *this };
+    END_KLASS_DEF()
+}

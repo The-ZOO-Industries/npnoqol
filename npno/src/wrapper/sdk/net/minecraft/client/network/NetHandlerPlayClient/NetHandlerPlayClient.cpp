@@ -1,41 +1,25 @@
 #include "NetHandlerPlayClient.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 NetHandlerPlayClient::NetHandlerPlayClient(const jobject instance) 
-    : JavaClass("net/minecraft/client/network/NetHandlerPlayClient", instance) 
+    : JavaClass(instance) 
 {
-    this->Init();
+    
 }
 
 NetHandlerPlayClient::~NetHandlerPlayClient() = default;
 
-void NetHandlerPlayClient::Init()
-{
-    std::call_once(oflag, [this] 
-        {
-            getPlayerInfoMapMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerInfoMap", "()Ljava/util/Collection;");
-        });
-}
-
 std::vector<std::unique_ptr<NetworkPlayerInfo>> NetHandlerPlayClient::GetPlayerInfoMap() const 
 {
+    jni::frame f;
     std::vector<std::unique_ptr<NetworkPlayerInfo>> playerList;
 
-    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getPlayerInfoMapMethodID);
+    maps::Collection collection = maps::NetHandlerPlayClient(this->instance).getPlayerInfoMap.call();
+    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-    const std::unique_ptr<Collection> getPlayer = std::make_unique<Collection>(collectionLocal);
-    const jobjectArray arrayLocal = static_cast<jobjectArray>(getPlayer->ToArray());
-
-    for (jint i = 0; i < getPlayer->Size(); ++i)
+    for (maps::Object& obj : vec)
     {
-        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
-        playerList.push_back(std::make_unique<NetworkPlayerInfo>(elementLocal));
-        Jvm::env->DeleteLocalRef(elementLocal);
+        playerList.push_back(std::make_unique<NetworkPlayerInfo>(jni::make_global(obj)));
     }
-
-    Jvm::env->DeleteLocalRef(arrayLocal);
-    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return playerList;
 }

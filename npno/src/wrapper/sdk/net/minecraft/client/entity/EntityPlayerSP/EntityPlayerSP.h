@@ -11,16 +11,15 @@ public:
 
 	virtual ~EntityPlayerSP() override;
 
-	virtual void Init() override;
-
-	std::unique_ptr<NetHandlerPlayClient> GetSendQueue() const;
+	[[nodiscard]] std::unique_ptr<NetHandlerPlayClient> GetSendQueue() const;
 
 	void SendChatMessage(const std::string& message) const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jfieldID sendQueueFieldID{ nullptr };
-
-	inline static jmethodID sendChatMessageMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF_EX(EntityPlayerSP, "net/minecraft/client/entity/EntityPlayerSP", EntityPlayer)
+        jni::field<NetHandlerPlayClient, "sendQueue"> sendQueue{ *this };
+        jni::method<void, "sendChatMessage", jni::NOT_STATIC, String> sendChatMessage{ *this };
+    END_KLASS_DEF()
+}

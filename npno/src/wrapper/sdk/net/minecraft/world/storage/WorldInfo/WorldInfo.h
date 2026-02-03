@@ -7,21 +7,19 @@ class WorldInfo : public JavaClass
 public:
 	explicit WorldInfo(const jobject instance);
 
-	WorldInfo(const char* name, const jobject instance);
-
 	virtual ~WorldInfo() override;
-
-	virtual void Init() override;
 
     [[nodiscard]] I64 GetRandomSeed() const;
     [[nodiscard]] I64 GetWorldTime() const;
 
     [[nodiscard]] std::string GetWorldName() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jfieldID randomSeedFieldID{ nullptr };
-    inline static jfieldID worldTimeFieldID{ nullptr };
-    inline static jfieldID worldNameFieldID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(WorldInfo, "net/minecraft/world/storage/WorldInfo")
+        jni::field<jlong, "randomSeed"> randomSeed{ *this };
+        jni::field<jlong, "worldTime"> worldTime{ *this };
+        jni::field<jstring, "worldName"> worldName{ *this };
+    END_KLASS_DEF()
+}

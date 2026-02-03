@@ -13,3 +13,11 @@ public:
 
     [[nodiscard]] jstring ToString() const;
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(UUID, "java/util/UUID")
+        jni::method<jint, "version"> version{ *this };
+        jni::method<String, "toString"> toString{ *this };
+    END_KLASS_DEF()
+}

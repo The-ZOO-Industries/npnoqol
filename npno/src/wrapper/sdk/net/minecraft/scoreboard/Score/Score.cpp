@@ -1,28 +1,21 @@
 #include "Score.h"
 
 Score::Score(const jobject instance)
-	: JavaClass("net/minecraft/scoreboard/Score", instance)
+	: JavaClass(instance)
 {
-	this->Init();
+
 }
 
 Score::~Score() = default;
 
-void Score::Init()
-{
-	std::call_once(oflag, [this]
-		{
-			getScorePointsMethodID = Jvm::env->GetMethodID(this->javaClass, "getScorePoints", "()I");
-			getPlayerNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayerName", "()Ljava/lang/String;");
-		});
-}
-
 I32 Score::GetScorePoints() const
 {
-	return static_cast<I32>(Jvm::env->CallIntMethod(this->instance, getScorePointsMethodID));
+	return static_cast<I32>(maps::Score(this->instance).getScorePoints.call());
 }
 
 std::string Score::GetPlayerName() const
 {
-	return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getPlayerNameMethodID)));
+	jni::frame f;
+
+	return JavaUtil::JStringToString(static_cast<jstring>(maps::Score(this->instance).getPlayerName.call()));
 }
