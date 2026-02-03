@@ -9,15 +9,15 @@ public:
 
 	virtual ~Score() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] I32 GetScorePoints() const;
 
 	[[nodiscard]] std::string GetPlayerName() const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getScorePointsMethodID{ nullptr };
-	inline static jmethodID getPlayerNameMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(Score, "net/minecraft/scoreboard/Score")
+        jni::method<jint, "getScorePoints"> getScorePoints{ *this };
+        jni::method<String, "getPlayerName"> getPlayerName{ *this };
+    END_KLASS_DEF()
+}

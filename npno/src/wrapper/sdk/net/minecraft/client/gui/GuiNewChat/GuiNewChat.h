@@ -11,18 +11,17 @@ public:
 
 	virtual ~GuiNewChat() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::vector<std::unique_ptr<ChatLine>> GetChatLines() const;
 
 	void RefreshChat() const;
 	void DeleteChatLine(const I32 id) const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jfieldID chatLinesFieldID{ nullptr };
-
-	inline static jmethodID refreshChatMethodID{ nullptr };
-	inline static jmethodID deleteChatLineMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(GuiNewChat, "net/minecraft/client/gui/GuiNewChat")
+        jni::field<List, "chatLines"> chatLines{ *this };
+        jni::method<void, "refreshChat"> refreshChat{ *this };
+        jni::method<void, "deleteChatLine", jni::NOT_STATIC, jint> deleteChatLine{ *this };
+    END_KLASS_DEF()
+}

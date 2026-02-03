@@ -3,10 +3,7 @@
 AutoGG::AutoGG()
     : Module{ true }
 {
-    this->autoGGLines = this->ToRegex(
-    {
-        "1st - "
-    });
+    this->autoGGLines = Config::GetAutoGGLines();
 }
 
 AutoGG::~AutoGG() = default;

@@ -11,12 +11,12 @@ public:
 
 	virtual ~NetHandlerPlayClient() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::vector<std::unique_ptr<NetworkPlayerInfo>> GetPlayerInfoMap() const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getPlayerInfoMapMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(NetHandlerPlayClient, "net/minecraft/client/network/NetHandlerPlayClient")
+        jni::method<Collection, "getPlayerInfoMap"> getPlayerInfoMap{ *this };
+    END_KLASS_DEF()
+}

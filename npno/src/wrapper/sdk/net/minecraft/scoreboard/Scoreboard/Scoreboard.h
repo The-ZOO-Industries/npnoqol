@@ -20,8 +20,6 @@ public:
 		BELOW_NAME
 	};
 
-	virtual void Init() override;
-
 	[[nodiscard]] bool AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const;
 
 	[[nodiscard]] std::unique_ptr<ScorePlayerTeam> GetTeam(const std::string& teamName) const;
@@ -37,18 +35,20 @@ public:
 	void RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const;
 	void RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const;
 	void SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID addPlayerToTeamMethodID{ nullptr };
-	inline static jmethodID getTeamMethodID{ nullptr };
-	inline static jmethodID getPlayersTeamMethodID{ nullptr };
-	inline static jmethodID createTeamMethodID{ nullptr };
-	inline static jmethodID getObjectiveInDisplaySlotMethodID{ nullptr };
-	inline static jmethodID getTeamsMethodID{ nullptr };
-	inline static jmethodID getSortedScoresMethodID{ nullptr };
-	inline static jmethodID removeTeamMethodID{ nullptr };
-	inline static jmethodID removePlayerFromTeamMethodID{ nullptr };
-	inline static jmethodID setObjectiveInDisplaySlotMethodID{ nullptr };
 };
+
+namespace maps
+{
+	BEGIN_KLASS_DEF(Scoreboard, "net/minecraft/scoreboard/Scoreboard")
+        jni::method<jboolean, "addPlayerToTeam", jni::NOT_STATIC, String, String> addPlayerToTeam{ *this };
+        jni::method<ScorePlayerTeam, "getTeam", jni::NOT_STATIC, String> getTeam{ *this };
+        jni::method<ScorePlayerTeam, "getPlayersTeam", jni::NOT_STATIC, String> getPlayersTeam{ *this };
+        jni::method<ScorePlayerTeam, "createTeam", jni::NOT_STATIC, String> createTeam{ *this };
+        jni::method<ScoreObjective, "getObjectiveInDisplaySlot", jni::NOT_STATIC, jint> getObjectiveInDisplaySlot{ *this };
+        jni::method<Collection, "getTeams"> getTeams{ *this };
+        jni::method<Collection, "getSortedScores", jni::NOT_STATIC, ScoreObjective> getSortedScores{ *this };
+        jni::method<void, "removeTeam", jni::NOT_STATIC, ScorePlayerTeam> removeTeam{ *this };
+        jni::method<void, "removePlayerFromTeam", jni::NOT_STATIC, String, ScorePlayerTeam> removePlayerFromTeam{ *this };
+        jni::method<void, "setObjectiveInDisplaySlot", jni::NOT_STATIC, jint, ScoreObjective> setObjectiveInDisplaySlot{ *this };
+    END_KLASS_DEF()
+}

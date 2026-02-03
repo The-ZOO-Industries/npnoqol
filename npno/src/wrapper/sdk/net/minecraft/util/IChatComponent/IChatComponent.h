@@ -6,18 +6,18 @@ class IChatComponent : public JavaClass
 {
 public:
     explicit IChatComponent(const jobject instance);
-    IChatComponent(const char* name, const jobject instance);
 
     virtual ~IChatComponent() override;
 
-    virtual void Init() override;
-
     [[nodiscard]] std::string GetFormattedText() const;
     [[nodiscard]] std::string GetUnformattedText() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jmethodID getFormattedTextMethodID{ nullptr };
-    inline static jmethodID getUnformattedTextMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(IChatComponent, "net/minecraft/util/IChatComponent")
+        jni::method<String, "getFormattedText"> getFormattedText{ *this };
+        jni::method<String, "getUnformattedText"> getUnformattedText{ *this };
+    END_KLASS_DEF()
+
+}

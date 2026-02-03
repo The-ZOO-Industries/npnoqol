@@ -3,13 +3,7 @@
 ChatManager::ChatManager()
     : Module{ true }
 {
-    this->blacklistedLines = this->ToRegex(
-    {
-        "Sending you to",
-        "Slow down! You can only use /tip",
-        "You are sen ding commands too fast! Please slow dowm.",
-        "You tipped"
-	});
+    this->blacklistedLines = this->ToRegex(Config::GetBlackListedLines());
 }
 
 ChatManager::~ChatManager() = default;

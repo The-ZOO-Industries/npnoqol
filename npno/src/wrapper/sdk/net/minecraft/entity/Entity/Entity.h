@@ -9,11 +9,8 @@ class Entity : public JavaClass
 {
 public:
 	explicit Entity(const jobject instance);
-	Entity(const char* name, const jobject instance);
 
 	virtual ~Entity() override;
-
-	virtual void Init() override;
 
 	[[nodiscard]] virtual bool IsSprinting() const final;
 	[[nodiscard]] virtual bool IsSneaking() const final;
@@ -42,31 +39,33 @@ public:
 	[[nodiscard]] virtual std::string GetName() const final;
 
 	virtual void AddChatMessage(const std::unique_ptr<IChatComponent>& chatComponent) const final;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID isSprintingMethodID{ nullptr };
-	inline static jmethodID isSneakingMethodID{ nullptr };
-	inline static jmethodID isInvisibleMethodID{ nullptr };
-	inline static jmethodID isEatingMethodID{ nullptr };
-	inline static jmethodID isRidingMethodID{ nullptr };
-	inline static jmethodID getUniqueIDMethodID{ nullptr };
-	inline static jmethodID getNameMethodID{ nullptr };
-	inline static jmethodID addChatMessageMethodID{ nullptr };
-
-	inline static jfieldID onGroundFieldID{ nullptr };
-	inline static jfieldID rotationYawFieldID{ nullptr };
-	inline static jfieldID rotationPitchFieldID{ nullptr };
-	inline static jfieldID prevRotationYawFieldID{ nullptr };
-	inline static jfieldID prevRotationPitchFieldID{ nullptr };
-	inline static jfieldID posXFieldID{ nullptr };
-	inline static jfieldID posYFieldID{ nullptr };
-	inline static jfieldID posZFieldID{ nullptr };
-	inline static jfieldID lastTickPosXFieldID{ nullptr };
-	inline static jfieldID lastTickPosYFieldID{ nullptr };
-	inline static jfieldID lastTickPosZFieldID{ nullptr };
-	inline static jfieldID motionXFieldID{ nullptr };
-	inline static jfieldID motionYFieldID{ nullptr };
-	inline static jfieldID motionZFieldID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(Entity, "net/minecraft/entity/Entity")
+        jni::method<jboolean, "isSprinting"> isSprinting{ *this };
+        jni::method<jboolean, "isSneaking"> isSneaking{ *this };
+        jni::method<jboolean, "isInvisible"> isInvisible{ *this };
+        jni::method<jboolean, "isEating"> isEating{ *this };
+        jni::method<jboolean, "isRiding"> isRiding{ *this };
+        jni::method<UUID, "getUniqueID"> getUniqueID{ *this };
+        jni::method<String, "getName"> getName{ *this };
+        jni::method<void, "addChatMessage", jni::NOT_STATIC, IChatComponent> addChatMessage{ *this };
+
+        jni::field<jboolean, "onGround"> onGround{ *this };
+        jni::field<jfloat, "rotationYaw"> rotationYaw{ *this };
+        jni::field<jfloat, "rotationPitch"> rotationPitch{ *this };
+        jni::field<jfloat, "prevRotationYaw"> prevRotationYaw{ *this };
+        jni::field<jfloat, "prevRotationPitch"> prevRotationPitch{ *this };
+        jni::field<jdouble, "posX"> posX{ *this };
+        jni::field<jdouble, "posY"> posY{ *this };
+        jni::field<jdouble, "posZ"> posZ{ *this };
+        jni::field<jdouble, "lastTickPosX"> lastTickPosX{ *this };
+        jni::field<jdouble, "lastTickPosY"> lastTickPosY{ *this };
+        jni::field<jdouble, "lastTickPosZ"> lastTickPosZ{ *this };
+        jni::field<jdouble, "motionX"> motionX{ *this };
+        jni::field<jdouble, "motionY"> motionY{ *this };
+        jni::field<jdouble, "motionZ"> motionZ{ *this };
+    END_KLASS_DEF()
+}

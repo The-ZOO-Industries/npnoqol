@@ -6,6 +6,7 @@
 
 #include <jni/jni.h>
 #include <jni/jvmti.h>
+#include <meta_jni/meta_jni.hpp>
 
 class Jvm final
 {

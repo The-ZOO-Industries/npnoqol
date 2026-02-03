@@ -8,23 +8,22 @@ class EntityLivingBase : public Entity
 {
 public:
 	explicit EntityLivingBase(const jobject instance);
-	EntityLivingBase(const char* name, const jobject instance);
 
 	virtual ~EntityLivingBase() override;
-
-	virtual void Init() override;
 
 	[[nodiscard]] virtual float GetHealth() const final;
 	[[nodiscard]] virtual float GetMaxHealth() const final;
 	[[nodiscard]] virtual float GetAbsorptionAmount() const final;
 
 	[[nodiscard]] virtual std::vector<std::unique_ptr<PotionEffect>> GetActivePotionEffects() const final;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getHealthMethodID{ nullptr };
-	inline static jmethodID getMaxHealthMethodID{ nullptr };
-	inline static jmethodID getAbsorptionAmountMethodID{ nullptr };
-	inline static jmethodID getActivePotionEffectsMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF_EX(EntityLivingBase, "net/minecraft/entity/EntityLivingBase", Entity)
+        jni::method<jfloat, "getHealth"> getHealth{ *this };
+        jni::method<jfloat, "getMaxHealth"> getMaxHealth{ *this };
+        jni::method<jfloat, "getAbsorptionAmount"> getAbsorptionAmount{ *this };
+        jni::method<Collection, "getActivePotionEffects"> getActivePotionEffects{ *this };
+    END_KLASS_DEF()
+}

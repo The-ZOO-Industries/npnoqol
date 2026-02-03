@@ -1,31 +1,19 @@
 #include "Collection.h"
 
-Collection::Collection(const jobject instance) 
-    : JavaClass("java/util/Collection", instance) 
+Collection::Collection(const jobject instance) : 
+    JavaClass(instance) 
 {
-    this->Init();
-}
 
-Collection::Collection(const char* name, const jobject instance) 
-    : JavaClass(name, instance) 
-{
-    this->Init();
 }
 
 Collection::~Collection() = default;
 
-void Collection::Init() 
-{
-    sizeMethodID = Jvm::env->GetMethodID(this->javaClass, "size", "()I");
-    toArrayMethodID = Jvm::env->GetMethodID(this->javaClass, "toArray", "()[Ljava/lang/Object;");
-}
-
 jint Collection::Size() const 
 {
-    return Jvm::env->CallIntMethod(this->instance, sizeMethodID);
+    return maps::Collection(this->instance).size.call();
 }
 
 jobjectArray Collection::ToArray() const 
 {
-    return static_cast<jobjectArray>(Jvm::env->CallObjectMethod(this->instance, toArrayMethodID));
+    return static_cast<jobjectArray>(maps::Collection(this->instance).toArray.call());
 }

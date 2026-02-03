@@ -9,10 +9,12 @@ public:
 
 	virtual ~List() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] jobject Get(const I32 index) const;
-
-private:
-	inline static jmethodID getMethodID{ nullptr };
 };
+
+namespace maps
+{
+	BEGIN_KLASS_DEF_EX(List, "java/util/List", Collection)
+        jni::method<Object, "get", jni::NOT_STATIC, jint> get{ *this };
+    END_KLASS_DEF()
+}

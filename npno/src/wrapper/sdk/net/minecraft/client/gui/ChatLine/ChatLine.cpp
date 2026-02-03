@@ -1,33 +1,28 @@
 #include "ChatLine.h"
 
 ChatLine::ChatLine(const jobject instance)
-    : JavaClass("net/minecraft/client/gui/ChatLine", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 ChatLine::~ChatLine() = default;
 
-void ChatLine::Init()
-{
-    std::call_once(oflag, [this]
-        {
-			chatLineIDFieldID = Jvm::env->GetFieldID(this->javaClass, "chatLineID", "I");
-            lineStringFieldID = Jvm::env->GetFieldID(this->javaClass, "lineString", "Lnet/minecraft/util/IChatComponent;");
-        });
-}
-
 I32 ChatLine::GetChatLineID() const
 {
-    return Jvm::env->GetIntField(this->instance, chatLineIDFieldID);
+    return static_cast<I32>(maps::ChatLine(this->instance).chatLineID.get());
 }
 
 std::unique_ptr<IChatComponent> ChatLine::GetLineString() const
 {
-    return std::make_unique<IChatComponent>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectField(this->instance, lineStringFieldID)));
+    jni::frame f;
+
+    return std::make_unique<IChatComponent>(jni::make_global(maps::ChatLine(this->instance).lineString.get()));
 }
 
 void ChatLine::SetLineString(const std::unique_ptr<IChatComponent>& newLine)
 {
-    Jvm::env->SetObjectField(this->instance, lineStringFieldID, newLine->GetInstance());
+    jni::frame f;
+    
+    maps::ChatLine(this->instance).lineString.set(newLine->GetInstance());
 }

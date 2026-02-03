@@ -8,11 +8,8 @@ class EntityPlayer : public EntityLivingBase
 {
 public:
 	explicit EntityPlayer(const jobject instance);
-	EntityPlayer(const char* name, const jobject instance);
 
 	virtual ~EntityPlayer() override;
-
-	virtual void Init() override;
 
 	[[nodiscard]] virtual bool IsSpectator() const final;
 	[[nodiscard]] virtual bool IsUsingItem() const final;
@@ -22,13 +19,15 @@ public:
 	[[nodiscard]] virtual std::string GetCustomNameTag() const final;
 
 	[[nodiscard]] std::unique_ptr<GameProfile> GetGameProfile() const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID isSpectatorMethodID{ nullptr };
-	inline static jmethodID isUsingItemMethodID{ nullptr };
-	inline static jmethodID canAttackPlayerMethodID{ nullptr };
-	inline static jmethodID getCustomNameTagMethodID{ nullptr };
-	inline static jmethodID getGameProfileMethodID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF_EX(EntityPlayer, "net/minecraft/entity/player/EntityPlayer", EntityLivingBase)
+        jni::method<jboolean, "isSpectator"> isSpectator{ *this };
+        jni::method<jboolean, "isBlocking"> isBlocking{ *this };
+        jni::method<jboolean, "canAttackPlayer", jni::NOT_STATIC, EntityPlayer> canAttackPlayer{ *this };
+        jni::method<String, "getCustomNameTag"> getCustomNameTag{ *this };
+        jni::method<GameProfile, "getGameProfile"> getGameProfile{ *this };
+    END_KLASS_DEF()
+}

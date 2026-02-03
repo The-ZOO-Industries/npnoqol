@@ -13,18 +13,17 @@ public:
 
     virtual ~Minecraft() override;
 
-    virtual void Init() override;
-
     [[nodiscard]] std::unique_ptr<EntityPlayerSP> GetThePlayer() const;
     [[nodiscard]] std::unique_ptr<WorldClient> GetTheWorld() const;
     [[nodiscard]] std::unique_ptr<GuiIngame> GetIngameGUI() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jfieldID theMinecraftFieldID{ nullptr };
-
-    inline static jfieldID thePlayerFieldID{ nullptr };
-    inline static jfieldID theWorldFieldID{ nullptr };
-    inline static jfieldID ingameGUIFieldID{ nullptr };
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(Minecraft, "net/minecraft/client/Minecraft")
+        jni::field<Minecraft, "theMinecraft", jni::STATIC> theMinecraft{ *this };
+        jni::field<EntityPlayerSP, "thePlayer"> thePlayer{ *this };
+        jni::field<WorldClient, "theWorld"> theWorld{ *this };
+        jni::field<GuiIngame, "ingameGUI"> ingameGUI{ *this };
+    END_KLASS_DEF()
+}

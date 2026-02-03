@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mappings.hpp"
 #include "../JavaUtil/JavaUtil.h"
 
 #include <memory>
@@ -11,15 +12,12 @@
 class JavaClass
 {
 public:
-    JavaClass(const char* const name, const jobject instance);
+    JavaClass(const jobject instance);
 
     virtual ~JavaClass();
-
-    virtual void Init() = 0;
 
     [[nodiscard]] jobject GetInstance() const;
 
 protected:
-    jclass javaClass;
     jobject instance;
 };

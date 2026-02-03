@@ -9,13 +9,15 @@ public:
 
     virtual ~UUID_J() override;
 
-    virtual void Init() override;
-
     [[nodiscard]] jint Version() const;
 
-    [[nodiscard]] jstring ToString() const;  
-
-private:
-    inline static jmethodID versionMethodID{ nullptr };
-    inline static jmethodID toStringMethodID{ nullptr };
+    [[nodiscard]] jstring ToString() const;
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(UUID, "java/util/UUID")
+        jni::method<jint, "version"> version{ *this };
+        jni::method<String, "toString"> toString{ *this };
+    END_KLASS_DEF()
+}

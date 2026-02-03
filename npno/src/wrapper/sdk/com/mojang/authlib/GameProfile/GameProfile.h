@@ -11,15 +11,15 @@ public:
 
 	virtual ~GameProfile() override;
 
-	virtual void Init() override;
-
 	[[nodiscard]] std::string GetName() const;
 
 	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID getNameMethodID{ nullptr };
-	inline static jmethodID getPropertiesMethodID{ nullptr };
 };
+
+namespace maps
+{
+	BEGIN_KLASS_DEF(GameProfile, "com/mojang/authlib/GameProfile")
+        jni::method<String, "getName"> getName{ *this };
+        jni::method<PropertyMap, "getProperties"> getProperties{ *this };
+    END_KLASS_DEF()
+}

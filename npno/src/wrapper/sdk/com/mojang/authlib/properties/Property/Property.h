@@ -9,14 +9,14 @@ public:
 
     virtual ~Property() override;
 
-    virtual void Init() override;
-
-    [[nodiscard]] jstring GetValue() const;
-    [[nodiscard]] jstring GetName() const;
-
-private:
-    inline static std::once_flag oflag{};
-
-    inline static jmethodID getValueMethodID{ nullptr };
-    inline static jmethodID getNameMethodID{ nullptr };
+    [[nodiscard]] std::string GetValue() const;
+    [[nodiscard]] std::string GetName() const;
 };
+
+namespace maps
+{
+    BEGIN_KLASS_DEF(Property, "com/mojang/authlib/properties/Property")
+        jni::method<String, "getValue"> getValue{ *this };
+        jni::method<String, "getName"> getName{ *this };
+    END_KLASS_DEF()
+}

@@ -9,11 +9,11 @@ public:
 	explicit ChatComponentText(const std::string& text);
 
 	virtual ~ChatComponentText() override;
-
-	virtual void Init() override;
-
-private:
-	inline static std::once_flag oflag{};
-
-	inline static jmethodID constructorMethodID{ nullptr };
 };
+
+namespace maps
+{
+	BEGIN_KLASS_DEF_EX(ChatComponentText, "net/minecraft/util/ChatComponentText", IChatComponent)
+        jni::constructor<String> constructor{ *this };
+    END_KLASS_DEF()
+}

@@ -1,108 +1,103 @@
 #include "Scoreboard.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 Scoreboard::Scoreboard(const jobject instance)
-    : JavaClass("net/minecraft/scoreboard/Scoreboard", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 Scoreboard::~Scoreboard() = default;
 
-void Scoreboard::Init() 
-{
-    std::call_once(oflag, [this]
-        {
-            addPlayerToTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "addPlayerToTeam", "(Ljava/lang/String;Ljava/lang/String;)Z");
-            getTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
-            getPlayersTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "getPlayersTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
-            createTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "createTeam", "(Ljava/lang/String;)Lnet/minecraft/scoreboard/ScorePlayerTeam;");
-            getObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "getObjectiveInDisplaySlot", "(I)Lnet/minecraft/scoreboard/ScoreObjective;");
-			getTeamsMethodID = Jvm::env->GetMethodID(this->javaClass, "getTeams", "()Ljava/util/Collection;");
-            getSortedScoresMethodID = Jvm::env->GetMethodID(this->javaClass, "getSortedScores", "(Lnet/minecraft/scoreboard/ScoreObjective;)Ljava/util/Collection;");
-            removeTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removeTeam", "(Lnet/minecraft/scoreboard/ScoreObjective;)Ljava/util/Collection;");
-            removePlayerFromTeamMethodID = Jvm::env->GetMethodID(this->javaClass, "removePlayerFromTeam", "(Ljava/lang/String;Lnet/minecraft/scoreboard/ScorePlayerTeam;)V");
-            setObjectiveInDisplaySlotMethodID = Jvm::env->GetMethodID(this->javaClass, "setObjectiveInDisplaySlot", "(ILnet/minecraft/scoreboard/ScoreObjective;)V");
-        });
-}
-
 bool Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const 
 {
-    return Jvm::env->CallBooleanMethod(this->instance, addPlayerToTeamMethodID, JavaUtil::StringToJString(playerName), JavaUtil::StringToJString(teamName));
+    jni::frame f;
+
+    return maps::Scoreboard(this->instance).addPlayerToTeam.call(JavaUtil::StringToJString(playerName), JavaUtil::StringToJString(teamName));
 }
 
 std::unique_ptr<ScorePlayerTeam> Scoreboard::GetTeam(const std::string& teamName) const 
 {
-    return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getTeamMethodID, JavaUtil::StringToJString(teamName))));
+    jni::frame f;
+
+    return std::make_unique<ScorePlayerTeam>(jni::make_global(maps::Scoreboard(this->instance).getTeam.call(JavaUtil::StringToJString(teamName))));
 }
 
 std::unique_ptr<ScorePlayerTeam> Scoreboard::GetPlayersTeam(const std::string& playerName) const
 {
-    return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getPlayersTeamMethodID, JavaUtil::StringToJString(playerName))));
+    jni::frame f;
+
+    return std::make_unique<ScorePlayerTeam>(jni::make_global( maps::Scoreboard(this->instance).getPlayersTeam.call(JavaUtil::StringToJString(playerName))));
 }
 
 std::unique_ptr<ScorePlayerTeam> Scoreboard::CreateTeam(const std::string& teamName) const 
 {
-    return std::make_unique<ScorePlayerTeam>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, createTeamMethodID, JavaUtil::StringToJString(teamName))));
+    jni::frame f;
+
+    return std::make_unique<ScorePlayerTeam>(jni::make_global(maps::Scoreboard(this->instance).createTeam.call(JavaUtil::StringToJString(teamName))));
 }
 
-std::unique_ptr<ScoreObjective> Scoreboard::GetObjectiveInDisplaySlot(DisplaySlot slot) const
+std::unique_ptr<ScoreObjective> Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const
 {
-    return std::make_unique<ScoreObjective>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getObjectiveInDisplaySlotMethodID, static_cast<jint>(slot))));
+    jni::frame f;
+
+    return std::make_unique<ScoreObjective>(jni::make_global(maps::Scoreboard(this->instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot))));
 }
 
 std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
 {
+    jni::frame f;
+
     std::vector<std::unique_ptr<ScorePlayerTeam>> teamList;
 
-    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, getTeamsMethodID);
+    maps::Collection collection = maps::Scoreboard(this->instance).getTeams.call();
+    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-    const std::unique_ptr<Collection> getTeams = std::make_unique<Collection>(collectionLocal);
-    const jobjectArray arrayLocal = static_cast<jobjectArray>(getTeams->ToArray());
-
-    for (jint i = 0; i < getTeams->Size(); ++i)
+    for (maps::Object& obj : vec)
     {
-        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
-        teamList.push_back(std::make_unique<ScorePlayerTeam>(elementLocal));
-        Jvm::env->DeleteLocalRef(elementLocal);
+        teamList.push_back(std::make_unique<ScorePlayerTeam>(jni::make_global(obj)));
     }
-
-    Jvm::env->DeleteLocalRef(arrayLocal);
-    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return teamList;
 }
 
 std::vector<std::unique_ptr<Score>> Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const
 {
+    jni::frame f;
+
     std::vector<std::unique_ptr<Score>> scoreList;
 
-    std::unique_ptr<Collection> getScores = std::make_unique<Collection>(Jvm::env->CallObjectMethod(this->instance, getSortedScoresMethodID));
+    maps::ScoreObjective objParam(objective->GetInstance());
+    maps::Collection collection = maps::Scoreboard(this->instance).getSortedScores.call(objParam);
+    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-    const jobjectArray array = getScores->ToArray();
-
-    for (jint i = 0; i < getScores->Size(); ++i)
+    for (maps::Object& obj : vec)
     {
-        scoreList.push_back(std::make_unique<Score>(Jvm::env->NewGlobalRef(Jvm::env->GetObjectArrayElement(array, i))));
+        scoreList.push_back(std::make_unique<Score>(jni::make_global(obj)));
     }
-
-    Jvm::env->DeleteGlobalRef(array);
 
     return scoreList;
 }
 
 void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const 
 {
-    Jvm::env->CallVoidMethod(this->instance, removeTeamMethodID, team->GetInstance());
+    jni::frame f;
+
+    maps::ScorePlayerTeam teamParam(team->GetInstance());
+    maps::Scoreboard(this->instance).removeTeam.call(teamParam);
 }
 
 void Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const
 {
-    Jvm::env->CallVoidMethod(this->instance, removePlayerFromTeamMethodID, JavaUtil::StringToJString(playerName), team->GetInstance());
+    jni::frame f;
+
+    maps::ScorePlayerTeam teamParam(team->GetInstance());
+    maps::Scoreboard(this->instance).removePlayerFromTeam.call(JavaUtil::StringToJString(playerName), teamParam);
 }
 
 void Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const
 {
-    Jvm::env->CallVoidMethod(this->instance, setObjectiveInDisplaySlotMethodID, static_cast<jint>(slot), objective ? objective->GetInstance() : nullptr);
+    jni::frame f;
+
+    maps::ScoreObjective objParam(objective ? objective->GetInstance() : nullptr);
+    maps::Scoreboard(this->instance).setObjectiveInDisplaySlot.call(static_cast<jint>(slot), objParam);
 }

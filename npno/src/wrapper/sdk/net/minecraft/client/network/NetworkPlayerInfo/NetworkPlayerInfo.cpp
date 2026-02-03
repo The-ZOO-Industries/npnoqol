@@ -1,34 +1,31 @@
 #include "NetworkPlayerInfo.h"
 
 NetworkPlayerInfo::NetworkPlayerInfo(const jobject instance) 
-    : JavaClass("net/minecraft/client/network/NetworkPlayerInfo", instance) 
+    : JavaClass(instance) 
 {
-    this->Init();
+
 }
 
 NetworkPlayerInfo::~NetworkPlayerInfo() = default;
 
-void NetworkPlayerInfo::Init() 
-{
-    std::call_once(oflag, [this] 
-        {
-        getGameProfileMethodID = Jvm::env->GetMethodID(this->javaClass, "getGameProfile", "()Lcom/mojang/authlib/GameProfile;");
-        getDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getDisplayName", "()Lnet/minecraft/util/IChatComponent;");
-        setDisplayNameMethodID = Jvm::env->GetMethodID(this->javaClass,"setDisplayName","(Lnet/minecraft/util/IChatComponent;)V");
-        });
-}
-
 std::unique_ptr<GameProfile> NetworkPlayerInfo::GetGameProfile() const 
 {
-    return std::make_unique<GameProfile>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getGameProfileMethodID)));
+    jni::frame f;
+
+    return std::make_unique<GameProfile>(jni::make_global(maps::NetworkPlayerInfo(this->instance).getGameProfile.call()));
 }
 
 std::unique_ptr<IChatComponent> NetworkPlayerInfo::GetDisplayName() const 
 {
-    return std::make_unique<IChatComponent>(Jvm::env->NewGlobalRef(Jvm::env->CallObjectMethod(this->instance, getDisplayNameMethodID)));
+    jni::frame f;
+
+    return std::make_unique<IChatComponent>(jni::make_global(maps::NetworkPlayerInfo(this->instance).getDisplayName.call()));
 }
 
 void NetworkPlayerInfo::SetDisplayName(const std::unique_ptr<IChatComponent>& newName)
 {
-    Jvm::env->CallVoidMethod(this->instance, setDisplayNameMethodID, newName->GetInstance());
+    jni::frame f;
+    
+    maps::IChatComponent nameParam(newName->GetInstance());
+    maps::NetworkPlayerInfo(this->instance).setDisplayName.call(nameParam);
 }

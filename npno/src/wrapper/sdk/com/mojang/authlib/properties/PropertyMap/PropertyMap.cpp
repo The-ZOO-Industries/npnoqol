@@ -1,41 +1,26 @@
 #include "PropertyMap.h"
 
-#include "../../src/wrapper/sdk/java/util/Collection/Collection.h"
-
 PropertyMap::PropertyMap(const jobject instance)
-    : JavaClass("com/mojang/authlib/properties/PropertyMap", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 PropertyMap::~PropertyMap() = default;
 
-void PropertyMap::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            valuesMethodID = Jvm::env->GetMethodID(this->javaClass, "values", "()Ljava/util/Collection;");
-        });
-}
-
 std::vector<std::unique_ptr<Property>> PropertyMap::GetValues() const
 {
+    jni::frame f;
+    
     std::vector<std::unique_ptr<Property>> properties;
 
-    const jobject collectionLocal = Jvm::env->CallObjectMethod(this->instance, valuesMethodID);
+    maps::Collection collection = maps::PropertyMap(this->instance).values.call();
+    std::vector<maps::Object> vec = collection.toArray().to_vector();
 
-    const std::unique_ptr<Collection> getProperty = std::make_unique<Collection>(collectionLocal);
-    const jobjectArray arrayLocal = static_cast<jobjectArray>(getProperty->ToArray());
-
-    for (jint i = 0; i < getProperty->Size(); ++i)
+    for (maps::Object& obj : vec)
     {
-        const jobject elementLocal = Jvm::env->GetObjectArrayElement(arrayLocal, i);
-        properties.push_back(std::make_unique<Property>(elementLocal));
-        Jvm::env->DeleteLocalRef(elementLocal);
+        properties.push_back(std::make_unique<Property>(jni::make_global(obj)));
     }
-
-    Jvm::env->DeleteLocalRef(arrayLocal);
-    Jvm::env->DeleteLocalRef(collectionLocal);
 
     return properties;
 }

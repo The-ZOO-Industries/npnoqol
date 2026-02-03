@@ -1,34 +1,26 @@
 #include "PotionEffect.h"
 
 PotionEffect::PotionEffect(const jobject instance)
-    : JavaClass("net/minecraft/potion/PotionEffect", instance)
+    : JavaClass(instance)
 {
-    this->Init();
+
 }
 
 PotionEffect::~PotionEffect() = default;
 
-void PotionEffect::Init()
-{
-    std::call_once(oflag, [this]
-        {
-            getDurationMethodID = Jvm::env->GetMethodID(this->javaClass, "getDuration", "()I");
-            getAmplifierMethodID = Jvm::env->GetMethodID(this->javaClass, "getAmplifier", "()I");
-            getEffectNameMethodID = Jvm::env->GetMethodID(this->javaClass, "getEffectName", "()Ljava/lang/String;");
-        });
-}
-
 I32 PotionEffect::GetDuration() const
 {
-    return static_cast<I32>(Jvm::env->CallIntMethod(this->instance, getDurationMethodID));
+    return static_cast<I32>(maps::PotionEffect(this->instance).getDuration.call());
 }
 
 I32 PotionEffect::GetAmplifier() const
 {
-    return static_cast<I32>(Jvm::env->CallIntMethod(this->instance, getAmplifierMethodID));
+    return static_cast<I32>(maps::PotionEffect(this->instance).getAmplifier.call());
 }
 
 std::string PotionEffect::GetEffectName() const
 {
-    return JavaUtil::JStringToString(static_cast<jstring>(Jvm::env->CallObjectMethod(this->instance, getEffectNameMethodID)));
+    jni::frame f;
+
+    return JavaUtil::JStringToString(static_cast<jstring>(maps::PotionEffect(this->instance).getEffectName.call()));
 }
