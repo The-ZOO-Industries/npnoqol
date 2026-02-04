@@ -11,18 +11,15 @@ auto GuiNewChat::GetChatLines() const -> std::vector<std::unique_ptr<ChatLine>>
 {
     jni::frame f;
 
-    std::vector<std::unique_ptr<ChatLine>> chat{};
+    std::vector<std::unique_ptr<EntityPlayer>> chat;
 
-    maps::List lines = maps::GuiNewChat(this->instance).chatLines.get();
-    std::vector<maps::Object> vec = lines.toArray().to_vector();
+    maps::List listWrapper = maps::World(this->instance).playerEntities.get();
+
+    std::vector<maps::Object> vec = ((maps::Collection)listWrapper).toArray.call().to_vector();
 
     for (maps::Object& obj : vec)
     {
-        chat.push_back(
-            std::make_unique<ChatLine>(
-                jobject(maps::ChatLine(obj, true))
-            )
-        );
+        chat.emplace_back(std::make_unique<EntityPlayer>(jobject(maps::EntityPlayer(obj, true))));
     }
 
     return chat;

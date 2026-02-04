@@ -23,8 +23,7 @@ std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
 
     maps::List listWrapper = maps::World(this->instance).playerEntities.get();
 
-    auto array = ((maps::Collection)listWrapper).toArray.call();
-    std::vector<maps::Object> vec = array.to_vector();
+    std::vector<maps::Object> vec = ((maps::Collection)listWrapper).toArray.call().to_vector();
 
     for (maps::Object& obj : vec)
     {
