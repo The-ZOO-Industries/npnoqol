@@ -21,9 +21,11 @@ std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
 
     std::vector<std::unique_ptr<EntityPlayer>> playerList;
 
-    maps::List listWrapper = maps::World(this->instance).playerEntities.get();
+    maps::List listWrapper = maps::GuiNewChat(this->instance).chatLines.get();
 
-    std::vector<maps::Object> vec = ((maps::Collection)listWrapper).toArray.call().to_vector();
+    jni::array<maps::Object> array = ((maps::Collection)listWrapper).toArray.call();
+
+    std::vector<maps::Object> vec = array.to_vector();
 
     for (maps::Object& obj : vec)
     {

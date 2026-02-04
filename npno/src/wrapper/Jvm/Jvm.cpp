@@ -1,4 +1,5 @@
 #include "Jvm.h"
+#include "Jvm.h"
 
 #include <algorithm>
 
@@ -6,7 +7,7 @@ bool Jvm::Init()
 {
     jsize count;
     if (JNI_GetCreatedJavaVMs(&vm, 1, &count) != JNI_OK || !count) return false;
-    
+
     const jint result = vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_8);
     if (result == JNI_EDETACHED)
     {
@@ -19,11 +20,11 @@ bool Jvm::Init()
 
     jni::init();
     jni::set_thread_env(env);
-    
-    jni::set_custom_find_class([](const char* name) -> jclass 
-    {
-        return Jvm::GetClass(name);
-    });
+
+    jni::set_custom_find_class([](const char* name) -> jclass
+        {
+            return Jvm::GetClass(name);
+        });
 
     return true;
 }
@@ -31,7 +32,7 @@ bool Jvm::Init()
 void Jvm::ShutDown()
 {
     jni::shutdown();
-    
+
     for (const auto& [name, clazz] : classes)
     {
         if (clazz) env->DeleteGlobalRef(clazz);
@@ -44,6 +45,15 @@ jclass Jvm::GetClass(const std::string& name)
     if (const auto it = classes.find(name); it != classes.end())
     {
         return it->second;
+    }
+
+    jclass localClass = env->FindClass(name.c_str());
+    if (localClass)
+    {
+        jclass globalClass = static_cast<jclass>(env->NewGlobalRef(localClass));
+        env->DeleteLocalRef(localClass);
+        classes[name] = globalClass;
+        return globalClass;
     }
 
     return nullptr;

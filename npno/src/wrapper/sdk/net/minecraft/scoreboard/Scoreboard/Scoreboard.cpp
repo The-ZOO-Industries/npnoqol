@@ -43,18 +43,23 @@ auto Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const -> std:
     return std::make_unique<ScoreObjective>(jobject(maps::ScoreObjective(maps::Scoreboard(this->instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot)), true)));
 }
 
-auto Scoreboard::GetTeams() const -> std::vector<std::unique_ptr<ScorePlayerTeam>>
+std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
 {
     jni::frame f;
 
-    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList{};
+    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList;
+
     maps::Collection collection = maps::Scoreboard(this->instance).getTeams.call();
 
-    std::vector<maps::Object> vec = maps::Collection(collection, true).toArray.call().to_vector();
+    jni::array<maps::Object> array = collection.toArray.call();
+
+    std::vector<maps::Object> vec = array.to_vector();
+
     for (maps::Object& obj : vec)
     {
         teamList.push_back(std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(obj, true))));
     }
+
     return teamList;
 }
 
