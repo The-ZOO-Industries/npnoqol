@@ -4,12 +4,12 @@
 
 #include "../../src/wrapper/sdk/net/minecraft/client/network/NetworkPlayerInfo/NetworkPlayerInfo.h"
 
-class GuiPlayerTabOverlay final : public JavaClass 
+class GuiPlayerTabOverlay final : public JavaClass
 {
 public:
-	explicit GuiPlayerTabOverlay(const jobject instance);
+    explicit GuiPlayerTabOverlay(maps::GuiPlayerTabOverlay instance);
 
-	virtual ~GuiPlayerTabOverlay() override;
+    virtual ~GuiPlayerTabOverlay() override;
 
-	[[nodiscard]] std::string GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const;
+    [[nodiscard]] std::string GetPlayerName(const std::unique_ptr<NetworkPlayerInfo>& playerInfo) const;
 };

@@ -1,7 +1,7 @@
 #include "ChatLine.h"
 
-ChatLine::ChatLine(const jobject instance)
-    : JavaClass(instance)
+ChatLine::ChatLine(maps::ChatLine instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,20 +10,18 @@ ChatLine::~ChatLine() = default;
 
 I32 ChatLine::GetChatLineID() const
 {
-    return static_cast<I32>(maps::ChatLine(this->instance).chatLineID.get());
+    return static_cast<I32>(maps::ChatLine(this->instance.object_instance).chatLineID.get());
 }
 
 std::unique_ptr<IChatComponent> ChatLine::GetLineString() const
 {
-    jni::frame f;
-
-    return std::make_unique<IChatComponent>(jobject(maps::IChatComponent(maps::ChatLine(this->instance).lineString.get(), true)));
+    maps::IChatComponent lineString = maps::ChatLine(this->instance.object_instance).lineString.get();
+    maps::IChatComponent globalLineString{ lineString.object_instance, true };
+    return std::make_unique<IChatComponent>(globalLineString);
 }
 
 void ChatLine::SetLineString(const std::unique_ptr<IChatComponent>& newLine)
 {
-    jni::frame f;
-
-    maps::IChatComponent componentParam(newLine->GetInstance());
-    maps::ChatLine(this->instance).lineString.set(componentParam);
+    maps::IChatComponent component{ newLine->GetInstance().object_instance };
+    maps::ChatLine(this->instance.object_instance).lineString.set(component);
 }

@@ -1,21 +1,20 @@
 #include "ChatComponentText.h"
 
-ChatComponentText::ChatComponentText(const jobject instance)
-    : IChatComponent(instance)
+ChatComponentText::ChatComponentText(maps::ChatComponentText instance)
+    : IChatComponent(maps::IChatComponent(instance.object_instance, instance.is_global()))
 {
 
 }
 
 ChatComponentText::ChatComponentText(const std::string& text)
-    : IChatComponent(nullptr)
+    : IChatComponent(maps::IChatComponent(nullptr))
 {
-    jni::frame f;
+    jstring jText = JavaUtil::StringToJString(JavaUtil::FixString(text));
+    maps::String textStr{ jText };
 
-    maps::String jTextStr((jstring)JavaUtil::StringToJString(JavaUtil::FixString(text)));
+    maps::ChatComponentText newObj = maps::ChatComponentText::new_object(&maps::ChatComponentText_members::constructor, textStr);
 
-    maps::ChatComponentText newObj = maps::ChatComponentText::new_object(&maps::ChatComponentText_members::constructor, jTextStr);
-
-    this->instance = Jvm::env->NewGlobalRef(jobject(newObj));
+    this->instance = maps::Object{ newObj.object_instance, true };
 }
 
 ChatComponentText::~ChatComponentText() = default;

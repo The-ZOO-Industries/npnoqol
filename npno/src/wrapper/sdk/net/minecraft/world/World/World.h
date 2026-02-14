@@ -9,11 +9,11 @@
 class World : public JavaClass
 {
 public:
-	explicit World(const jobject instance);
+    explicit World(maps::World instance);
 
-	virtual ~World() override;
+    virtual ~World() override;
 
-	[[nodiscard]] virtual std::unique_ptr<WorldInfo> GetWorldInfo() const final;
+    [[nodiscard]] virtual std::unique_ptr<WorldInfo> GetWorldInfo() const final;
 
-	[[nodiscard]] virtual std::vector<std::unique_ptr<EntityPlayer>> GetPlayerEntities() const final;
+    [[nodiscard]] virtual std::vector<std::unique_ptr<EntityPlayer>> GetPlayerEntities() const final;
 };

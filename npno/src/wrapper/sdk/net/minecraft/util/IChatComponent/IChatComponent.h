@@ -5,7 +5,7 @@
 class IChatComponent : public JavaClass
 {
 public:
-    explicit IChatComponent(const jobject instance);
+    explicit IChatComponent(maps::IChatComponent instance);
 
     virtual ~IChatComponent() override;
 

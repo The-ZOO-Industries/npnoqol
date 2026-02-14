@@ -1,31 +1,29 @@
 #include "NetworkPlayerInfo.h"
 
-NetworkPlayerInfo::NetworkPlayerInfo(const jobject instance)
-    : JavaClass(instance)
+NetworkPlayerInfo::NetworkPlayerInfo(maps::NetworkPlayerInfo instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
 
 NetworkPlayerInfo::~NetworkPlayerInfo() = default;
 
-auto NetworkPlayerInfo::GetGameProfile() const -> std::unique_ptr<GameProfile>
+std::unique_ptr<GameProfile> NetworkPlayerInfo::GetGameProfile() const
 {
-    jni::frame f;
-
-    return std::make_unique<GameProfile>(jobject(maps::GameProfile(maps::NetworkPlayerInfo(this->instance).getGameProfile.call(), true)));
+    maps::GameProfile gameProfile = maps::NetworkPlayerInfo(this->instance.object_instance).getGameProfile.call();
+    maps::GameProfile globalProfile{ gameProfile.object_instance, true };
+    return std::make_unique<GameProfile>(globalProfile);
 }
 
-auto NetworkPlayerInfo::GetDisplayName() const -> std::unique_ptr<IChatComponent>
+std::unique_ptr<IChatComponent> NetworkPlayerInfo::GetDisplayName() const
 {
-    jni::frame f;
-
-    return std::make_unique<IChatComponent>(jobject(maps::IChatComponent(maps::NetworkPlayerInfo(this->instance).getDisplayName.call(), true)));
+    maps::IChatComponent displayName = maps::NetworkPlayerInfo(this->instance.object_instance).getDisplayName.call();
+    maps::IChatComponent globalName{ displayName.object_instance, true };
+    return std::make_unique<IChatComponent>(globalName);
 }
 
-auto NetworkPlayerInfo::SetDisplayName(const std::unique_ptr<IChatComponent>& newName) -> void
+void NetworkPlayerInfo::SetDisplayName(const std::unique_ptr<IChatComponent>& newName)
 {
-    jni::frame f;
-
-    maps::IChatComponent nameParam{ jobject(maps::IChatComponent(newName->GetInstance(), true)) };
-    maps::NetworkPlayerInfo(this->instance).setDisplayName.call(nameParam);
+    maps::IChatComponent nameParam{ newName->GetInstance().object_instance };
+    maps::NetworkPlayerInfo(this->instance.object_instance).setDisplayName.call(nameParam);
 }

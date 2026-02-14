@@ -1,7 +1,7 @@
 #include "Score.h"
 
-Score::Score(const jobject instance)
-	: JavaClass(instance)
+Score::Score(maps::Score instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,12 +10,11 @@ Score::~Score() = default;
 
 I32 Score::GetScorePoints() const
 {
-	return static_cast<I32>(maps::Score(this->instance).getScorePoints.call());
+    return static_cast<I32>(maps::Score(this->instance.object_instance).getScorePoints.call());
 }
 
 std::string Score::GetPlayerName() const
 {
-	jni::frame f;
-
-	return JavaUtil::JStringToString((jstring)jobject(maps::Score(this->instance).getPlayerName.call()));
+    maps::String playerName = maps::Score(this->instance.object_instance).getPlayerName.call();
+    return JavaUtil::JStringToString((jstring)jobject(playerName));
 }

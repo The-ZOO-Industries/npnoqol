@@ -2,18 +2,15 @@
 
 #include <print>
 
-JavaClass::JavaClass(const jobject instance)
-    : instance{ instance ? Jvm::env->NewGlobalRef(instance) : nullptr }
+JavaClass::JavaClass(maps::Object instance)
+    : instance{ instance }
 {
-    
+
 }
 
-JavaClass::~JavaClass()
-{
-    if (this->instance) Jvm::env->DeleteGlobalRef(this->instance);
-}
+JavaClass::~JavaClass() = default;
 
-jobject JavaClass::GetInstance() const
+maps::Object JavaClass::GetInstance() const
 {
     return this->instance;
 }

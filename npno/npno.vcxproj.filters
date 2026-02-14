@@ -231,6 +231,12 @@
     <ClInclude Include="ext\meta_jni\meta_jni.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="ext\meta_jni\stacktrace.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\java\util\Set\Set.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Base\Base.cpp">
@@ -393,6 +399,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\feature\FeatureManager\FeatureManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wrapper\sdk\java\util\Set\Set.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

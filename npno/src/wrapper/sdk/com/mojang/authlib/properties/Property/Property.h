@@ -5,7 +5,7 @@
 class Property final : public JavaClass
 {
 public:
-    explicit Property(const jobject instance);
+    explicit Property(maps::Property instance);
 
     virtual ~Property() override;
 

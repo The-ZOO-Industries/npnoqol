@@ -1,7 +1,7 @@
 #include "PropertyMap.h"
 
-PropertyMap::PropertyMap(const jobject instance)
-    : JavaClass(instance)
+PropertyMap::PropertyMap(maps::PropertyMap instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,16 +10,16 @@ PropertyMap::~PropertyMap() = default;
 
 std::vector<std::unique_ptr<Property>> PropertyMap::GetValues() const
 {
-    jni::frame f;
-
     std::vector<std::unique_ptr<Property>> properties;
 
-    maps::Collection collection = maps::PropertyMap(this->instance).values.call();
-    std::vector<maps::Object> vec = collection.toArray().to_vector();
+    maps::Collection collection = maps::PropertyMap(this->instance.object_instance).values.call();
+    jni::array<maps::Object> array = collection.toArray.call();
+    std::vector<maps::Object> vec = array.to_vector();
 
     for (maps::Object& obj : vec)
     {
-        properties.push_back(std::make_unique<Property>(jobject(maps::Property(obj, true))));
+        maps::Property property{ obj.object_instance, true };
+        properties.push_back(std::make_unique<Property>(property));
     }
 
     return properties;

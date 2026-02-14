@@ -8,12 +8,12 @@
 class GuiNewChat final : public JavaClass
 {
 public:
-	explicit GuiNewChat(const jobject instance);
+    explicit GuiNewChat(maps::GuiNewChat instance);
 
-	virtual ~GuiNewChat() override;
+    virtual ~GuiNewChat() override;
 
-	[[nodiscard]] std::vector<std::unique_ptr<ChatLine>> GetChatLines() const;
+    [[nodiscard]] std::vector<std::unique_ptr<ChatLine>> GetChatLines() const;
 
-	void RefreshChat() const;
-	void DeleteChatLine(const I32 id) const;
+    void RefreshChat() const;
+    void DeleteChatLine(const I32 id) const;
 };

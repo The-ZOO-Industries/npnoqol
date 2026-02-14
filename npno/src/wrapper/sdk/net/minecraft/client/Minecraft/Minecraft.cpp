@@ -1,33 +1,34 @@
 #include "Minecraft.h"
 
 Minecraft::Minecraft()
-    : JavaClass(nullptr)
+    : JavaClass(maps::Object(nullptr))
 {
-    jni::frame f;
-
     maps::Minecraft mc{};
-    this->instance = Jvm::env->NewGlobalRef(jobject(mc.theMinecraft.get()));
+    maps::Minecraft theMinecraft = mc.theMinecraft.get();
+    this->instance = maps::Object{ theMinecraft.object_instance, true };
 }
 
 Minecraft::~Minecraft() = default;
 
-auto Minecraft::GetThePlayer() const -> std::unique_ptr<EntityPlayerSP>
+std::unique_ptr<EntityPlayerSP> Minecraft::GetThePlayer() const
 {
-    jni::frame f;
-
-    return std::make_unique<EntityPlayerSP>(jobject(maps::EntityPlayerSP(maps::Minecraft(this->instance).thePlayer.get(), true)));
+    maps::Minecraft mc{ this->instance.object_instance, this->instance.is_global() };
+    maps::EntityPlayerSP thePlayer = mc.thePlayer.get();
+    maps::EntityPlayerSP globalPlayer{ thePlayer.object_instance, true };
+    return std::make_unique<EntityPlayerSP>(globalPlayer);
 }
 
-auto Minecraft::GetTheWorld() const -> std::unique_ptr<WorldClient>
+std::unique_ptr<WorldClient> Minecraft::GetTheWorld() const
 {
-    jni::frame f;
-
-    return std::make_unique<WorldClient>(jobject(maps::WorldClient(maps::Minecraft(this->instance).theWorld.get(), true)));
+    maps::WorldClient theWorld = (maps::Minecraft)this->instance.object_instance.theWorld.get();
+    maps::WorldClient globalWorld{ theWorld.object_instance, true };
+    return std::make_unique<WorldClient>(globalWorld);
 }
 
-auto Minecraft::GetIngameGUI() const -> std::unique_ptr<GuiIngame>
+std::unique_ptr<GuiIngame> Minecraft::GetIngameGUI() const
 {
-    jni::frame f;
-
-    return std::make_unique<GuiIngame>(jobject(maps::GuiIngame(maps::Minecraft(this->instance).ingameGUI.get(), true)));
+    maps::Minecraft mc{ this->instance.object_instance, this->instance.is_global() };
+    maps::GuiIngame ingameGUI = mc.ingameGUI.get();
+    maps::GuiIngame globalGUI{ ingameGUI.object_instance, true };
+    return std::make_unique<GuiIngame>(globalGUI);
 }

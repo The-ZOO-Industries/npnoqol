@@ -5,10 +5,10 @@
 class Collection : public JavaClass
 {
 public:
-	explicit Collection(const jobject instance);
+	explicit Collection(maps::Collection instance);
 
 	virtual ~Collection() override;
 
 	[[nodiscard]] jint Size() const;
-	[[nodiscard]] jobjectArray ToArray() const;
+	[[nodiscard]] jni::array<maps::Object> ToArray() const;
 };

@@ -5,9 +5,9 @@
 class WorldInfo : public JavaClass
 {
 public:
-	explicit WorldInfo(const jobject instance);
+    explicit WorldInfo(maps::WorldInfo instance);
 
-	virtual ~WorldInfo() override;
+    virtual ~WorldInfo() override;
 
     [[nodiscard]] I64 GetRandomSeed() const;
     [[nodiscard]] I64 GetWorldTime() const;

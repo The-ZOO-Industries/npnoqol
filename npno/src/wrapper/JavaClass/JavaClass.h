@@ -12,12 +12,11 @@
 class JavaClass
 {
 public:
-    JavaClass(const jobject instance);
-
+    explicit JavaClass(maps::Object instance);
     virtual ~JavaClass();
 
-    [[nodiscard]] jobject GetInstance() const;
+    [[nodiscard]] maps::Object GetInstance() const;
 
 protected:
-    jobject instance;
+    maps::Object instance;
 };

@@ -8,12 +8,12 @@
 class NetworkPlayerInfo final : public JavaClass
 {
 public:
-	explicit NetworkPlayerInfo(const jobject instance);
+    explicit NetworkPlayerInfo(maps::NetworkPlayerInfo instance);
 
-	virtual ~NetworkPlayerInfo() override;
+    virtual ~NetworkPlayerInfo() override;
 
-	[[nodiscard]] std::unique_ptr<GameProfile> GetGameProfile() const;
-	[[nodiscard]] std::unique_ptr<IChatComponent> GetDisplayName() const;
+    [[nodiscard]] std::unique_ptr<GameProfile> GetGameProfile() const;
+    [[nodiscard]] std::unique_ptr<IChatComponent> GetDisplayName() const;
 
-	void SetDisplayName(const std::unique_ptr<IChatComponent>& newName);
+    void SetDisplayName(const std::unique_ptr<IChatComponent>& newName);
 };

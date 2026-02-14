@@ -5,16 +5,16 @@
 class ScorePlayerTeam final : public JavaClass
 {
 public:
-	explicit ScorePlayerTeam(const jobject instance);
+    explicit ScorePlayerTeam(maps::ScorePlayerTeam instance);
 
-	virtual ~ScorePlayerTeam() override;
+    virtual ~ScorePlayerTeam() override;
 
-	[[nodiscard]] std::string GetNamePrefix() const;
-	[[nodiscard]] std::string GetNameSuffix() const;
-	[[nodiscard]] std::string GetTeamName() const;
+    [[nodiscard]] std::string GetNamePrefix() const;
+    [[nodiscard]] std::string GetNameSuffix() const;
+    [[nodiscard]] std::string GetTeamName() const;
 
-	[[nodiscard]] std::vector<std::string> GetMembershipCollection() const;
+    [[nodiscard]] std::vector<std::string> GetMembershipCollection() const;
 
-	void SetNamePrefix(const std::string& prefix) const;
-	void SetNameSuffix(const std::string& suffix) const;
+    void SetNamePrefix(const std::string& prefix) const;
+    void SetNameSuffix(const std::string& suffix) const;
 };

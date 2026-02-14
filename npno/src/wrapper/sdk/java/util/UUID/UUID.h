@@ -5,11 +5,10 @@
 class UUID_J final : public JavaClass
 {
 public:
-    explicit UUID_J(const jobject instance);
+    explicit UUID_J(maps::UUID instance);
 
     virtual ~UUID_J() override;
 
     [[nodiscard]] jint Version() const;
-
     [[nodiscard]] jstring ToString() const;
 };

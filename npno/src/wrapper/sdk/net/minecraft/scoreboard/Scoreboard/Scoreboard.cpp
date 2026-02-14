@@ -1,106 +1,107 @@
 #include "Scoreboard.h"
 
-Scoreboard::Scoreboard(const jobject instance)
-    : JavaClass(instance)
+Scoreboard::Scoreboard(maps::Scoreboard instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
 
 Scoreboard::~Scoreboard() = default;
 
-auto Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const -> bool
+bool Scoreboard::AddPlayerToTeam(const std::string& playerName, const std::string& teamName) const
 {
-    jni::frame f;
-
-    return maps::Scoreboard(this->instance).addPlayerToTeam.call(JavaUtil::StringToJString(playerName), JavaUtil::StringToJString(teamName));
+    jstring jPlayerName = JavaUtil::StringToJString(playerName);
+    jstring jTeamName = JavaUtil::StringToJString(teamName);
+    maps::String playerStr{ jPlayerName };
+    maps::String teamStr{ jTeamName };
+    return maps::Scoreboard(this->instance.object_instance).addPlayerToTeam.call(playerStr, teamStr);
 }
 
-auto Scoreboard::GetTeam(const std::string& teamName) const -> std::unique_ptr<ScorePlayerTeam>
+std::unique_ptr<ScorePlayerTeam> Scoreboard::GetTeam(const std::string& teamName) const
 {
-    jni::frame f;
-
-    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).getTeam.call(JavaUtil::StringToJString(teamName)), true)));
+    jstring jTeamName = JavaUtil::StringToJString(teamName);
+    maps::String teamStr{ jTeamName };
+    maps::ScorePlayerTeam team = maps::Scoreboard(this->instance.object_instance).getTeam.call(teamStr);
+    maps::ScorePlayerTeam globalTeam{ team.object_instance, true };
+    return std::make_unique<ScorePlayerTeam>(globalTeam);
 }
 
-auto Scoreboard::GetPlayersTeam(const std::string& playerName) const -> std::unique_ptr<ScorePlayerTeam>
+std::unique_ptr<ScorePlayerTeam> Scoreboard::GetPlayersTeam(const std::string& playerName) const
 {
-    jni::frame f;
-
-    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).getPlayersTeam.call(JavaUtil::StringToJString(playerName)), true)));
+    jstring jPlayerName = JavaUtil::StringToJString(playerName);
+    maps::String playerStr{ jPlayerName };
+    maps::ScorePlayerTeam team = maps::Scoreboard(this->instance.object_instance).getPlayersTeam.call(playerStr);
+    maps::ScorePlayerTeam globalTeam{ team.object_instance, true };
+    return std::make_unique<ScorePlayerTeam>(globalTeam);
 }
 
-auto Scoreboard::CreateTeam(const std::string& teamName) const -> std::unique_ptr<ScorePlayerTeam>
+std::unique_ptr<ScorePlayerTeam> Scoreboard::CreateTeam(const std::string& teamName) const
 {
-    jni::frame f;
-
-    return std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(maps::Scoreboard(this->instance).createTeam.call(JavaUtil::StringToJString(teamName)), true)));
+    jstring jTeamName = JavaUtil::StringToJString(teamName);
+    maps::String teamStr{ jTeamName };
+    maps::ScorePlayerTeam team = maps::Scoreboard(this->instance.object_instance).createTeam.call(teamStr);
+    maps::ScorePlayerTeam globalTeam{ team.object_instance, true };
+    return std::make_unique<ScorePlayerTeam>(globalTeam);
 }
 
-auto Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const -> std::unique_ptr<ScoreObjective>
+std::unique_ptr<ScoreObjective> Scoreboard::GetObjectiveInDisplaySlot(const DisplaySlot slot) const
 {
-    jni::frame f;
-
-    return std::make_unique<ScoreObjective>(jobject(maps::ScoreObjective(maps::Scoreboard(this->instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot)), true)));
+    maps::ScoreObjective objective = maps::Scoreboard(this->instance.object_instance).getObjectiveInDisplaySlot.call(static_cast<jint>(slot));
+    maps::ScoreObjective globalObjective{ objective.object_instance, true };
+    return std::make_unique<ScoreObjective>(globalObjective);
 }
 
 std::vector<std::unique_ptr<ScorePlayerTeam>> Scoreboard::GetTeams() const
 {
-    jni::frame f;
+    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList{};
 
-    std::vector<std::unique_ptr<ScorePlayerTeam>> teamList;
-
-    maps::Collection collection = maps::Scoreboard(this->instance).getTeams.call();
-
+    maps::Collection collection = maps::Scoreboard(this->instance.object_instance).getTeams.call();
     jni::array<maps::Object> array = collection.toArray.call();
-
     std::vector<maps::Object> vec = array.to_vector();
 
     for (maps::Object& obj : vec)
     {
-        teamList.push_back(std::make_unique<ScorePlayerTeam>(jobject(maps::ScorePlayerTeam(obj, true))));
+        maps::ScorePlayerTeam team{ obj.object_instance, true };
+        teamList.emplace_back(std::make_unique<ScorePlayerTeam>(team));
     }
 
     return teamList;
 }
 
-auto Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const -> std::vector<std::unique_ptr<Score>>
+std::vector<std::unique_ptr<Score>> Scoreboard::GetSortedScores(const std::unique_ptr<ScoreObjective>& objective) const
 {
-    jni::frame f;
-
     std::vector<std::unique_ptr<Score>> scoreList{};
 
-    maps::ScoreObjective objParam{ jobject(maps::ScoreObjective(objective->GetInstance(), true)) };
-    maps::Collection collection = maps::Scoreboard(this->instance).getSortedScores.call(objParam);
+    maps::ScoreObjective objParam{ objective->GetInstance().object_instance };
+    maps::Collection collection = maps::Scoreboard(this->instance.object_instance).getSortedScores.call(objParam);
+    jni::array<maps::Object> array = collection.toArray.call();
+    std::vector<maps::Object> vec = array.to_vector();
 
-    std::vector<maps::Object> vec = maps::Collection(collection, true).toArray.call().to_vector();
     for (maps::Object& obj : vec)
     {
-        scoreList.push_back(std::make_unique<Score>(jobject(maps::Score(obj, true))));
+        maps::Score score{ obj.object_instance, true };
+        scoreList.push_back(std::make_unique<Score>(score));
     }
 
     return scoreList;
 }
 
-auto Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const -> void
+void Scoreboard::RemoveTeam(const std::unique_ptr<ScorePlayerTeam>& team) const
 {
-    jni::frame f;
-
-    maps::ScorePlayerTeam teamParam{ jobject(maps::ScorePlayerTeam(team->GetInstance(), true)) };
-    maps::Scoreboard(this->instance).removeTeam.call(teamParam);
+    maps::ScorePlayerTeam teamParam{ team->GetInstance().object_instance };
+    maps::Scoreboard(this->instance.object_instance).removeTeam.call(teamParam);
 }
 
-auto Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const -> void
+void Scoreboard::RemovePlayerFromTeam(const std::string& playerName, const std::unique_ptr<ScorePlayerTeam>& team) const
 {
-    jni::frame f;
-
-    maps::ScorePlayerTeam teamParam{ jobject(maps::ScorePlayerTeam(team->GetInstance(), true)) };
-    maps::Scoreboard(this->instance).removePlayerFromTeam.call(JavaUtil::StringToJString(playerName), teamParam);
+    jstring jPlayerName = JavaUtil::StringToJString(playerName);
+    maps::String playerStr{ jPlayerName };
+    maps::ScorePlayerTeam teamParam{ team->GetInstance().object_instance };
+    maps::Scoreboard(this->instance.object_instance).removePlayerFromTeam.call(playerStr, teamParam);
 }
 
-auto Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const -> void
+void Scoreboard::SetObjectiveInDisplaySlot(const DisplaySlot slot, const std::unique_ptr<ScoreObjective>& objective) const
 {
-    jni::frame f;
-
-    maps::ScoreObjective objParam{ jobject(objective ? maps::ScoreObjective(objective->GetInstance(), true) : nullptr) };
-    maps::Scoreboard(this->instance).setObjectiveInDisplaySlot.call(static_cast<jint>(slot), objParam);
+    maps::ScoreObjective objParam{ objective ? objective->GetInstance().object_instance : nullptr };
+    maps::Scoreboard(this->instance.object_instance).setObjectiveInDisplaySlot.call(static_cast<jint>(slot), objParam);
 }

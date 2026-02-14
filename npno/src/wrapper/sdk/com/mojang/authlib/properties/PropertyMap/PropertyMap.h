@@ -8,7 +8,7 @@
 class PropertyMap final : public JavaClass
 {
 public:
-    explicit PropertyMap(const jobject instance);
+    explicit PropertyMap(maps::PropertyMap instance);
 
     virtual ~PropertyMap() override;
 

@@ -1,7 +1,7 @@
 #include "GuiIngame.h"
 
-GuiIngame::GuiIngame(const jobject instance)
-	: JavaClass(instance)
+GuiIngame::GuiIngame(maps::GuiIngame instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,14 +10,14 @@ GuiIngame::~GuiIngame() = default;
 
 std::unique_ptr<GuiNewChat> GuiIngame::GetPersistantChatGUI() const
 {
-	jni::frame f;
-
-	return std::make_unique<GuiNewChat>(jobject(maps::GuiNewChat(maps::GuiIngame(this->instance).persistantChatGUI.get(), true)));
+    maps::GuiNewChat chatGUI = maps::GuiIngame(this->instance.object_instance).persistantChatGUI.get();
+    maps::GuiNewChat globalChatGUI{ chatGUI.object_instance, true };
+    return std::make_unique<GuiNewChat>(globalChatGUI);
 }
 
 std::unique_ptr<GuiPlayerTabOverlay> GuiIngame::GetOverlayPlayerList() const
 {
-	jni::frame f;
-
-	return std::make_unique<GuiPlayerTabOverlay>(jobject(maps::GuiPlayerTabOverlay(maps::GuiIngame(this->instance).overlayPlayerList.get(), true)));
+    maps::GuiPlayerTabOverlay playerList = maps::GuiIngame(this->instance.object_instance).overlayPlayerList.get();
+    maps::GuiPlayerTabOverlay globalPlayerList{ playerList.object_instance, true };
+    return std::make_unique<GuiPlayerTabOverlay>(globalPlayerList);
 }

@@ -5,9 +5,9 @@
 class List final : public Collection
 {
 public:
-	explicit List(const jobject instance);
+    explicit List(maps::List instance);
 
-	virtual ~List() override;
+    virtual ~List() override;
 
-	[[nodiscard]] jobject Get(const jint index) const;
+    [[nodiscard]] maps::Object Get(const jint index) const;
 };

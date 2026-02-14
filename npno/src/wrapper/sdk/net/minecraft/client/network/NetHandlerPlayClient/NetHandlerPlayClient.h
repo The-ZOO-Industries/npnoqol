@@ -8,9 +8,9 @@
 class NetHandlerPlayClient final : public JavaClass
 {
 public:
-	explicit NetHandlerPlayClient(const jobject instance);
+    explicit NetHandlerPlayClient(maps::NetHandlerPlayClient instance);
 
-	virtual ~NetHandlerPlayClient() override;
+    virtual ~NetHandlerPlayClient() override;
 
-	[[nodiscard]] std::vector<std::unique_ptr<NetworkPlayerInfo>> GetPlayerInfoMap() const;
+    [[nodiscard]] std::vector<std::unique_ptr<NetworkPlayerInfo>> GetPlayerInfoMap() const;
 };

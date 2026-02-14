@@ -1,23 +1,25 @@
 #include "WorldClient.h"
 
-WorldClient::WorldClient(const jobject instance)
-    : World(instance)
+WorldClient::WorldClient(maps::WorldClient instance)
+    : World(maps::World(instance.object_instance, instance.is_global()))
 {
 
 }
 
 WorldClient::~WorldClient() = default;
 
-auto WorldClient::GetScoreboard() const -> std::unique_ptr<Scoreboard>
+std::unique_ptr<Scoreboard> WorldClient::GetScoreboard() const
 {
-    jni::frame f;
-
-    return std::make_unique<Scoreboard>(jobject(maps::Scoreboard(maps::WorldClient(this->instance).getScoreboard.call(), true)));
+    maps::Scoreboard scoreboard = maps::WorldClient(this->instance.object_instance).getScoreboard.call();
+    maps::Scoreboard globalScoreboard{ scoreboard.object_instance, true };
+    return std::make_unique<Scoreboard>(globalScoreboard);
 }
 
-auto WorldClient::GetPlayerEntityByName(const std::string& name) const -> std::unique_ptr<EntityPlayer>
+std::unique_ptr<EntityPlayer> WorldClient::GetPlayerEntityByName(const std::string& name) const
 {
-    jni::frame f;
-
-    return std::make_unique<EntityPlayer>(jobject(maps::EntityPlayer(maps::WorldClient(this->instance).getPlayerEntityByName.call(JavaUtil::StringToJString(name)), true)));
+    jstring jname = JavaUtil::StringToJString(name);
+    maps::String nameStr{ jname };
+    maps::EntityPlayer player = maps::WorldClient(this->instance.object_instance).getPlayerEntityByName.call(nameStr);
+    maps::EntityPlayer globalPlayer{ player.object_instance, true };
+    return std::make_unique<EntityPlayer>(globalPlayer);
 }

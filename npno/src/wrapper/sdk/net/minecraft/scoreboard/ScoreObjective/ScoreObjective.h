@@ -5,12 +5,12 @@
 class ScoreObjective final : public JavaClass
 {
 public:
-	explicit ScoreObjective(const jobject instance);
+    explicit ScoreObjective(maps::ScoreObjective instance);
 
-	virtual ~ScoreObjective() override;
+    virtual ~ScoreObjective() override;
 
-	[[nodiscard]] std::string GetName() const;
-	[[nodiscard]] std::string GetDisplayName() const;
+    [[nodiscard]] std::string GetName() const;
+    [[nodiscard]] std::string GetDisplayName() const;
 
-	void SetDisplayName(const std::string& name) const;
+    void SetDisplayName(const std::string& name) const;
 };

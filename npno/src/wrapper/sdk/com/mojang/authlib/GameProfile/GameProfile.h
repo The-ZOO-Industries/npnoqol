@@ -7,11 +7,10 @@
 class GameProfile final : public JavaClass
 {
 public:
-	explicit GameProfile(const jobject instance);
+    explicit GameProfile(maps::GameProfile instance);
 
-	virtual ~GameProfile() override;
+    virtual ~GameProfile() override;
 
-	[[nodiscard]] std::string GetName() const;
-
-	[[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
+    [[nodiscard]] std::string GetName() const;
+    [[nodiscard]] std::unique_ptr<PropertyMap> GetProperties() const;
 };

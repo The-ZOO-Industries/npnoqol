@@ -28,6 +28,7 @@
     <ClInclude Include="ext\jni\jvmti.h" />
     <ClInclude Include="ext\jni\jvmticmlr.h" />
     <ClInclude Include="ext\meta_jni\meta_jni.hpp" />
+    <ClInclude Include="ext\meta_jni\stacktrace.hpp" />
     <ClInclude Include="ext\nlohmann\json.hpp" />
     <ClInclude Include="ext\nlohmann\json_fwd.hpp" />
     <ClInclude Include="ext\npno\Type.hpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\Collection\Collection.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\List\List.h" />
+    <ClInclude Include="src\wrapper\sdk\java\util\Set\Set.h" />
     <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.h" />
@@ -125,6 +127,7 @@
     <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\Collection\Collection.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp" />
+    <ClCompile Include="src\wrapper\sdk\java\util\Set\Set.cpp" />
     <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
     <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.cpp" />
@@ -260,7 +263,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -284,7 +287,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)ext\jni\jvm.lib;Wldap32.lib;Crypt32.lib;Ws2_32.lib;iphlpapi.lib;secur32.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

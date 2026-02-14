@@ -14,12 +14,22 @@
 #include <shared_mutex>
 #include <cstdint>
 #include <functional>
+#include <dbghelp.h>
+#include <iostream>
+
+#include "stacktrace.hpp"
+
+//#define NDEBUG
 
 #ifdef NDEBUG
-	#define assertm(exp, msg) ;
+#define assertm(exp, msg) \
+
 #else
-	#include <iostream>
-	#define assertm(exp, msg) if (!(exp)) { std::cout << (msg) << '\n'; abort(); }
+#define assertm(exp, msg) \
+        if (!(exp)) { \
+            std::cout << (msg) << '\n'; \
+            PrintStackTrace(); \
+        }
 #endif
 
 #define BEGIN_KLASS_DEF(unobf_klass_name, obf_klass_name) struct unobf_klass_name##_members; using unobf_klass_name = jni::klass<obf_klass_name, unobf_klass_name##_members>; struct unobf_klass_name##_members : public jni::empty_members	{ unobf_klass_name##_members(jclass owner_klass, jobject object_instance, bool is_global_ref) : jni::empty_members(owner_klass, object_instance, is_global_ref) {}

@@ -1,42 +1,38 @@
 #include "ScorePlayerTeam.h"
 
-ScorePlayerTeam::ScorePlayerTeam(const jobject instance)
-    : JavaClass(instance)
+ScorePlayerTeam::ScorePlayerTeam(maps::ScorePlayerTeam instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
 
 ScorePlayerTeam::~ScorePlayerTeam() = default;
 
-std::string ScorePlayerTeam::GetTeamName() const 
+std::string ScorePlayerTeam::GetTeamName() const
 {
-    jni::frame f;
-
-    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getTeamName.call()));
+    maps::String teamName = maps::ScorePlayerTeam(this->instance.object_instance).getTeamName.call();
+    return JavaUtil::JStringToString((jstring)jobject(teamName));
 }
 
-std::string ScorePlayerTeam::GetNamePrefix() const 
+std::string ScorePlayerTeam::GetNamePrefix() const
 {
-    jni::frame f;
-
-    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getColorPrefix.call()));
+    maps::String prefix = maps::ScorePlayerTeam(this->instance.object_instance).getColorPrefix.call();
+    return JavaUtil::JStringToString((jstring)jobject(prefix));
 }
 
-std::string ScorePlayerTeam::GetNameSuffix() const 
+std::string ScorePlayerTeam::GetNameSuffix() const
 {
-    jni::frame f;
-
-    return JavaUtil::JStringToString((jstring)jobject(maps::ScorePlayerTeam(this->instance).getColorSuffix.call()));
+    maps::String suffix = maps::ScorePlayerTeam(this->instance.object_instance).getColorSuffix.call();
+    return JavaUtil::JStringToString((jstring)jobject(suffix));
 }
 
 std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const
 {
-    jni::frame f;
-
     std::vector<std::string> members;
 
-    maps::Collection collection = maps::ScorePlayerTeam(this->instance).getMembershipCollection.call();
-    std::vector<maps::Object> vec = collection.toArray().to_vector();
+    maps::Collection collection = maps::ScorePlayerTeam(this->instance.object_instance).getMembershipCollection.call();
+    jni::array<maps::Object> array = collection.toArray.call();
+    std::vector<maps::Object> vec = array.to_vector();
 
     for (maps::Object& obj : vec)
     {
@@ -48,14 +44,14 @@ std::vector<std::string> ScorePlayerTeam::GetMembershipCollection() const
 
 void ScorePlayerTeam::SetNamePrefix(const std::string& prefix) const
 {
-    jni::frame f;
-
-    maps::ScorePlayerTeam(this->instance).setNamePrefix.call(JavaUtil::StringToJString(prefix));
+    jstring jPrefix = JavaUtil::StringToJString(prefix);
+    maps::String prefixStr{ jPrefix };
+    maps::ScorePlayerTeam(this->instance.object_instance).setNamePrefix.call(prefixStr);
 }
 
 void ScorePlayerTeam::SetNameSuffix(const std::string& suffix) const
 {
-    jni::frame f;
-    
-    maps::ScorePlayerTeam(this->instance).setNameSuffix.call(JavaUtil::StringToJString(suffix));
+    jstring jSuffix = JavaUtil::StringToJString(suffix);
+    maps::String suffixStr{ jSuffix };
+    maps::ScorePlayerTeam(this->instance.object_instance).setNameSuffix.call(suffixStr);
 }

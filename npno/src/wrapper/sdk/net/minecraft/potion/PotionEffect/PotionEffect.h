@@ -5,12 +5,12 @@
 class PotionEffect final : public JavaClass
 {
 public:
-	explicit PotionEffect(const jobject instance);
+    explicit PotionEffect(maps::PotionEffect instance);
 
-	virtual ~PotionEffect() override;
+    virtual ~PotionEffect() override;
 
-	[[nodiscard]] I32 GetDuration() const;
-	[[nodiscard]] I32 GetAmplifier() const;
+    [[nodiscard]] I32 GetDuration() const;
+    [[nodiscard]] I32 GetAmplifier() const;
 
-	[[nodiscard]] std::string GetEffectName() const;
+    [[nodiscard]] std::string GetEffectName() const;
 };

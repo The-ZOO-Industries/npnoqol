@@ -5,8 +5,8 @@
 class ChatComponentText final : public IChatComponent
 {
 public:
-	explicit ChatComponentText(const jobject instance);
-	explicit ChatComponentText(const std::string& text);
+    explicit ChatComponentText(maps::ChatComponentText instance);
+    explicit ChatComponentText(const std::string& text);
 
-	virtual ~ChatComponentText() override;
+    virtual ~ChatComponentText() override;
 };

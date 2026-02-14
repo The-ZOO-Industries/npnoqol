@@ -7,11 +7,11 @@
 class ChatLine final : public JavaClass
 {
 public:
-    explicit ChatLine(const jobject instance);
+    explicit ChatLine(maps::ChatLine instance);
 
     virtual ~ChatLine() override;
 
-	[[nodiscard]] I32 GetChatLineID() const;
+    [[nodiscard]] I32 GetChatLineID() const;
 
     [[nodiscard]] std::unique_ptr<IChatComponent> GetLineString() const;
 

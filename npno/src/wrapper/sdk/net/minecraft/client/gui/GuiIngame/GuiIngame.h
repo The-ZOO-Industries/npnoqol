@@ -8,10 +8,10 @@
 class GuiIngame final : public JavaClass
 {
 public:
-	explicit GuiIngame(const jobject instance);
+    explicit GuiIngame(maps::GuiIngame instance);
 
-	virtual ~GuiIngame() override;
+    virtual ~GuiIngame() override;
 
-	[[nodiscard]] std::unique_ptr<GuiNewChat> GetPersistantChatGUI() const;
-	[[nodiscard]] std::unique_ptr<GuiPlayerTabOverlay> GetOverlayPlayerList() const;
+    [[nodiscard]] std::unique_ptr<GuiNewChat> GetPersistantChatGUI() const;
+    [[nodiscard]] std::unique_ptr<GuiPlayerTabOverlay> GetOverlayPlayerList() const;
 };

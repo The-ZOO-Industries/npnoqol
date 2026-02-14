@@ -1,7 +1,7 @@
 #include "World.h"
 
-World::World(const jobject instance)
-    : JavaClass(instance)
+World::World(maps::World instance)
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,26 +10,24 @@ World::~World() = default;
 
 std::unique_ptr<WorldInfo> World::GetWorldInfo() const
 {
-    jni::frame f;
-
-    return std::make_unique<WorldInfo>(jobject(maps::WorldInfo(maps::World(this->instance).worldInfo.get(), true)));
+    maps::WorldInfo worldInfo = maps::World(this->instance.object_instance).worldInfo.get();
+    maps::WorldInfo globalWorldInfo{ worldInfo.object_instance, true };
+    return std::make_unique<WorldInfo>(globalWorldInfo);
 }
 
 std::vector<std::unique_ptr<EntityPlayer>> World::GetPlayerEntities() const
 {
-    jni::frame f;
-
     std::vector<std::unique_ptr<EntityPlayer>> playerList;
 
-    maps::List listWrapper = maps::GuiNewChat(this->instance).chatLines.get();
-
-    jni::array<maps::Object> array = ((maps::Collection)listWrapper).toArray.call();
-
+    maps::List listWrapper = maps::World(this->instance.object_instance).playerEntities.get();
+    maps::Collection collection{ listWrapper.object_instance, listWrapper.is_global() };
+    jni::array<maps::Object> array = collection.toArray.call();
     std::vector<maps::Object> vec = array.to_vector();
 
     for (maps::Object& obj : vec)
     {
-        playerList.emplace_back(std::make_unique<EntityPlayer>(jobject(maps::EntityPlayer(obj, true))));
+        maps::EntityPlayer player{ obj.object_instance, true };
+        playerList.emplace_back(std::make_unique<EntityPlayer>(player));
     }
 
     return playerList;

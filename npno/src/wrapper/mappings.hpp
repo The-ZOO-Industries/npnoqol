@@ -8,6 +8,7 @@ namespace maps
     KLASS_DECLARATION(String, "java/lang/String");
     KLASS_DECLARATION(Collection, "java/util/Collection");
     KLASS_DECLARATION(List, "java/util/List");
+    KLASS_DECLARATION(Set, "java/util/Set");
     KLASS_DECLARATION(UUID, "java/util/UUID");
     KLASS_DECLARATION(Property, "com/mojang/authlib/properties/Property");
     KLASS_DECLARATION(PropertyMap, "com/mojang/authlib/properties/PropertyMap");
@@ -47,6 +48,9 @@ namespace maps
 
     BEGIN_KLASS_MEMBERS_EX(List, Collection)
         jni::method<Object, "get", jni::NOT_STATIC, jint> get{ *this };
+    END_KLASS_MEMBERS()
+
+    BEGIN_KLASS_MEMBERS_EX(Set, Collection)
     END_KLASS_MEMBERS()
 
     BEGIN_KLASS_MEMBERS(UUID)

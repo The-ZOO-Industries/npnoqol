@@ -1,7 +1,7 @@
 #include "Collection.h"
 
-Collection::Collection(const jobject instance) : 
-    JavaClass(instance) 
+Collection::Collection(maps::Collection instance) 
+    : JavaClass(maps::Object(instance.object_instance, instance.is_global()))
 {
 
 }
@@ -10,10 +10,10 @@ Collection::~Collection() = default;
 
 jint Collection::Size() const 
 {
-    return maps::Collection(this->instance).size.call();
+    return maps::Collection(this->instance.object_instance).size.call();
 }
 
-jobjectArray Collection::ToArray() const 
+jni::array<maps::Object> Collection::ToArray() const
 {
-    return (jobjectArray)jobject(maps::Collection(this->instance).toArray.call());
+    return maps::Collection(this->instance).toArray.call();
 }
