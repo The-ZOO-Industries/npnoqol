@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ext\easy_jni\easy_jni.hpp" />
     <ClInclude Include="ext\jni\classfile_constants.h" />
     <ClInclude Include="ext\jni\jawt.h" />
     <ClInclude Include="ext\jni\jawt_md.h" />
@@ -27,129 +28,35 @@
     <ClInclude Include="ext\jni\jni_md.h" />
     <ClInclude Include="ext\jni\jvmti.h" />
     <ClInclude Include="ext\jni\jvmticmlr.h" />
-    <ClInclude Include="ext\meta_jni\meta_jni.hpp" />
-    <ClInclude Include="ext\meta_jni\stacktrace.hpp" />
     <ClInclude Include="ext\nlohmann\json.hpp" />
     <ClInclude Include="ext\nlohmann\json_fwd.hpp" />
-    <ClInclude Include="ext\npno\Type.hpp" />
-    <ClInclude Include="src\Base\Base.hpp" />
-    <ClInclude Include="src\feature\impl\command\CommandManager\CommandManager.hpp" />
-    <ClInclude Include="src\feature\impl\command\Command\Command.hpp" />
-    <ClInclude Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.hpp" />
-    <ClInclude Include="src\feature\FeatureManager\FeatureManager.hpp" />
-    <ClInclude Include="src\feature\Feature\Feature.hpp" />
-    <ClInclude Include="src\feature\impl\flag\FlagManager\FlagManager.hpp" />
-    <ClInclude Include="src\feature\impl\flag\Flag\Flag.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\AutoGG\AutoGG.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\ChatManager\ChatManager.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\NickManager\NickManager.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.hpp" />
-    <ClInclude Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.hpp" />
-    <ClInclude Include="src\feature\impl\module\HypixelModule\HypixelModule.hpp" />
-    <ClInclude Include="src\feature\impl\module\ModuleManager\ModuleManager.hpp" />
-    <ClInclude Include="src\feature\impl\module\Module\Module.hpp" />
-    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp" />
-    <ClInclude Include="src\util\Base64\Base64.hpp" />
-    <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp" />
-    <ClInclude Include="src\util\Config\AutoGGConfig.hpp" />
-    <ClInclude Include="src\util\Config\BlacklistedLinesConfig.hpp" />
-    <ClInclude Include="src\util\Config\Config.hpp" />
-    <ClInclude Include="src\util\Config\NickSkinsConfig.hpp" />
+    <ClInclude Include="src\base\base.hpp" />
+    <ClInclude Include="src\feature\feature_manager.hpp" />
+    <ClInclude Include="src\feature\feature.hpp" />
+    <ClInclude Include="src\feature\impl\command\command.hpp" />
+    <ClInclude Include="src\feature\impl\command\command_manager.hpp" />
+    <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
+    <ClInclude Include="src\util\enum_chat_formatting.hpp" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
-    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp" />
-    <ClInclude Include="src\util\HypixelRank\HypixelRank.hpp" />
-    <ClInclude Include="src\util\MinecraftCode\MinecraftCode.hpp" />
-    <ClInclude Include="src\util\Network\Network.hpp" />
-    <ClInclude Include="src\wrapper\JavaClass\JavaClass.h" />
-    <ClInclude Include="src\wrapper\JavaUtil\JavaUtil.h" />
-    <ClInclude Include="src\wrapper\Jvm\Jvm.h" />
-    <ClInclude Include="src\wrapper\mappings.hpp" />
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.h" />
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.h" />
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h" />
-    <ClInclude Include="src\wrapper\sdk\java\util\Collection\Collection.h" />
-    <ClInclude Include="src\wrapper\sdk\java\util\List\List.h" />
-    <ClInclude Include="src\wrapper\sdk\java\util\Set\Set.h" />
-    <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\Minecraft\Minecraft.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\NetworkPlayerInfo\NetworkPlayerInfo.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.h" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\World\World.h" />
+    <ClInclude Include="src\wrapper\register_classes.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\entity_player_sp.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\minecraft.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\world_client.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity_living_base.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\entity_player.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\chat_component_text.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\i_chat_component.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\world.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Base\Base.cpp" />
-    <ClCompile Include="src\Base\dllmain.cpp" />
-    <ClCompile Include="src\feature\impl\command\CommandManager\CommandManager.cpp" />
-    <ClCompile Include="src\feature\impl\command\Command\Command.cpp" />
-    <ClCompile Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.cpp" />
-    <ClCompile Include="src\feature\FeatureManager\FeatureManager.cpp" />
-    <ClCompile Include="src\feature\Feature\Feature.cpp" />
-    <ClCompile Include="src\feature\impl\flag\FlagManager\FlagManager.cpp" />
-    <ClCompile Include="src\feature\impl\flag\Flag\Flag.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\AutoGG\AutoGG.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\ChatManager\ChatManager.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\NickManager\NickManager.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.cpp" />
-    <ClCompile Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.cpp" />
-    <ClCompile Include="src\feature\impl\module\HypixelModule\HypixelModule.cpp" />
-    <ClCompile Include="src\feature\impl\module\ModuleManager\ModuleManager.cpp" />
-    <ClCompile Include="src\feature\impl\module\Module\Module.cpp" />
-    <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp" />
-    <ClCompile Include="src\util\Base64\Base64.cpp" />
-    <ClCompile Include="src\util\ChatUtil\ChatUtil.cpp" />
-    <ClCompile Include="src\util\Config\Config.cpp" />
-    <ClCompile Include="src\util\HypixelRank\HypixelRank.cpp" />
-    <ClCompile Include="src\util\Network\Network.cpp" />
-    <ClCompile Include="src\wrapper\JavaClass\JavaClass.cpp" />
-    <ClCompile Include="src\wrapper\JavaUtil\JavaUtil.cpp" />
-    <ClCompile Include="src\wrapper\Jvm\Jvm.cpp" />
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.cpp" />
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.cpp" />
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.cpp" />
-    <ClCompile Include="src\wrapper\sdk\java\util\Collection\Collection.cpp" />
-    <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp" />
-    <ClCompile Include="src\wrapper\sdk\java\util\Set\Set.cpp" />
-    <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\Minecraft\Minecraft.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\network\NetworkPlayerInfo\NetworkPlayerInfo.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.cpp" />
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp" />
+    <ClCompile Include="src\base\base.cpp" />
+    <ClCompile Include="src\base\dllmain.cpp" />
+    <ClCompile Include="src\feature\feature_manager.cpp" />
+    <ClCompile Include="src\feature\feature.cpp" />
+    <ClCompile Include="src\feature\impl\command\command.cpp" />
+    <ClCompile Include="src\feature\impl\command\command_manager.cpp" />
+    <ClCompile Include="src\feature\impl\command\impl\set_apikey.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
@@ -178,14 +85,14 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

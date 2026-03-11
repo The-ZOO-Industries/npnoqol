@@ -1,33 +1,35 @@
-#include "Base.hpp"
+#include "base.hpp"
 
-#include "../wrapper/Jvm/Jvm.h"
+#include "../wrapper/register_classes.hpp"
 
-#include <chrono>
-#include <thread>
-#include <windows.h>
-
-Base::Base()
-    : running{ Jvm::Init() }
+npno::base::base()
+    : running{ jni::init()}
 {
     if (running)
     {
-        this->featureManager = std::make_unique<FeatureManager>();
+        jni::register_classes();
+
+        this->features = std::make_unique<feature_manager>();
     }
 }
 
-Base::~Base() = default;
+npno::base::~base()
+{
+    jni::shutdown();
+}
 
-auto Base::Run() -> void
+auto npno::base::run()
+    -> void
 {
     while (this->running)
     {
-        this->featureManager->Update();
+        this->features->update();
 
         if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
         {
             this->running = false;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds{ 5 });
     }
 }

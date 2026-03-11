@@ -1,18 +1,22 @@
 #pragma once
 
-#include "../feature/FeatureManager/FeatureManager.hpp"
+#include "../feature/feature_manager.hpp"
 
-class Base final
+namespace npno
 {
-public:
-    Base();
+    class base final
+    {
+    public:
+        base();
 
-    ~Base();
+        ~base();
 
-    auto Run() -> void;
+        auto run() 
+            -> void;
 
-private:
-    std::unique_ptr<FeatureManager> featureManager;
+    private:
+        std::unique_ptr<feature_manager> features;
 
-    bool running;
-};
+        bool running;
+    };
+}
