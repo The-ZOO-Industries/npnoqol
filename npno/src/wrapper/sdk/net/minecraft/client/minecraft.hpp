@@ -2,9 +2,9 @@
 
 #include <easy_jni/easy_jni.hpp>
 
-#include "../client/entity/entity_player_sp.hpp"
-#include "../client/multiplayer/world_client.hpp"
-#include "../client/gui/gui_ingame.hpp"
+#include "entity/entity_player_sp.hpp"
+#include "multiplayer/world_client.hpp"
+#include "gui/gui_ingame.hpp"
 
 namespace jni
 {

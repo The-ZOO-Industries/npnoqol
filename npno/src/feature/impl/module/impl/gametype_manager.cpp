@@ -8,16 +8,13 @@ npno::gametype_manager::gametype_manager()
 
 npno::gametype_manager::~gametype_manager() = default;
 
-auto npno::gametype_manager::update()
-	-> void
-{
-    
-}
-
 auto npno::gametype_manager::on_load_world()
     -> void
 {
-    mc->get_the_player()->send_chat_message("/locraw");
+    if (this->sanity_check())
+    {
+        mc->get_the_player()->send_chat_message("/locraw");
+    }
 }
 
 auto npno::gametype_manager::on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)

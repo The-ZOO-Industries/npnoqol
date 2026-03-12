@@ -20,14 +20,75 @@ namespace npno
 		auto get_gametype() const
 			-> hypixel_gametype::gametype;
 
-	private:
+	protected:
 		struct player_data 
 		{
-			std::string name{};
+			std::string prefix{};
+			std::string rank{};
+			std::string suffix{};
+
+			bool is_nicked{ false };
+			bool error{ false };
 		};
+
+		struct team
+		{
+			std::vector<std::string> players{};
+			std::string hypixel_team{};
+			std::string npno_team{};
+
+			auto operator==(const team& other) const -> bool
+			{
+				return hypixel_team == other.hypixel_team and npno_team == other.npno_team;
+			}
+
+			auto operator<(const team& other) const -> bool
+			{
+				if (hypixel_team != other.hypixel_team)
+				{
+					return hypixel_team < other.hypixel_team;
+				}
+				return npno_team < other.npno_team;
+			}
+		};
+
+		auto update_tab_list() 
+			-> void;
+		auto update_nametags() 
+			-> void;
+
+		virtual auto get_player_data(const std::string& player_name) 
+			-> player_data;
+
+		virtual auto load_players_datas(const std::vector<std::string>& player_names) 
+			-> void = 0;
+
+		virtual auto format_tab_name(const std::unique_ptr<jni::entity_player>& player) 
+			-> std::string = 0;
+		virtual auto format_nametag(const std::unique_ptr<jni::entity_player>& player) 
+			-> std::pair<std::string, std::string> = 0;
+
+		virtual auto get_hp_color(const float hp) const 
+			-> std::string;
+
+		virtual auto handle_mode() 
+			-> void = 0;
+
+		std::map<team, std::vector<std::string>> sorted_teams;
+		std::unordered_map<std::string, team> team_manager;
 
 		std::unordered_map<std::string, player_data> player_cache;
 
 		hypixel_gametype::gametype gametype;
+
+	private:
+		auto orginize_teams() 
+			-> void;
+		auto fill_team_manager() 
+			-> void;
+		auto assign_npno_teams() 
+			-> void;
+		auto apply_teams()
+			-> void;
 	};
 }

@@ -17,3 +17,9 @@ auto npno::feature::sanity_check() const
 {
 	return mc->get_the_player()->get_instance() and mc->get_the_world()->get_instance();
 }
+
+auto npno::feature::is_bot(const std::unique_ptr<jni::entity_player>& entity) const
+	-> bool
+{
+	return entity->get_unique_id()->version() == 2;
+}

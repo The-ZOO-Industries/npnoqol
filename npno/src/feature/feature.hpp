@@ -13,6 +13,7 @@
 #include <print>
 #include <sstream>
 #include <mutex>
+#include <regex>
 
 namespace npno
 {
@@ -28,6 +29,9 @@ namespace npno
 
 		virtual auto sanity_check() const 
 			-> bool;
+
+		virtual auto is_bot(const std::unique_ptr<jni::entity_player>& entity) const
+			-> bool final;
 
 	protected:
 		inline static std::unique_ptr<jni::minecraft> mc{};

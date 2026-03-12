@@ -4,24 +4,23 @@
 
 namespace npno
 {
-	class gametype_manager final : public npno::module 
+	class chat_manager final : public npno::module
 	{
 	public:
-		gametype_manager();
+		chat_manager();
 
-		~gametype_manager();
+		~chat_manager();
 
 		auto update()
 			-> void override {};
 
 		auto on_load_world()
-			-> void override;
+			-> void override {};
 
 		auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
 			-> bool override;
 
 	private:
-		auto extract_json(const std::string& line) const
-			-> std::string;
+		std::vector<std::regex> blacklisted_lines;
 	};
 }

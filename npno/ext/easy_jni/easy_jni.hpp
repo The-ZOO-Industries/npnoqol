@@ -1510,13 +1510,28 @@ namespace jni
 
 	// wrapper for java List, inherite to_vector
 	// same as collection but no new methods for now
-	class list : public jni::collection
+	class list final : public jni::collection
 	{
 	public:
 		explicit list(const jobject instance = nullptr)
 			: jni::collection{ instance }
 		{
 
+		}
+	};
+
+	class uuid final : public jni::collection
+	{
+		explicit uuid(const jobject instance = nullptr)
+			: jni::collection{ instance }
+		{
+
+		}
+
+		auto version() const
+			-> int
+		{
+			return get_field<int>("version")->get();
 		}
 	};
 
@@ -1631,6 +1646,7 @@ namespace jni
 			// already register some java datastructures that have helper methods
 			jni::register_class<jni::collection>("java/lang/Collection");
 			jni::register_class<jni::list>("java/util/List");
+			jni::register_class<jni::uuid>("java.util.UUID");
 
 			return true;
 		}

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 #include <nlohmann/json.hpp>
 
@@ -90,4 +91,10 @@ namespace config
 		std::ofstream out_file{ config::path };
 		out_file << data.dump(4);
 	}
+
+	inline const std::vector<std::regex> blacklisted_lines
+	{
+		std::regex{ "You are AFK. Move around to return from AFK.", std::regex_constants::icase },
+		std::regex{ "You are sending commands too fast! Please slow down.", std::regex_constants::icase }
+	};
 }

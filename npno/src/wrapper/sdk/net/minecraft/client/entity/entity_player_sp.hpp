@@ -3,6 +3,7 @@
 #include "../../entity/player/entity_player.hpp"
 
 #include "../../util/chat_component_text.hpp"
+#include "../network/net_handler_play_client.hpp"
 
 namespace jni
 {
@@ -25,6 +26,12 @@ namespace jni
 			-> void
 		{
 			get_method<void, jni::i_chat_component>("addChatMessage")->call(value);
+		}
+
+		auto get_send_queue() const
+			-> std::unique_ptr<jni::net_handler_play_client>
+		{
+			return get_field<jni::net_handler_play_client>("sendQueue")->get();
 		}
 	};
 }

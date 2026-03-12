@@ -12,5 +12,11 @@ namespace jni
 		{
 
 		}
+
+		auto get_unique_id() const
+			-> std::unique_ptr<jni::uuid>
+		{
+			return get_method<jni::uuid>("getUniqueID")->call();
+		}
 	};
 }

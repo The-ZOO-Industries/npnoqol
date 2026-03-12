@@ -3,11 +3,13 @@
 #include "hypixel_gametype_module.hpp"
 
 #include "impl/blitz_survival_games.hpp"
+#include "impl/chat_manager.hpp"
 #include "impl/gametype_manager.hpp"
 
 npno::module_manager::module_manager()
 {
 	this->register_module<npno::blitz_survival_games>();
+	this->register_module<npno::chat_manager>();
 	this->register_module<npno::gametype_manager>();
 }
 
