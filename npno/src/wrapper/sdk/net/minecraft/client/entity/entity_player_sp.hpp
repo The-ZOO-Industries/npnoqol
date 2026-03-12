@@ -18,13 +18,13 @@ namespace jni
 		auto send_chat_message(const std::string& value)
 			-> void
 		{
-			get_method<void>("sendChatMessage")->call(value);
+			get_method<void, std::string>("sendChatMessage")->call(value);
 		}
 
 		auto add_chat_message(const std::unique_ptr<jni::i_chat_component>& value)
 			-> void
 		{
-			get_method<void>("addChatMessage")->call(value);
+			get_method<void, jni::i_chat_component>("addChatMessage")->call(value);
 		}
 	};
 }

@@ -1460,7 +1460,7 @@ namespace jni
 		template<typename type, typename... args_t>
 			requires (
 				std::is_base_of_v<object, type> and
-				((std::is_same_v<std::remove_cvref_t<args_t>, std::string>
+				((std::is_convertible_v<std::remove_cvref_t<args_t>, std::string>
 				or std::is_base_of_v<object, std::remove_cvref_t<args_t>>
 				or is_object_ptr<std::remove_cvref_t<args_t>>::value) and ...)
 			)
@@ -1525,7 +1525,7 @@ namespace jni
 	template<typename type, typename... args_t>
 		requires (
 			std::is_base_of_v<object, type> and
-			((std::is_same_v<std::remove_cvref_t<args_t>, std::string>
+			((std::is_convertible_v<std::remove_cvref_t<args_t>, std::string>
 			or std::is_base_of_v<object, std::remove_cvref_t<args_t>>
 			or is_object_ptr<std::remove_cvref_t<args_t>>::value) and ...)
 		)
@@ -1542,7 +1542,7 @@ namespace jni
 			}
 
 			jni::object temp{ nullptr };
-			temp.register_method_id<void, args_t...>(clazz, "<init>", jni::method_type::NOT_STATIC, std::type_index{ typeid(type) });
+			temp.register_method_id<void, std::remove_cvref_t<args_t>...>(clazz, "<init>", jni::method_type::NOT_STATIC, std::type_index{ typeid(type) });
 
 			const jmethodID constructor_id{ jni::method_ids.at(typeid(type)).at("<init>") };
 

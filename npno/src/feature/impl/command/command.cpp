@@ -13,7 +13,7 @@ npno::command::~command() = default;
 auto npno::command::on_chat_message(const std::string& message) const
     -> bool
 {
-    if (const std::vector<std::string>& args{ this->get_arguments(message) }; std::format("/{}", this->name) == args[0])
+    if (const std::vector<std::string>& args{ this->get_arguments(message) }; this->name == args[0])
     {
         this->on_command(args);
         return true;

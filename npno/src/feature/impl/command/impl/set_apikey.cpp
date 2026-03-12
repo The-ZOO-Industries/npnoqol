@@ -1,7 +1,7 @@
 #include "set_apikey.hpp"
 
 npno::set_apikey::set_apikey()
-	: command{ "setapikey", std::format("{}/setapikey {}<api key>",
+	: command{ "/setapikey", std::format("{}/setapikey {}<apikey>",
 		enum_chat_formatting::dark_aqua,
 		enum_chat_formatting::aqua) }
 {
