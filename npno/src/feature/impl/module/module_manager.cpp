@@ -35,13 +35,6 @@ auto npno::module_manager::update()
 
 				this->load_world.clear();
 			}
-
-			if (this->print_chat_message.detected)
-			{
-				module->on_print_chat_message(this->print_chat_message.chat_component);
-
-				this->print_chat_message.clear();
-			}
 		}
 	}
 }
@@ -52,12 +45,19 @@ auto npno::module_manager::on_load_world()
 	this->load_world.detected = true;
 }
 
-auto npno::module_manager::on_print_chat_message(std::unique_ptr<jni::i_chat_component> chat_component)
-	-> void
+auto npno::module_manager::on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
+-> bool
 {
-	this->print_chat_message.detected = true;
+	bool result{ false };
+	for (const std::unique_ptr<npno::module>& module : this->modules)
+	{
+		if (module->is_enable() and module->sanity_check() and module->on_print_chat_message(chat_component))
+		{
+			result = true;
+		}
+	}
 
-	this->print_chat_message.chat_component = std::move(chat_component);
+	return result;
 }
 
 template <typename mod>

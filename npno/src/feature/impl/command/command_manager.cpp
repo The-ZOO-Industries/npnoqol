@@ -32,7 +32,7 @@ auto npno::command_manager::on_chat_message(const std::string& message)
 {
 	for (const std::unique_ptr<npno::command>& command : this->commands)
 	{
-		if (command->on_chat_message(message))
+		if (command->sanity_check() and command->on_chat_message(message))
 		{
 			std::lock_guard<std::mutex> lock{ this->hook_mutex };
 

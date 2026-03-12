@@ -11,14 +11,14 @@ namespace npno
 
 		~gametype_manager();
 
-		auto update() 
+		auto update()
 			-> void override;
 
 		auto on_load_world()
-			-> void override {};
-
-		virtual auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
 			-> void override;
+
+		auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
+			-> bool override;
 
 	private:
 		auto extract_json(const std::string& line) const

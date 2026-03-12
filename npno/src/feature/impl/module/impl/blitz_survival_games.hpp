@@ -13,5 +13,8 @@ namespace npno
 
 		auto update()
 			-> void override;
+
+		auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
+			-> bool override;
 	};
 }

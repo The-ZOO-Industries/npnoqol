@@ -15,7 +15,7 @@ namespace npno
 			-> void = 0;
 
 		virtual auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
-			-> void = 0;
+			-> bool = 0;
 
 		auto is_enable() const
 			-> bool;

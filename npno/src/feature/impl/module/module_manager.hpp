@@ -17,8 +17,8 @@ namespace npno
 		auto on_load_world()
 			-> void;
 
-		auto on_print_chat_message(std::unique_ptr<jni::i_chat_component> chat_component)
-			-> void;
+		auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
+			-> bool;
 
 	private:
 		template <typename mod>
@@ -34,21 +34,6 @@ namespace npno
 		};
 
 		load_world_hook load_world;
-
-		struct print_chat_message_hook : public npno::hook_handler
-		{
-			std::unique_ptr<jni::i_chat_component> chat_component{};
-
-			auto clear() ->
-				void override
-			{
-				this->detected = false;
-
-				this->chat_component.reset();
-			}
-		};
-
-		print_chat_message_hook print_chat_message;
 
 		std::mutex hook_mutex;
 	};

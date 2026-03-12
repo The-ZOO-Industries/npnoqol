@@ -40,5 +40,7 @@ auto npno::feature_manager::print_chat_message(jni::hotspot::frame* frame, jni::
 {
 	auto [self, chat_component] = frame->get_arguments<jni::gui_new_chat, jni::i_chat_component>();
 
-	module_manager->on_print_chat_message(std::move(chat_component));
+	std::println("hook {}", chat_component->get_unformatted_text());
+
+	(*cancel) = module_manager->on_print_chat_message(std::move(chat_component));
 }

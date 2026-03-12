@@ -15,7 +15,7 @@ namespace npno
 			-> void override;
 
 		virtual auto on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
-			-> void override {};
+			-> bool override { return false; };
 
 		auto get_gametype() const
 			-> hypixel_gametype::gametype;
