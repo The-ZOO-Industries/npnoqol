@@ -10,20 +10,23 @@ namespace npno
 		command(const std::string& name = "", const std::string& usage = "");
 
 		virtual ~command();
-
-		virtual auto update() const 
-			-> void final {};
 			
 		virtual auto on_command(const std::vector<std::string>& args) const 
 			-> void = 0;
 
+		virtual auto update() const
+			-> void override final;
+
 		auto on_chat_message(const std::string& message) const
 			-> bool;
 
-	protected:
-		auto get_arguments(const std::string& command) const 
+		auto get_arguments(const std::string& command) const
 			-> std::vector<std::string>;
 
+		auto get_name() const
+			-> std::string;
+			 
+	protected:
 		std::string name;
 		std::string usage;
 	};

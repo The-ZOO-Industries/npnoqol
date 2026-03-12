@@ -11,7 +11,10 @@ namespace npno
 
 		~command_manager();
 
-		auto update(const std::string& message) const
+		auto update()
+			-> void;
+
+		auto on_chat_message(const std::string& message)
 			-> bool;
 
 	private:
@@ -20,6 +23,26 @@ namespace npno
 		auto register_command()
 			-> void;
 
-		std::vector <std::unique_ptr<npno::command>> commands;
+		std::vector<std::unique_ptr<npno::command>> commands;
+
+		struct hook_handler
+		{
+			bool detected{ false };
+
+			std::string command_name{};
+			std::string command_line{};
+
+			auto clear() ->
+				void
+			{
+				this->detected = false;
+
+				this->command_name = std::string{};
+				this->command_line = std::string{};
+			}
+		};
+
+		hook_handler hook;
+		std::mutex hook_mutex;
 	};
 }
