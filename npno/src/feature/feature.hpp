@@ -1,0 +1,44 @@
+#pragma once
+
+#include "../wrapper/sdk/net/minecraft/client/minecraft.hpp"
+
+#include "../util/config.hpp"
+#include "../util/enum_chat_formatting.hpp"
+#include "../util/hypixel_api.hpp"
+#include "../util/network.hpp"
+
+#include <format>
+#include <print>
+#include <sstream>
+#include <mutex>
+
+namespace npno
+{
+	class feature
+	{
+	public:
+		feature();
+
+		virtual ~feature();
+
+		virtual auto update() const
+			-> void = 0;
+
+		virtual auto sanity_check() const 
+			-> bool;
+
+	protected:
+		inline static std::unique_ptr<jni::minecraft> mc{};
+	};
+
+	struct hook_handler
+	{
+		bool detected{ false };
+
+		virtual auto clear() ->
+			void
+		{
+			this->detected = false;
+		}
+	};
+}

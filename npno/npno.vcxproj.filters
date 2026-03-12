@@ -45,354 +45,105 @@
     <ClInclude Include="ext\nlohmann\json_fwd.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\Base\Base.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\command\Command\Command.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\command\CommandManager\CommandManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\flag\Flag\Flag.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\flag\FlagManager\FlagManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\AutoGG\AutoGG.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\ChatManager\ChatManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\NickManager\NickManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\HypixelModule\HypixelModule.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\Module\Module.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\impl\module\ModuleManager\ModuleManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\api\HypixelAPI\HypixelAPI.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Base64\Base64.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\ChatUtil\ChatUtil.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Config\Config.hpp">
+    <ClInclude Include="src\base\base.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\HypixelRank\HypixelRank.hpp">
+    <ClInclude Include="src\feature\feature.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\MinecraftCode\MinecraftCode.hpp">
+    <ClInclude Include="src\feature\feature_manager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\util\Network\Network.hpp">
+    <ClInclude Include="ext\easy_jni\easy_jni.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\JavaClass\JavaClass.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\minecraft.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\JavaUtil\JavaUtil.h">
+    <ClInclude Include="src\wrapper\register_classes.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\Jvm\Jvm.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity_living_base.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\entity_player.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\entity_player_sp.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\java\util\Collection\Collection.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\world.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\java\util\List\List.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\world_client.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\java\util\UUID\UUID.h">
+    <ClInclude Include="src\feature\impl\command\command.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h">
+    <ClInclude Include="src\feature\impl\command\command_manager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.h">
+    <ClInclude Include="src\util\enum_chat_formatting.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.h">
+    <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\i_chat_component.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.h">
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\chat_component_text.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\Minecraft\Minecraft.h">
+    <ClInclude Include="src\util\hypixel_api.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\WorldClient\WorldClient.h">
+    <ClInclude Include="src\util\network.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.h">
+    <ClInclude Include="src\util\config.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\NetworkPlayerInfo\NetworkPlayerInfo.h">
+    <ClInclude Include="src\feature\impl\module\module.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\EntityLivingBase\EntityLivingBase.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\world\World\World.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\Feature\Feature.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\npno\Type.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\feature\FeatureManager\FeatureManager.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\wrapper\mappings.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Config\AutoGGConfig.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Config\BlacklistedLinesConfig.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="src\util\Config\NickSkinsConfig.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="ext\meta_jni\meta_jni.hpp">
+    <ClInclude Include="src\feature\impl\module\module_manager.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Base\Base.cpp">
+    <ClCompile Include="src\base\base.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\command\Command\Command.cpp">
+    <ClCompile Include="src\feature\feature.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\command\CommandManager\CommandManager.cpp">
+    <ClCompile Include="src\base\dllmain.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\command\impl\SetHypixelAPIKey\SetHypixelAPIKey.cpp">
+    <ClCompile Include="src\feature\feature_manager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\flag\Flag\Flag.cpp">
+    <ClCompile Include="src\feature\impl\command\command.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\flag\FlagManager\FlagManager.cpp">
+    <ClCompile Include="src\feature\impl\command\command_manager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\AutoGG\AutoGG.cpp">
+    <ClCompile Include="src\feature\impl\command\impl\set_apikey.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\ChatManager\ChatManager.cpp">
+    <ClCompile Include="src\feature\impl\module\module.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\GamemodeManager\GamemodeManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\NickManager\NickManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\ScoreboardManager\ScoreboardManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\impl\BlitzSurvivalGames\BlitzSurvivalGames.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\HypixelModule\HypixelModule.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\Module\Module.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\impl\module\ModuleManager\ModuleManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\api\HypixelAPI\HypixelAPI.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\Base64\Base64.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\ChatUtil\ChatUtil.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\Config\Config.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\HypixelRank\HypixelRank.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util\Network\Network.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\JavaClass\JavaClass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\JavaUtil\JavaUtil.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\Jvm\Jvm.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\GameProfile\GameProfile.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\Property\Property.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\com\mojang\authlib\properties\PropertyMap\PropertyMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\java\util\Collection\Collection.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\java\util\List\List.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\java\util\UUID\UUID.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\ChatLine\ChatLine.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiIngame\GuiIngame.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiNewChat\GuiNewChat.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\gui\GuiPlayerTabOverlay\GuiPlayerTabOverlay.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\Minecraft\Minecraft.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\client\network\NetworkPlayerInfo\NetworkPlayerInfo.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\Entity\Entity.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\potion\PotionEffect\PotionEffect.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Score\Score.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\Scoreboard\Scoreboard.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScoreObjective\ScoreObjective.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\scoreboard\ScorePlayerTeam\ScorePlayerTeam.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\util\ChatComponentText\ChatComponentText.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\util\IChatComponent\IChatComponent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\world\storage\WorldInfo\WorldInfo.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\wrapper\sdk\net\minecraft\world\World\World.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\Feature\Feature.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Base\dllmain.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\feature\FeatureManager\FeatureManager.cpp">
+    <ClCompile Include="src\feature\impl\module\module_manager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

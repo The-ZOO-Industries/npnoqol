@@ -1,0 +1,19 @@
+#include "feature.hpp"
+
+npno::feature::feature()
+{
+	static std::once_flag mc_flag{};
+
+	std::call_once(mc_flag, [this]()
+		{
+			mc = std::make_unique<jni::minecraft>(nullptr)->get_the_minecraft();
+		});
+}
+
+npno::feature::~feature() = default;
+
+auto npno::feature::sanity_check() const 
+	-> bool
+{
+	return mc->get_the_player()->get_instance() and mc->get_the_world()->get_instance();
+}

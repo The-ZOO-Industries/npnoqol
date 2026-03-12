@@ -1,18 +1,15 @@
-#include "Base.hpp"
-
-#include <thread>
-#include <windows.h>
+#include "base.hpp"
 
 static DWORD WINAPI ThreadEntry(const HMODULE module)
 {
-    FILE* outputBuffer = nullptr;
+    FILE* outputBuffer{ nullptr };
 
     AllocConsole();
     freopen_s(&outputBuffer, "CONOUT$", "w", stdout);
 
     {
-        const std::unique_ptr<Base> base = std::make_unique<Base>();
-        base->Run();
+        const std::unique_ptr<npno::base> base{ std::make_unique<npno::base>() };
+        base->run();
     }
 
     FreeConsole();
@@ -28,10 +25,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     case DLL_PROCESS_ATTACH:
     {
         DisableThreadLibraryCalls(hModule);
-        HANDLE threadHandle = CreateThread(nullptr, 0ull, reinterpret_cast<LPTHREAD_START_ROUTINE>(ThreadEntry), hModule, 0ul, nullptr);
-        if (threadHandle)
+        HANDLE thread_handle = CreateThread(nullptr, 0ull, reinterpret_cast<LPTHREAD_START_ROUTINE>(ThreadEntry), hModule, 0ul, nullptr);
+        if (thread_handle)
         {
-            CloseHandle(threadHandle);
+            CloseHandle(thread_handle);
         }
         break;
     }
