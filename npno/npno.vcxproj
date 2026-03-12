@@ -36,8 +36,10 @@
     <ClInclude Include="src\feature\impl\command\command.hpp" />
     <ClInclude Include="src\feature\impl\command\command_manager.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
+    <ClInclude Include="src\util\hypixel_api.hpp" />
     <ClInclude Include="src\util\enum_chat_formatting.hpp" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
+    <ClInclude Include="src\util\network.hpp" />
     <ClInclude Include="src\wrapper\register_classes.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\entity_player_sp.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\minecraft.hpp" />

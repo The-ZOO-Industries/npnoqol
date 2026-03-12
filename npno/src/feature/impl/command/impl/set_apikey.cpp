@@ -19,5 +19,16 @@ auto npno::set_apikey::on_command(const std::vector<std::string>& args) const
 		return;
 	}
 
-	std::println("you set the api key to {}", args[1]);
+	if (hypixel_api::check_apikey(args[1]))
+	{
+		mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(
+			std::format("{}Hypixel API key is valid", enum_chat_formatting::green)
+		));
+	}
+	else
+	{
+		mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(
+			std::format("{}Hypixel API key is invalid", enum_chat_formatting::red)
+		));
+	}
 }
