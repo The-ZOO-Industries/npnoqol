@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -36,15 +36,22 @@
     <ClInclude Include="src\feature\impl\command\command.hpp" />
     <ClInclude Include="src\feature\impl\command\command_manager.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
+    <ClInclude Include="src\feature\impl\module\hypixel_gametype_module.hpp" />
+    <ClInclude Include="src\feature\impl\module\impl\blitz_survival_games.hpp" />
+    <ClInclude Include="src\feature\impl\module\impl\gametype_manager.hpp" />
     <ClInclude Include="src\feature\impl\module\module.hpp" />
     <ClInclude Include="src\feature\impl\module\module_manager.hpp" />
     <ClInclude Include="src\util\config.hpp" />
     <ClInclude Include="src\util\hypixel_api.hpp" />
     <ClInclude Include="src\util\enum_chat_formatting.hpp" />
     <ClInclude Include="src\util\HypixelGamemode\HypixelGamemode.h" />
+    <ClInclude Include="src\util\hypixel_gametype.hpp" />
+    <ClInclude Include="src\util\hypixel_mode.hpp" />
     <ClInclude Include="src\util\network.hpp" />
     <ClInclude Include="src\wrapper\register_classes.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\entity_player_sp.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\gui_ingame.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\gui\gui_new_chat.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\minecraft.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\world_client.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity.hpp" />
@@ -62,6 +69,9 @@
     <ClCompile Include="src\feature\impl\command\command.cpp" />
     <ClCompile Include="src\feature\impl\command\command_manager.cpp" />
     <ClCompile Include="src\feature\impl\command\impl\set_apikey.cpp" />
+    <ClCompile Include="src\feature\impl\module\hypixel_gametype_module.cpp" />
+    <ClCompile Include="src\feature\impl\module\impl\blitz_survival_games.cpp" />
+    <ClCompile Include="src\feature\impl\module\impl\gametype_manager.cpp" />
     <ClCompile Include="src\feature\impl\module\module.cpp" />
     <ClCompile Include="src\feature\impl\module\module_manager.cpp" />
   </ItemGroup>

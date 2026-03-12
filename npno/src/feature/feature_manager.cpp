@@ -7,6 +7,7 @@ npno::feature_manager::feature_manager()
 
 	jni::hook<jni::entity_player_sp>("sendChatMessage", &npno::feature_manager::send_chat_message_hook);
 	jni::hook<jni::minecraft>("loadWorld", &npno::feature_manager::load_world_hook);
+	jni::hook<jni::gui_new_chat>("printChatMessage", &npno::feature_manager::print_chat_message);
 }
 
 npno::feature_manager::~feature_manager() = default;
@@ -31,7 +32,13 @@ auto npno::feature_manager::load_world_hook(jni::hotspot::frame* frame, jni::hot
 {
 	auto [self, _] = frame->get_arguments<jni::entity_player_sp, jni::world_client>();
 
-	std::println("load world");
-
 	module_manager->on_load_world();
+}
+
+auto npno::feature_manager::print_chat_message(jni::hotspot::frame* frame, jni::hotspot::java_thread* thread, bool* cancel)
+	-> void
+{
+	auto [self, chat_component] = frame->get_arguments<jni::gui_new_chat, jni::i_chat_component>();
+
+	module_manager->on_print_chat_message(std::move(chat_component));
 }

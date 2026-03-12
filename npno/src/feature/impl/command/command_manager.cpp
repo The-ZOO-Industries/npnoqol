@@ -16,11 +16,11 @@ auto npno::command_manager::update()
 
 	for (const std::unique_ptr<npno::command>& command : this->commands)
 	{
-		if (command->sanity_check() and this->hook.detected and command->get_name() == this->hook.command_name)
+		if (command->sanity_check() and this->send_chat_message.detected and command->get_name() == this->send_chat_message.command_name)
 		{
-			command->on_command(command->get_arguments(this->hook.command_line));
+			command->on_command(command->get_arguments(this->send_chat_message.command_line));
 
-			this->hook.clear();
+			this->send_chat_message.clear();
 
 			break;
 		}
@@ -36,9 +36,9 @@ auto npno::command_manager::on_chat_message(const std::string& message)
 		{
 			std::lock_guard<std::mutex> lock{ this->hook_mutex };
 
-			this->hook.detected = true;
-			this->hook.command_name = command->get_name();
-			this->hook.command_line = message;
+			this->send_chat_message.detected = true;
+			this->send_chat_message.command_name = command->get_name();
+			this->send_chat_message.command_line = message;
 			
 			return true;
 		}

@@ -40,7 +40,7 @@ namespace npno
 			}
 		};
 
-		send_chat_message_hook hook;
+		send_chat_message_hook send_chat_message;
 		std::mutex hook_mutex;
 	};
 }

@@ -14,3 +14,9 @@ auto npno::module::is_enable() const
 {
     return this->enable;
 }
+
+auto npno::module::set_enable(const bool state)
+    -> void
+{
+    this->enable = state;
+}

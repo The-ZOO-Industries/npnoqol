@@ -21,5 +21,8 @@ namespace jni
 
 		jni::register_class<jni::i_chat_component>("net/minecraft/util/IChatComponent");
 		jni::register_class<jni::chat_component_text>("net/minecraft/util/ChatComponentText");
+
+		jni::register_class<jni::gui_ingame>("net/minecraft/client/gui/GuiIngame");
+		jni::register_class<jni::gui_new_chat>("net/minecraft/client/gui/GuiNewChat");
 	}
 }

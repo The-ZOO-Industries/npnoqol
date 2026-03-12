@@ -5,6 +5,8 @@
 #include "../util/config.hpp"
 #include "../util/enum_chat_formatting.hpp"
 #include "../util/hypixel_api.hpp"
+#include "../util/hypixel_gametype.hpp"
+#include "../util/hypixel_mode.hpp"
 #include "../util/network.hpp"
 
 #include <format>
@@ -21,7 +23,7 @@ namespace npno
 
 		virtual ~feature();
 
-		virtual auto update() const
+		virtual auto update()
 			-> void = 0;
 
 		virtual auto sanity_check() const 

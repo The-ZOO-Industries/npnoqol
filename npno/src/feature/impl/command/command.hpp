@@ -14,7 +14,7 @@ namespace npno
 		virtual auto on_command(const std::vector<std::string>& args) const 
 			-> void = 0;
 
-		virtual auto update() const
+		virtual auto update()
 			-> void override final {};
 
 		auto on_chat_message(const std::string& message) const

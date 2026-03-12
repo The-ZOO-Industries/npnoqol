@@ -24,6 +24,9 @@ namespace npno
 		static auto load_world_hook(jni::hotspot::frame* frame, jni::hotspot::java_thread* thread, bool* cancel)
 			-> void;
 
+		static auto print_chat_message(jni::hotspot::frame* frame, jni::hotspot::java_thread* thread, bool* cancel)
+			-> void;
+
 		inline static std::unique_ptr<npno::command_manager> command_manager{};
 		inline static std::unique_ptr<npno::module_manager> module_manager{};
 	};

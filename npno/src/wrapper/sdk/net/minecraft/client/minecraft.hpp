@@ -4,6 +4,7 @@
 
 #include "../client/entity/entity_player_sp.hpp"
 #include "../client/multiplayer/world_client.hpp"
+#include "../client/gui/gui_ingame.hpp"
 
 namespace jni
 {
@@ -32,6 +33,12 @@ namespace jni
 			-> std::unique_ptr<jni::world_client>
 		{
 			return get_field<jni::world_client>("theWorld")->get();
+		}
+
+		auto get_ingame_gui() const
+			-> std::unique_ptr<jni::gui_ingame>
+		{
+			return get_field<jni::gui_ingame>("ingameGUI")->get();
 		}
 	};
 }
