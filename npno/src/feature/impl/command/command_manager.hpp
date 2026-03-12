@@ -25,15 +25,13 @@ namespace npno
 
 		std::vector<std::unique_ptr<npno::command>> commands;
 
-		struct hook_handler
+		struct send_chat_message_hook : public npno::hook_handler
 		{
-			bool detected{ false };
-
 			std::string command_name{};
 			std::string command_line{};
 
 			auto clear() ->
-				void
+				void override
 			{
 				this->detected = false;
 
@@ -42,7 +40,7 @@ namespace npno
 			}
 		};
 
-		hook_handler hook;
+		send_chat_message_hook hook;
 		std::mutex hook_mutex;
 	};
 }

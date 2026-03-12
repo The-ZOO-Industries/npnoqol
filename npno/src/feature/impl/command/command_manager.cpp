@@ -16,7 +16,7 @@ auto npno::command_manager::update()
 
 	for (const std::unique_ptr<npno::command>& command : this->commands)
 	{
-		if (this->hook.detected and command->get_name() == this->hook.command_name)
+		if (command->sanity_check() and this->hook.detected and command->get_name() == this->hook.command_name)
 		{
 			command->on_command(command->get_arguments(this->hook.command_line));
 

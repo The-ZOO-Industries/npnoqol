@@ -2,6 +2,7 @@
 
 #include "../wrapper/sdk/net/minecraft/client/minecraft.hpp"
 
+#include "../util/config.hpp"
 #include "../util/enum_chat_formatting.hpp"
 #include "../util/hypixel_api.hpp"
 #include "../util/network.hpp"
@@ -28,5 +29,16 @@ namespace npno
 
 	protected:
 		inline static std::unique_ptr<jni::minecraft> mc{};
+	};
+
+	struct hook_handler
+	{
+		bool detected{ false };
+
+		virtual auto clear() ->
+			void
+		{
+			this->detected = false;
+		}
 	};
 }

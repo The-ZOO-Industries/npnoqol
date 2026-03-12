@@ -10,12 +10,6 @@ npno::command::command(const std::string& name, const std::string& usage)
 
 npno::command::~command() = default;
 
-auto npno::command::update() const
-    -> void
-{
-
-}
-
 auto npno::command::on_chat_message(const std::string& message) const
     -> bool
 {

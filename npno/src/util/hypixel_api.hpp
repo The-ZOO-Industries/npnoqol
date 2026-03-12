@@ -1,13 +1,10 @@
 #pragma once
 
 #include "network.hpp"
-
-#include <nlohmann/json.hpp>
+#include "config.hpp"
 
 namespace hypixel_api
 {
-    inline std::string current_api_key{};
-
 	static auto check_apikey(const std::string& api_key)
 		-> bool
 	{
@@ -22,11 +19,12 @@ namespace hypixel_api
                     return false;
                 }
 
-                hypixel_api::current_api_key = api_key;
+                config::set<std::string>("api.hypixel", api_key);
+
                 return true;
             }
-            return false;
 
+            return false;
         }
         catch (...)
         {
