@@ -17,6 +17,7 @@ auto npno::hypixel_gametype_module::on_load_world()
 	this->player_cache.clear();
 	this->team_manager.clear();
 	this->sorted_teams.clear();
+	this->longest.clear();
 }
 
 auto npno::hypixel_gametype_module::get_gametype() const

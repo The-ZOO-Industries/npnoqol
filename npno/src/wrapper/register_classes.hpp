@@ -32,5 +32,7 @@ namespace jni
 		jni::register_class<jni::score_player_team>("net/minecraft/scoreboard/ScorePlayerTeam");
 
 		jni::register_class<jni::game_profile>("com/mojang/authlib/GameProfile");
+
+		jni::register_class<jni::potion_effect>("net/minecraft/potion/PotionEffect");
 	}
 }

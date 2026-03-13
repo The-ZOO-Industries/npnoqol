@@ -12,5 +12,11 @@ namespace jni
 		{
 
 		}
+
+		auto get_player_entities() const
+			-> std::vector<std::unique_ptr<jni::entity_player>>
+		{
+			return get_field<jni::list>("playerEntities")->get()->to_vector<jni::entity_player>();
+		}
 	};
 }

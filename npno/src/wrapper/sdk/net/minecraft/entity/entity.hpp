@@ -18,5 +18,11 @@ namespace jni
 		{
 			return get_method<jni::uuid>("getUniqueID")->call();
 		}
+
+		auto is_dead() const
+			-> bool
+		{
+			return get_field<bool>("isDead")->get();
+		}
 	};
 }

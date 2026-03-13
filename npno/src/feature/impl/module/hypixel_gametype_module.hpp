@@ -52,6 +52,25 @@ namespace npno
 			}
 		};
 
+		struct longest
+		{
+			std::size_t longest_prefix{ 0 };
+			std::size_t longest_rank{ 0 };
+			std::size_t longest_name{ 0 };
+			std::size_t longest_hp{ 0 };
+			std::size_t longest_suffix{ 0 };
+
+			auto clear()
+				-> void
+			{
+				this->longest_prefix = 0;
+				this->longest_rank = 0;
+				this->longest_name = 0;
+				this->longest_hp = 0;
+				this->longest_suffix = 0;
+			}
+		};
+
 		auto update_tab_list() 
 			-> void;
 		auto update_nametags() 
@@ -80,6 +99,8 @@ namespace npno
 		std::unordered_map<std::string, player_data> player_cache;
 
 		hypixel_gametype::gametype gametype;
+
+		longest longest;
 
 	private:
 		auto orginize_teams() 

@@ -102,9 +102,30 @@ auto npno::blitz_survival_games::handle_mode()
     }
 }
 
-auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::entity_player>& player) 
+auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::entity_player>& player)
     -> std::string
 {
+    for (const std::unique_ptr<jni::potion_effect>& effect : player->get_active_potion_effects())
+    {
+        if (effect->get_effect_name() == "potion.invisibility" and effect->get_duration() > 6000)
+        {
+            if (this->mode == mode::TEAMS)
+            {
+                const std::string team_name{ team_manager[player->get_name()].hypixel_team };
+                const auto it{ this->team_colors.find(team_name) };
+                if (it != this->team_colors.end() and team_colors.size() != 1)
+                {
+                    return std::format("{}{}", it->second, player->get_name());
+                }
+            }
+
+            return std::format(" {}{}",
+                enum_chat_formatting::dark_aqua,
+                player->get_name()
+            );
+        }
+    }
+
     const player_data player_data{ this->get_player_data(player->get_name()) };
     const float health{ player->get_health() + player->get_absorption_amount() };
 
@@ -161,11 +182,14 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
     );
 }
 
-auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entity_player>& player) 
+auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entity_player>& player)
     -> std::pair<std::string, std::string>
 {
+    const player_data player_data{ this->get_player_data(player->get_name()) };
     const float health{ player->get_health() + player->get_absorption_amount() };
-    std::pair<std::string, std::string> nametag{ std::format("{} ", enum_chat_formatting::dark_aqua), std::format(" {}{:.1f} ", this->get_hp_color(health), health) };
+
+    std::string prefix{ enum_chat_formatting::dark_aqua };
+    std::string suffix{};
 
     if (this->mode == mode::TEAMS)
     {
@@ -173,11 +197,13 @@ auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entit
         const auto it{ this->team_colors.find(team_name) };
         if (it != this->team_colors.end())
         {
-            nametag.first += it->second;
+            prefix += it->second;
         }
     }
 
-    return nametag;
+    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
+
+    return { prefix, suffix };
 }
 
 auto npno::blitz_survival_games::get_wins_color(const std::string& wins) const 

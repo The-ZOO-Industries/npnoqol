@@ -2,6 +2,8 @@
 
 #include "entity.hpp"
 
+#include "../potion/potion_effect.hpp"
+
 namespace jni
 {
 	class entity_living_base : public jni::entity
@@ -29,6 +31,12 @@ namespace jni
 			-> float
 		{
 			return get_method<float>("getAbsorptionAmount")->call();
+		}
+
+		auto get_active_potion_effects() const
+			-> std::vector<std::unique_ptr<jni::potion_effect>>
+		{
+			return get_method<jni::collection>("getActivePotionEffects")->call()->to_vector<jni::potion_effect>();
 		}
 	};
 }
