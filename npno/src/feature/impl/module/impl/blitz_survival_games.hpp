@@ -28,20 +28,22 @@ namespace npno
 			LOBBY
 		};
 
-		auto handle_mode() 
+		auto handle_mode()
 			-> void override;
 
-		auto format_tab_name(const std::unique_ptr<jni::entity_player>& player) 
+		auto format_tab_name(const std::unique_ptr<jni::entity_player>& player)
 			-> std::string override;
-		auto format_nametag(const std::unique_ptr<jni::entity_player>& player) 
+		auto format_nametag(const std::unique_ptr<jni::entity_player>& player)
 			-> std::pair<std::string, std::string> override;
+		auto format_second_nametag(const std::unique_ptr<jni::entity_player>& player)
+			-> std::string override;
 
-		auto get_wins_color(const std::string& wins) const 
+		auto get_wins_color(const std::string& wins) const
 			-> std::string;
-		auto get_kdr_color(const std::string& kdr) const 
+		auto get_kdr_color(const std::string& kdr) const
 			-> std::string;
 
-		auto assign_team_colors() 
+		auto assign_team_colors()
 			-> void;
 
 		std::unordered_map<std::string, std::string> team_colors;

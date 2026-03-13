@@ -159,6 +159,18 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\potion_effect.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_objective.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\i_score_objective_criteria.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_dummy_criteria.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base\base.cpp">

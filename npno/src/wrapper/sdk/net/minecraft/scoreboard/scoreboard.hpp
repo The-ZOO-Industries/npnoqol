@@ -3,6 +3,8 @@
 #include <easy_jni/easy_jni.hpp>
 
 #include "score_player_team.hpp"
+#include "score_objective.hpp"
+#include "score.hpp"
 
 namespace jni
 {
@@ -55,6 +57,42 @@ namespace jni
 			-> bool
 		{
 			return get_method<bool, std::string, std::string>("addPlayerToTeam")->call(player_name, team_name);
+		}
+
+		auto set_objective_in_display_slot(const int display_slot, const std::unique_ptr<jni::score_objective>& score) const
+			-> void
+		{
+			get_method<void, int, jni::score_objective>("setObjectiveInDisplaySlot")->call(display_slot, score);
+		}
+
+		auto get_objective_in_display_slot(const int display_slot) const
+			-> std::unique_ptr<jni::score_objective>
+		{
+			return get_method<jni::score_objective, int>("getObjectiveInDisplaySlot")->call(display_slot);
+		}
+
+		auto get_score_objectives() const
+			-> std::vector<std::unique_ptr<jni::score_objective>>
+		{
+			return get_method<jni::collection>("getScoreObjectives")->call()->to_vector<jni::score_objective>();
+		}
+
+		auto get_objective(const std::string& value) const
+			-> std::unique_ptr<jni::score_objective>
+		{
+			return get_method<jni::score_objective, std::string>("getObjective")->call(value);
+		}
+
+		auto add_score_objective(const std::string& name, const std::unique_ptr<jni::i_score_objective_criteria>& dummy) const
+			-> std::unique_ptr<jni::score_objective>
+		{
+			return get_method<jni::score_objective, std::string, jni::i_score_objective_criteria>("addScoreObjective")->call(name, dummy);
+		}
+
+		auto get_value_from_objective(const std::string& name, const std::unique_ptr<jni::score_objective>& objective) const
+			-> std::unique_ptr<jni::score>
+		{
+			return get_method<jni::score, std::string, jni::score_objective>("getValueFromObjective")->call(name, objective);
 		}
 	};
 }

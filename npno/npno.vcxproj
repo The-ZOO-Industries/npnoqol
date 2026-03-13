@@ -59,7 +59,11 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\network_player_info.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\net_handler_play_client.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\potion_effect.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\i_score_objective_criteria.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\scoreboard.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_dummy_criteria.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_objective.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_player_team.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity_living_base.hpp" />

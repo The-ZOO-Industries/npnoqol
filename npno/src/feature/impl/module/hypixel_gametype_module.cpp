@@ -14,10 +14,11 @@ auto npno::hypixel_gametype_module::on_load_world()
 {
 	hypixel_gametype::current_gametype = hypixel_gametype::gametype::LOBBY;
 
+	this->archive_player_cache();
+
 	this->player_cache.clear();
 	this->team_manager.clear();
 	this->sorted_teams.clear();
-	this->longest.clear();
 }
 
 auto npno::hypixel_gametype_module::get_gametype() const
@@ -60,18 +61,53 @@ auto npno::hypixel_gametype_module::update_nametags()
 	this->load_players();
 }
 
-auto npno::hypixel_gametype_module::get_player_data(const std::string& player_name) 
+auto npno::hypixel_gametype_module::update_second_nametags()
+	-> void
+{
+	const std::unique_ptr<jni::scoreboard>& scoreboard{ mc->get_the_world()->get_scoreboard() };
+
+	const std::unique_ptr<jni::score_objective>& existing{ scoreboard->get_objective("nig") };
+
+	if (not existing->get_instance())
+	{
+		scoreboard->add_score_objective("nig", jni::make_unique<jni::score_dummy_criteria, std::string>("ger"));
+	}
+
+	const std::unique_ptr<jni::score_objective>& objective{ scoreboard->get_objective("nig") };
+
+	scoreboard->set_objective_in_display_slot(2, objective);
+
+	for (const std::unique_ptr<jni::entity_player>& player : mc->get_the_world()->get_player_entities())
+	{
+		objective->set_display_name(this->format_second_nametag(player));
+	}
+}
+
+auto npno::hypixel_gametype_module::get_player_data(const std::string& player_name)
 	-> player_data
 {
-	if (auto it = this->player_cache.find(player_name); it != this->player_cache.end())
+	std::lock_guard lock{ this->player_cache_mutex };
+	if (auto it = player_cache.find(player_name); it != player_cache.end())
 	{
+		if (it->second.error)
+		{
+			if (auto archive_it = player_archive_cache.find(player_name); archive_it != player_archive_cache.end())
+			{
+				return archive_it->second;
+			}
+		}
+
 		return it->second;
 	}
 
-	player_data playerData{};
-	playerData.error = true;
-
-	return playerData;
+	player_data pd{};
+	pd.error = true;
+	if (auto archive_it = player_archive_cache.find(player_name); archive_it != player_archive_cache.end())
+	{
+		pd = archive_it->second;
+		pd.error = false;
+	}
+	return pd;
 }
 
 auto npno::hypixel_gametype_module::get_hp_color(const float hp) const 
@@ -83,29 +119,31 @@ auto npno::hypixel_gametype_module::get_hp_color(const float hp) const
 	return enum_chat_formatting::red;
 }
 
-auto npno::hypixel_gametype_module::orginize_teams() 
+auto npno::hypixel_gametype_module::orginize_teams()
 	-> void
 {
 	this->sorted_teams.clear();
 
-	for (const auto& [player_name, team] : this->team_manager)
+	for (const auto& [player_name, player_team] : this->team_manager)
 	{
-		if (!team.hypixel_team.empty())
+		if (!player_team.hypixel_team.empty())
 		{
-			this->sorted_teams[team].push_back(player_name);
+			team key{};
+			key.hypixel_team = player_team.hypixel_team;
+			this->sorted_teams[key].push_back(player_name);
 		}
 	}
 }
 
-auto npno::hypixel_gametype_module::fill_team_manager() 
+auto npno::hypixel_gametype_module::fill_team_manager()
 	-> void
 {
-	const std::unique_ptr<jni::world_client> the_world{ mc->get_the_world() };
-	const std::unique_ptr<jni::scoreboard> scoreboard{ the_world->get_scoreboard() };
+	const std::unique_ptr<jni::world_client>& the_world{ mc->get_the_world() };
+	const std::unique_ptr<jni::scoreboard>& scoreboard{ the_world->get_scoreboard() };
 
 	for (const std::unique_ptr<jni::score_player_team>& score_team : scoreboard->get_teams())
 	{
-		const std::string hypixel_team_name{ score_team->get_team_name() };
+		const std::string& hypixel_team_name{ score_team->get_team_name() };
 
 		for (const std::string& player_name : score_team->get_membership_collection())
 		{
@@ -121,7 +159,7 @@ auto npno::hypixel_gametype_module::fill_team_manager()
 
 			if (!hypixel_team_name.starts_with("npno_"))
 			{
-				auto it = this->team_manager.find(player_name);
+				auto it{ this->team_manager.find(player_name) };
 				if (it == this->team_manager.end())
 				{
 					team team{};
@@ -138,28 +176,29 @@ auto npno::hypixel_gametype_module::fill_team_manager()
 	}
 }
 
-auto npno::hypixel_gametype_module::assign_npno_teams() 
+auto npno::hypixel_gametype_module::assign_npno_teams()
 	-> void
 {
-	std::int32_t teamCounter{ 0 };
+	std::int32_t team_counter{ 0 };
 	for (auto& [team, players] : this->sorted_teams)
 	{
-		for (std::string& player_name : players)
+		for (std::size_t i{ 0 }; i < players.size(); ++i)
 		{
-			if (hypixel_gametype_module::team& player_team{ this->team_manager[player_name] }; player_team.npno_team.empty())
+			hypixel_gametype_module::team& player_team{ this->team_manager[players[i]] };
+			if (player_team.npno_team.empty())
 			{
-				player_team.npno_team = std::format("npno_{}", teamCounter);
+				player_team.npno_team = std::format("npno_{}_{}", team_counter, i);
 			}
 		}
-		++teamCounter;
+		++team_counter;
 	}
 }
 
-auto npno::hypixel_gametype_module::apply_teams() 
+auto npno::hypixel_gametype_module::apply_teams()
 	-> void
 {
-	const std::unique_ptr<jni::world_client> the_world{ mc->get_the_world() };
-	const std::unique_ptr<jni::scoreboard> scoreboard{ the_world->get_scoreboard() };
+	const std::unique_ptr<jni::world_client>& the_world{ mc->get_the_world() };
+	const std::unique_ptr<jni::scoreboard>& scoreboard{ the_world->get_scoreboard() };
 
 	for (const auto& [player_name, player_team] : this->team_manager)
 	{
@@ -168,27 +207,32 @@ auto npno::hypixel_gametype_module::apply_teams()
 			continue;
 		}
 
-		std::unique_ptr<jni::score_player_team> team{ scoreboard->get_team(player_team.npno_team) };
-		if (!team->get_instance())
+		if (not scoreboard->get_team(player_team.npno_team)->get_instance())
 		{
-			team = scoreboard->create_team(player_team.npno_team);
+			scoreboard->create_team(player_team.npno_team);
 		}
 
-		std::unique_ptr<jni::score_player_team> current_team{ scoreboard->get_team(player_name) };
-		if (current_team->get_instance() and not current_team->get_team_name().starts_with("npno_"))
+		const std::unique_ptr<jni::score_player_team>& team{ scoreboard->get_team(player_team.npno_team) };
+
+		const std::unique_ptr<jni::score_player_team>& current_team{ scoreboard->get_players_team(player_name) };
+
+		if (current_team->get_instance())
 		{
+			const std::string current_name{ current_team->get_team_name() };
+
 			scoreboard->remove_player_from_team(player_name, current_team);
+			scoreboard->add_player_to_team(player_name, player_team.npno_team);
 		}
-
-		if (not scoreboard->get_players_team(player_name) or scoreboard->get_players_team(player_name)->get_team_name() != player_team.npno_team)
+		else
 		{
 			scoreboard->add_player_to_team(player_name, player_team.npno_team);
 		}
 
-		if (const std::unique_ptr<jni::entity_player>& player{ the_world->get_player_entity_by_name(player_name) }; 
+		if (const std::unique_ptr<jni::entity_player>& player{ the_world->get_player_entity_by_name(player_name) };
 			player->get_instance() and not this->is_bot(player))
 		{
-			const std::pair<std::string, std::string> nametag{ this->format_nametag(player) };
+			const std::pair<std::string, std::string>& nametag{ this->format_nametag(player) };
+
 			team->set_name_prefix(nametag.first);
 			team->set_name_suffix(nametag.second);
 		}
@@ -209,16 +253,33 @@ auto npno::hypixel_gametype_module::load_players()
 
 	if (!to_fetch.empty())
 	{
-		for (const std::string& name : to_fetch)
 		{
-			player_data pending{};
-			pending.error = true;
-			this->player_cache[name] = pending;
+			std::lock_guard lock{ this->player_cache_mutex };
+			for (const std::string& name : to_fetch)
+			{
+				player_data pending{};
+				pending.error = true;
+				this->player_cache[name] = pending;
+			}
 		}
 
 		std::thread([this, to_fetch = std::move(to_fetch)]()
 			{
 				this->load_players_datas(to_fetch);
 			}).detach();
+	}
+}
+
+auto npno::hypixel_gametype_module::archive_player_cache()
+	-> void
+{
+	std::lock_guard lock{ player_cache_mutex };
+	for (const auto& [name, data] : this->player_cache)
+	{
+		player_archive_cache[name] = data;
+		if (player_archive_cache.size() > 100)
+		{
+			player_archive_cache.erase(player_archive_cache.begin());
+		}
 	}
 }

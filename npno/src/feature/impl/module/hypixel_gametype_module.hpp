@@ -37,43 +37,24 @@ namespace npno
 			std::string hypixel_team{};
 			std::string npno_team{};
 
-			auto operator==(const team& other) const -> bool
+			auto operator<(const team& other) const 
+				-> bool
 			{
-				return hypixel_team == other.hypixel_team and npno_team == other.npno_team;
+				return hypixel_team < other.hypixel_team;
 			}
 
-			auto operator<(const team& other) const -> bool
+			auto operator==(const team& other) const 
+				-> bool
 			{
-				if (hypixel_team != other.hypixel_team)
-				{
-					return hypixel_team < other.hypixel_team;
-				}
-				return npno_team < other.npno_team;
-			}
-		};
-
-		struct longest
-		{
-			std::size_t longest_prefix{ 0 };
-			std::size_t longest_rank{ 0 };
-			std::size_t longest_name{ 0 };
-			std::size_t longest_hp{ 0 };
-			std::size_t longest_suffix{ 0 };
-
-			auto clear()
-				-> void
-			{
-				this->longest_prefix = 0;
-				this->longest_rank = 0;
-				this->longest_name = 0;
-				this->longest_hp = 0;
-				this->longest_suffix = 0;
+				return hypixel_team == other.hypixel_team;
 			}
 		};
 
 		auto update_tab_list() 
 			-> void;
 		auto update_nametags() 
+			-> void;
+		auto update_second_nametags()
 			-> void;
 
 		virtual auto get_player_data(const std::string& player_name) 
@@ -86,6 +67,8 @@ namespace npno
 			-> std::string = 0;
 		virtual auto format_nametag(const std::unique_ptr<jni::entity_player>& player) 
 			-> std::pair<std::string, std::string> = 0;
+		virtual auto format_second_nametag(const std::unique_ptr<jni::entity_player>& player)
+			-> std::string = 0;
 
 		virtual auto get_hp_color(const float hp) const 
 			-> std::string;
@@ -96,11 +79,12 @@ namespace npno
 		std::map<team, std::vector<std::string>> sorted_teams;
 		std::unordered_map<std::string, team> team_manager;
 
+		std::unordered_map<std::string, player_data> player_archive_cache;
 		std::unordered_map<std::string, player_data> player_cache;
 
-		hypixel_gametype::gametype gametype;
+		mutable std::mutex player_cache_mutex;
 
-		longest longest;
+		hypixel_gametype::gametype gametype;
 
 	private:
 		auto orginize_teams() 
@@ -113,6 +97,8 @@ namespace npno
 			-> void;
 
 		auto load_players()
+			-> void;
+		auto archive_player_cache()
 			-> void;
 	};
 }

@@ -7,6 +7,8 @@ namespace hypixel_gametype
 {
     enum class gametype : std::int32_t
     {
+        UNKNOWN,
+        
         LOBBY,
         QUAKECRAFT,
         WALLS,
@@ -44,6 +46,7 @@ namespace hypixel_gametype
 
     inline const std::unordered_map<std::string, hypixel_gametype::gametype> string_to_gametype =
     {
+        {"UNKNOWN", hypixel_gametype::gametype::UNKNOWN},
         {"LOBBY", hypixel_gametype::gametype::LOBBY},
         {"QUAKECRAFT", hypixel_gametype::gametype::QUAKECRAFT},
         {"WALLS", hypixel_gametype::gametype::WALLS},

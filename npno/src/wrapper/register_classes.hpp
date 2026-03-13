@@ -30,6 +30,10 @@ namespace jni
 
 		jni::register_class<jni::scoreboard>("net/minecraft/scoreboard/Scoreboard");
 		jni::register_class<jni::score_player_team>("net/minecraft/scoreboard/ScorePlayerTeam");
+		jni::register_class<jni::score_objective>("net/minecraft/scoreboard/ScoreObjective");
+		jni::register_class<jni::score>("net/minecraft/scoreboard/Score"); 
+		jni::register_class<jni::i_score_objective_criteria>("net/minecraft/scoreboard/IScoreObjectiveCriteria");
+		jni::register_class<jni::score_dummy_criteria>("net/minecraft/scoreboard/ScoreDummyCriteria");
 
 		jni::register_class<jni::game_profile>("com/mojang/authlib/GameProfile");
 

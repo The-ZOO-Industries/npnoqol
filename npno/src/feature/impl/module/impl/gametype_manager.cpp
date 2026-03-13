@@ -38,9 +38,17 @@ auto npno::gametype_manager::on_print_chat_message(const std::unique_ptr<jni::i_
     {
         const auto json{ nlohmann::json::parse(json_part) };
 
-        if (json.contains("gametype"))
+        if (json.contains("gametype") 
+            and hypixel_gametype::string_to_gametype.find(json["gametype"].get<std::string>()) != hypixel_gametype::string_to_gametype.end())
         {
             hypixel_gametype::current_gametype = hypixel_gametype::string_to_gametype.at(json["gametype"].get<std::string>());
+            result = true;
+        }
+
+        if (not result and json.contains("gametype")
+            and hypixel_gametype::string_to_gametype.find(json["gametype"].get<std::string>()) == hypixel_gametype::string_to_gametype.end())
+        {
+            hypixel_gametype::current_gametype = hypixel_gametype::string_to_gametype.at("UNKNOWN");
             result = true;
         }
 

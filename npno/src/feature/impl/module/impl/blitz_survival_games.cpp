@@ -18,9 +18,10 @@ auto npno::blitz_survival_games::update()
 		return;
 	}
 
-	this->update_nametags();
-	this->assign_team_colors();
-	this->update_tab_list();
+    this->update_nametags();
+    this->update_second_nametags();
+    this->assign_team_colors();
+    this->update_tab_list();
 }
 
 auto npno::blitz_survival_games::on_print_chat_message(const std::unique_ptr<jni::i_chat_component>& chat_component)
@@ -60,7 +61,10 @@ auto npno::blitz_survival_games::load_players_datas(const std::vector<std::strin
                 player_data.prefix = std::format("{}[NICK]{}", enum_chat_formatting::red, enum_chat_formatting::white);
                 player_data.is_nicked = true;
 
-                this->player_cache[player_name] = player_data;
+                {
+                    std::lock_guard lock{ this->player_cache_mutex };
+                    this->player_cache[player_name] = player_data;
+                }
                 continue;
             }
 
@@ -73,12 +77,17 @@ auto npno::blitz_survival_games::load_players_datas(const std::vector<std::strin
             player_data.prefix = std::format("{}", wins);
             player_data.suffix = std::format("{:.1f}", static_cast<float>(kills) / max(1, deaths));
 
-            this->player_cache[player_name] = player_data;
+            {
+                std::lock_guard lock{ this->player_cache_mutex };
+                this->player_cache[player_name] = player_data;
+            }
         }
         catch (...)
         {
-            player_data.error = true;
-            this->player_cache[player_name] = player_data;
+            {
+                std::lock_guard lock{ this->player_cache_mutex };
+                this->player_cache[player_name] = player_data;
+            }
         }
     }
 }
@@ -201,9 +210,15 @@ auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entit
         }
     }
 
-    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
-
+    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health); 
+   
     return { prefix, suffix };
+}
+
+auto npno::blitz_survival_games::format_second_nametag(const std::unique_ptr<jni::entity_player>& player)
+    -> std::string
+{
+        
 }
 
 auto npno::blitz_survival_games::get_wins_color(const std::string& wins) const 
