@@ -58,8 +58,8 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\multiplayer\world_client.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\network_player_info.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\net_handler_play_client.hpp" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\scoreboard\scoreboard.hpp" />
-    <ClInclude Include="src\wrapper\sdk\net\minecraft\client\scoreboard\score_player_team.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\scoreboard.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_player_team.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\entity_living_base.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\entity_player.hpp" />

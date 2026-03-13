@@ -24,5 +24,13 @@ namespace jni
 
 		jni::register_class<jni::gui_ingame>("net/minecraft/client/gui/GuiIngame");
 		jni::register_class<jni::gui_new_chat>("net/minecraft/client/gui/GuiNewChat");
+
+		jni::register_class<jni::network_player_info>("net/minecraft/client/network/NetworkPlayerInfo");
+		jni::register_class<jni::net_handler_play_client>("net/minecraft/client/network/NetHandlerPlayClient");
+
+		jni::register_class<jni::scoreboard>("net/minecraft/scoreboard/Scoreboard");
+		jni::register_class<jni::score_player_team>("net/minecraft/scoreboard/ScorePlayerTeam");
+
+		jni::register_class<jni::game_profile>("com/mojang/authlib/GameProfile");
 	}
 }

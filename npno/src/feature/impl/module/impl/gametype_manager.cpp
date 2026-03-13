@@ -14,6 +14,14 @@ auto npno::gametype_manager::on_load_world()
     if (this->sanity_check())
     {
         mc->get_the_player()->send_chat_message("/locraw");
+
+        const bool valid{ hypixel_api::check_apikey(config::get<std::string>("api.hypixel")) };
+
+        mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(
+            std::format("{}Outdated hypixel apikey {}https://developer.hypixel.net/dashboard", 
+                enum_chat_formatting::red, 
+                enum_chat_formatting::aqua)
+            ));
     }
 }
 

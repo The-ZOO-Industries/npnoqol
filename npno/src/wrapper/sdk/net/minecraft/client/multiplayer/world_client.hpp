@@ -2,7 +2,7 @@
 
 #include "../../world/world.hpp"
 
-#include "../scoreboard/scoreboard.hpp"
+#include "../../scoreboard/scoreboard.hpp"
 #include "../../entity/player/entity_player.hpp"
 
 namespace jni
@@ -11,7 +11,7 @@ namespace jni
 	{
 	public:
 		explicit world_client(const jobject instance)
-			: world{ instance }
+			: jni::world{ instance }
 		{
 
 		}
@@ -25,7 +25,7 @@ namespace jni
 		auto get_player_entity_by_name(const std::string& value) const
 			-> std::unique_ptr<jni::entity_player>
 		{
-			return get_method<jni::entity_player>("getPlayerEntityByName")->call(value);
+			return get_method<jni::entity_player, std::string>("getPlayerEntityByName")->call(value);
 		}
 	};
 }

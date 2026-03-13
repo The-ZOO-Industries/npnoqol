@@ -1478,33 +1478,73 @@ namespace jni
 
 		}
 
-		// helper method for collections
 		template<typename type>
-			requires (std::is_base_of_v<object, type>)
+			requires (std::is_base_of_v<object, type> or std::is_same_v<type, std::string>)
 		auto to_vector() const
-			-> std::vector<std::unique_ptr<type>>
+			-> std::conditional_t<std::is_same_v<type, std::string>, std::vector<std::string>, std::vector<std::unique_ptr<type>>>
 		{
-			std::vector<std::unique_ptr<type>> result{};
+			using result_t = std::conditional_t<std::is_same_v<type, std::string>, std::vector<std::string>, std::vector<std::unique_ptr<type>>>;
 
-			const jobjectArray array{ this->get_method<jobjectArray>("toArray")->call() };
-
-			const jsize length{ jni::get_env()->GetArrayLength(array) };
-			result.reserve(static_cast<std::size_t>(length));
-
-			for (jsize i{ 0 }; i < length; ++i)
+			try
 			{
-				const jobject element{ jni::get_env()->GetObjectArrayElement(array, i) };
-				result.emplace_back(std::make_unique<type>(element));
-
-				if (element)
+				if (not this->instance)
 				{
-					jni::get_env()->DeleteLocalRef(element);
+					return result_t{};
 				}
+
+				const jobjectArray array{ this->get_method<jobjectArray>("toArray")->call() };
+
+				if (not array)
+				{
+					return result_t{};
+				}
+
+				const jsize length{ jni::get_env()->GetArrayLength(array) };
+
+				if (length <= 0)
+				{
+					jni::get_env()->DeleteLocalRef(array);
+					return result_t{};
+				}
+
+				result_t result{};
+				result.reserve(static_cast<std::size_t>(length));
+
+				for (jsize i{ 0 }; i < length; ++i)
+				{
+					const jobject element{ jni::get_env()->GetObjectArrayElement(array, i) };
+
+					if constexpr (std::is_same_v<type, std::string>)
+					{
+						if (element)
+						{
+							result.emplace_back(jni::string(static_cast<jstring>(element)).get_std_string());
+							jni::get_env()->DeleteLocalRef(element);
+						}
+						else
+						{
+							result.emplace_back(std::string{});
+						}
+					}
+					else
+					{
+						result.emplace_back(std::make_unique<type>(element));
+
+						if (element)
+						{
+							jni::get_env()->DeleteLocalRef(element);
+						}
+					}
+				}
+
+				jni::get_env()->DeleteLocalRef(array);
+
+				return result;
 			}
-
-			jni::get_env()->DeleteLocalRef(array);
-
-			return result;
+			catch (...)
+			{
+				return result_t{};
+			}
 		}
 	};
 
@@ -1520,10 +1560,11 @@ namespace jni
 		}
 	};
 
-	class uuid final : public jni::collection
+	class uuid final : public jni::object
 	{
+	public:
 		explicit uuid(const jobject instance = nullptr)
-			: jni::collection{ instance }
+			: jni::object{ instance }
 		{
 
 		}
@@ -1531,7 +1572,7 @@ namespace jni
 		auto version() const
 			-> int
 		{
-			return get_field<int>("version")->get();
+			return get_method<int>("version")->call();
 		}
 	};
 
@@ -1644,9 +1685,9 @@ namespace jni
 			}
 
 			// already register some java datastructures that have helper methods
-			jni::register_class<jni::collection>("java/lang/Collection");
+			jni::register_class<jni::collection>("java/util/Collection");
 			jni::register_class<jni::list>("java/util/List");
-			jni::register_class<jni::uuid>("java.util.UUID");
+			jni::register_class<jni::uuid>("java/util/UUID");
 
 			return true;
 		}

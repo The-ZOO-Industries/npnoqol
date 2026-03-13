@@ -12,5 +12,23 @@ namespace jni
 		{
 
 		}
+
+		auto get_health() const
+			-> float
+		{
+			return get_method<float>("getHealth")->call();
+		}
+
+		auto get_max_health() const
+			-> float
+		{
+			return get_method<float>("getMaxHealth")->call();
+		}
+
+		auto get_absorption_amount() const
+			-> float
+		{
+			return get_method<float>("getAbsorptionAmount")->call();
+		}
 	};
 }

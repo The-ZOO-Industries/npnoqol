@@ -90,5 +90,8 @@ namespace npno
 			-> void;
 		auto apply_teams()
 			-> void;
+
+		auto load_players()
+			-> void;
 	};
 }

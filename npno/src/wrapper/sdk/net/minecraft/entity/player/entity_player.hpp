@@ -12,5 +12,11 @@ namespace jni
 		{
 
 		}
+
+		auto get_name() const
+			-> std::string
+		{
+			return get_method<std::string>("getName")->call();
+		}
 	};
 }
