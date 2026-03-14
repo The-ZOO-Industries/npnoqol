@@ -172,7 +172,22 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
         );
     }
 
-    const std::string rank_section{ player_data.rank.empty() ? "" : (player_data.rank + " ") };
+    const std::string rank_section{ player_data.rank.empty() ? enum_chat_formatting::gray : (player_data.rank + " ") };
+
+    if (player_data.prefix.empty() or player_data.prefix.empty())
+    {
+        std::println("[WARNING] format_tab_name() bad error handling for {}, prefix: {}, suffix: {}", 
+            player->get_name(), player_data.prefix, player_data.prefix
+        );
+
+        return std::format(" {}{}? {}{}",
+            team_prefix,
+            enum_chat_formatting::dark_red,
+            enum_chat_formatting::dark_aqua,
+            player->get_name()
+        );
+    }
+
     return std::format(" {}{}[{}] {}{} {}{}",
         team_prefix,
         this->get_wins_color(player_data.prefix),
