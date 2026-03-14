@@ -39,5 +39,8 @@ namespace jni
 		jni::register_class<jni::game_profile>("com/mojang/authlib/GameProfile");
 
 		jni::register_class<jni::potion_effect>("net/minecraft/potion/PotionEffect");
+
+		jni::register_class<jni::inventory_player>("net/minecraft/entity/player/InventoryPlayer");
+		jni::register_class<jni::item_stack>("net/minecraft/item/ItemStack");
 	}
 }

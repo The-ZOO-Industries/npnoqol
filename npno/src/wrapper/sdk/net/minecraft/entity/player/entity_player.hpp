@@ -2,6 +2,8 @@
 
 #include "../entity_living_base.hpp"
 
+#include "inventory_player.hpp"
+
 namespace jni
 {
 	class entity_player : public jni::entity_living_base
@@ -17,6 +19,12 @@ namespace jni
 			-> std::string
 		{
 			return get_method<std::string>("getName")->call();
+		}
+
+		auto get_inventory() const
+			-> std::unique_ptr<jni::inventory_player>
+		{
+			return get_field<jni::inventory_player>("inventory")->get();
 		}
 	};
 }

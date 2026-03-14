@@ -71,14 +71,15 @@ auto npno::hypixel_gametype_module::update_second_nametags()
 }
 
 auto npno::hypixel_gametype_module::get_player_data(const std::string& player_name)
-	-> player_data
+	-> player_data&
 {
 	std::lock_guard lock{ this->player_cache_mutex };
-	if (auto it = player_cache.find(player_name); it != player_cache.end())
+
+	if (auto it{ player_cache.find(player_name) }; it != player_cache.end())
 	{
 		if (it->second.error)
 		{
-			if (auto archive_it = player_archive_cache.find(player_name); archive_it != player_archive_cache.end())
+			if (auto archive_it{ player_archive_cache.find(player_name) }; archive_it != player_archive_cache.end())
 			{
 				return archive_it->second;
 			}
@@ -87,13 +88,15 @@ auto npno::hypixel_gametype_module::get_player_data(const std::string& player_na
 		return it->second;
 	}
 
-	player_data pd{};
+	player_data& pd{ this->player_cache[player_name] };
 	pd.error = true;
-	if (auto archive_it = player_archive_cache.find(player_name); archive_it != player_archive_cache.end())
+
+	if (auto archive_it{ player_archive_cache.find(player_name) }; archive_it != player_archive_cache.end())
 	{
 		pd = archive_it->second;
 		pd.error = false;
 	}
+
 	return pd;
 }
 

@@ -202,7 +202,7 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
 auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entity_player>& player)
     -> std::pair<std::string, std::string>
 {
-    const player_data player_data{ this->get_player_data(player->get_name()) };
+    player_data& player_data{ this->get_player_data(player->get_name()) };
     const float health{ player->get_health() + player->get_absorption_amount() };
 
     std::string prefix{ enum_chat_formatting::dark_aqua };
@@ -219,8 +219,46 @@ auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entit
     }
 
     suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
+
+    if (player_data.kit.empty())
+    {
+        const std::unique_ptr<jni::inventory_player>& inventory{ player->get_inventory() };
+
+        for (std::uint32_t i{ 0 }; i < 4; i++)
+        {
+            const std::unique_ptr<jni::item_stack>& stack{ inventory->armor_item_in_slot(i) };
+            if (not stack->get_instance())
+            {
+                continue;
+            }
+
+            const std::string name{ stack->get_display_name() };
+
+            const auto apostrophe{ name.find("'s ") };
+            const auto open_paren{ name.rfind('(') };
+            const auto close_paren{ name.rfind(')') };
+
+            if (apostrophe == std::string::npos or open_paren == std::string::npos or close_paren == std::string::npos or open_paren >= close_paren)
+            {
+                continue;
+            }
+
+            const std::string kit_name{ name.substr(3, apostrophe - 3) };
+
+            const std::string kit_level{ name.substr(open_paren + 1, close_paren - open_paren - 1) };
+
+            player_data.kit = std::format("{}{} {}", enum_chat_formatting::aqua, kit_name, kit_level);
+            break;
+        }
+    }
    
-    return { prefix, suffix };
+    std::string full_prefix{};
+    if (not player_data.kit.empty())
+    {
+        full_prefix = std::format("{} {}", player_data.kit, prefix);
+    }
+    
+    return { full_prefix.empty() ? prefix : full_prefix, suffix};
 }
 
 auto npno::blitz_survival_games::format_second_nametag(const std::unique_ptr<jni::entity_player>& player)

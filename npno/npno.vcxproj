@@ -59,6 +59,8 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\network_player_info.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\network\net_handler_play_client.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\item\entity_armor_stand.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\player\inventory_player.hpp" />
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\item\item_stack.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\potion\potion_effect.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\i_score_objective_criteria.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score.hpp" />

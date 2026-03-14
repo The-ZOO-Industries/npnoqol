@@ -27,6 +27,8 @@ namespace npno
 			std::string rank{};
 			std::string suffix{};
 
+			std::string kit{};
+
 			bool is_nicked{ false };
 			bool error{ false };
 		};
@@ -58,7 +60,7 @@ namespace npno
 			-> void;
 
 		virtual auto get_player_data(const std::string& player_name) 
-			-> player_data;
+			-> player_data&;
 
 		virtual auto load_players_datas(const std::vector<std::string>& player_names) 
 			-> void = 0;
