@@ -7,6 +7,18 @@ npno::feature::feature()
 	std::call_once(mc_flag, [this]()
 		{
 			mc = std::make_unique<jni::minecraft>(nullptr)->get_the_minecraft();
+
+			if (mc->get_the_player()->get_instance())
+			{
+				mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(
+					std::format(
+						"{}Welcome to the zoo {}{}",
+						enum_chat_formatting::aqua,
+						enum_chat_formatting::dark_aqua,
+						mc->get_the_player()->get_name()
+					)
+				));
+			}
 		});
 }
 
