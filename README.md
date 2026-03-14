@@ -13,13 +13,22 @@ Here, we like to experiment, break a few rules (just a little 😏), and make yo
 
 ### Hypixel in General
 
-
+**Chat Manager**  
+  - Filters your chat.
+  
 ### Commands
-- **/setapikey (key)**  
-  Set your Hypixel API key to enable features.
+**/setapikey (key)**  
+  - Set your Hypixel API key to enable features.
 
 ### Supported Gamemodes
 
+**Blitz Survival Games**  
+  - Deobfuscates chat join messages  
+  - Deobfuscates nametags  
+  - Deobfuscates tab list  
+  - Adds a stats overlay in the tab (overall wins & overall KDR)  
+  - Displays HP in nametag  
+  - Assigns unique colors for each team in team modes  
 
 ---
 
