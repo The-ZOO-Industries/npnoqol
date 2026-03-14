@@ -14,6 +14,8 @@ Here, we like to experiment, break a few rules (just a little 😏), and make yo
 
 ### Hypixel in General
 
+**Auto GG**  
+
 **Chat Manager**  
   - Filters your chat.
   
