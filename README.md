@@ -21,6 +21,9 @@ Here, we like to experiment, break a few rules (just a little 😏), and make yo
 **/setapikey (key)**  
   - Set your Hypixel API key to enable features.
 
+**/rq**
+  - Requeue to the current gamemode.
+
 ### Supported Gamemodes
 
 **Blitz Survival Games**  
