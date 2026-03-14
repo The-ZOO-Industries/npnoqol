@@ -174,10 +174,10 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
 
     const std::string rank_section{ player_data.rank.empty() ? enum_chat_formatting::gray : (player_data.rank + " ") };
 
-    if (player_data.prefix.empty() or player_data.prefix.empty())
+    if (player_data.prefix.empty() or player_data.suffix.empty())
     {
         std::println("[WARNING] format_tab_name() bad error handling for {}, prefix: {}, suffix: {}", 
-            player->get_name(), player_data.prefix, player_data.prefix
+            player->get_name(), player_data.prefix, player_data.suffix
         );
 
         return std::format(" {}{}? {}{}",
