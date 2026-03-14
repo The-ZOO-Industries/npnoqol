@@ -1,10 +1,8 @@
-# 🦁 npnoqol
+# npnoqol
 
-This is the official **ZOO Industries Minecraft client**, designed to be injected or uninjected **at runtime** on **Lunar Client 1.8.9**.  
-Here, we like to experiment, break a few rules (just a little 😏), and make your Hypixel experience… well, a bit wilder.  
+A Minecraft client designed to be injected or uninjected **at runtime** on **Lunar Client 1.8.9**.
 
-> ⚠️ Disclaimer: This client is for **educational and experimental purposes**. Use at your own risk. We are not responsible for bans or other consequences.  
-> Press Delete to uninject, slide the .dll on the .exe to inject 
+> Press Delete to uninject, slide the .dll on the .exe to inject.
 
 ---
 
@@ -12,33 +10,36 @@ Here, we like to experiment, break a few rules (just a little 😏), and make yo
 
 ### Hypixel in General
 
-**Auto GG**  
+**Auto GG**
+- Automatically sends "good game" at the end of a match, with random capitalization (e.g. `gOoD gAmE`).
 
-**Chat Manager**  
-  - Filters your chat.
-  
-### Commands
-**/setapikey (key)**  
-  - Set your Hypixel API key to enable features.
+**Auto Boop Friends**
+- Automatically boops your friends.
 
-**/rq**
-  - Requeue to the current gamemode.
+**Auto Welcome Guild Members**
+- Automatically welcomes guild members when they join.
 
-### Supported Gamemodes
-
-**Blitz Survival Games**  
-  - Deobfuscates chat join messages  
-  - Deobfuscates nametags  
-  - Deobfuscates tab list  
-  - Adds a stats overlay in the tab (overall wins & overall KDR)  
-  - Displays HP and kit in nametag  
-  - Assigns unique colors for each team in team modes  
+**Chat Manager**
+- Filters your chat.
 
 ---
 
-## Join the ZOO 🐾
-This client is just one part of **The ZOO Industries**:  
-- Experimentation, chaos, and QOL improvements for Hypixel.  
-- Inject, uninjected, or just peek behind the scenes.  
+### Commands
 
-Have fun, don’t get caught… or do, we like a little drama. 😉  
+**/setapikey (key)**
+- Set your Hypixel API key to enable features.
+
+**/rq**
+- Requeue to the current gamemode.
+
+---
+
+### Supported Gamemodes
+
+**Blitz Survival Games**
+- Deobfuscates chat join messages
+- Deobfuscates nametags
+- Deobfuscates tab list
+- Adds a stats overlay in the tab (overall wins & overall KDR)
+- Displays HP and kit in nametag
+- Assigns unique colors for each team in team modes
