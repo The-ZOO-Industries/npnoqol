@@ -5,7 +5,7 @@ Welcome to **The ZOO Client**! 🐾
 This is the official **ZOO Industries Minecraft client**, designed to be injected or uninjected **at runtime** on **Lunar Client 1.8.9**.  
 Here, we like to experiment, break a few rules (just a little 😏), and make your Hypixel experience… well, a bit wilder.  
 
-> ⚠️ Disclaimer: This client is for **educational and experimental purposes**. Use at your own risk. We are not responsible for bans or other consequences.
+> ⚠️ Disclaimer: This client is for **educational and experimental purposes**. Use at your own risk. We are not responsible for bans or other consequences.  
 > Press Delete to uninject, slide the .dll on the .exe to inject 
 
 ---
