@@ -1,6 +1,4 @@
-# 🦁 The ZOO Client
-
-Welcome to **The ZOO Client**! 🐾  
+# 🦁 npnoqol
 
 This is the official **ZOO Industries Minecraft client**, designed to be injected or uninjected **at runtime** on **Lunar Client 1.8.9**.  
 Here, we like to experiment, break a few rules (just a little 😏), and make your Hypixel experience… well, a bit wilder.  
