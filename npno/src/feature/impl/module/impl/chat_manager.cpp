@@ -71,6 +71,21 @@ auto npno::chat_manager::welcome_guild(const std::string& text) const
     {
         return;
     }
+
+    const std::string prefix{ "Guild > " };
+    const std::string suffix{ " joined." };
+
+    if (not text.rfind(prefix, 0))
+    {
+        const std::size_t start{ prefix.size() };
+        const std::size_t end{ text.find(suffix, start) };
+
+        if (end != std::string::npos)
+        {
+            const std::string name{ text.substr(start, end - start) };
+            mc->get_the_player()->send_chat_message(std::format("/gc {} o/", name));
+        }
+    }
 }
 
 auto npno::chat_manager::boop_friend(const std::string& text) const
@@ -82,6 +97,21 @@ auto npno::chat_manager::boop_friend(const std::string& text) const
     if (std::chrono::duration_cast<std::chrono::seconds>(now - last_sent_time).count() < 5)
     {
         return;
+    }
+
+    const std::string prefix{ "Friend > " };
+    const std::string suffix{ " joined." };
+
+    if (not text.rfind(prefix, 0))
+    {
+        const std::size_t start{ prefix.size() };
+        const std::size_t end{ text.find(suffix, start) };
+
+        if (end != std::string::npos)
+        {
+            const std::string name{ text.substr(start, end - start) };
+            mc->get_the_player()->send_chat_message(std::format("/boop {}", name));
+        }
     }
 }
 
