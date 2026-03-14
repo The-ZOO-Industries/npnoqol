@@ -28,7 +28,7 @@ Here, we like to experiment, break a few rules (just a little 😏), and make yo
   - Deobfuscates nametags  
   - Deobfuscates tab list  
   - Adds a stats overlay in the tab (overall wins & overall KDR)  
-  - Displays HP in nametag  
+  - Displays HP and kit in nametag  
   - Assigns unique colors for each team in team modes  
 
 ---
