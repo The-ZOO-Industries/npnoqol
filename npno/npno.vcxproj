@@ -35,6 +35,7 @@
     <ClInclude Include="src\feature\feature.hpp" />
     <ClInclude Include="src\feature\impl\command\command.hpp" />
     <ClInclude Include="src\feature\impl\command\command_manager.hpp" />
+    <ClInclude Include="src\feature\impl\command\impl\requeue.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
     <ClInclude Include="src\feature\impl\module\hypixel_gametype_module.hpp" />
     <ClInclude Include="src\feature\impl\module\impl\blitz_survival_games.hpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="src\feature\feature.cpp" />
     <ClCompile Include="src\feature\impl\command\command.cpp" />
     <ClCompile Include="src\feature\impl\command\command_manager.cpp" />
+    <ClCompile Include="src\feature\impl\command\impl\requeue.cpp" />
     <ClCompile Include="src\feature\impl\command\impl\set_apikey.cpp" />
     <ClCompile Include="src\feature\impl\module\hypixel_gametype_module.cpp" />
     <ClCompile Include="src\feature\impl\module\impl\blitz_survival_games.cpp" />

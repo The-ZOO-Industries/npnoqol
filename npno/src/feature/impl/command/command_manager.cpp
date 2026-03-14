@@ -1,10 +1,12 @@
 #include "command_manager.hpp"
 
 #include "impl/set_apikey.hpp"
+#include "impl/requeue.hpp"
 
 npno::command_manager::command_manager()
 {
 	this->register_command<npno::set_apikey>();
+	this->register_command<npno::requeue>();
 }
 
 npno::command_manager::~command_manager() = default;
