@@ -95,6 +95,8 @@ namespace config
 	inline const std::vector<std::regex> blacklisted_lines
 	{
 		std::regex{ "You are AFK. Move around to return from AFK.", std::regex_constants::icase },
-		std::regex{ "You are sending commands too fast! Please slow down.", std::regex_constants::icase }
+		std::regex{ "You are sending commands too fast! Please slow down.", std::regex_constants::icase }, 
+		std::regex{ "Teaming is not allowed on Solo maps!Report teamers using / report!", std::regex_constants::icase },
+		std::regex{ "Saved and copied screenshot [Open]", std::regex_constants::icase }
 	};
 }

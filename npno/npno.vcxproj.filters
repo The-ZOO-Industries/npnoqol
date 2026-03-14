@@ -171,6 +171,9 @@
     <ClInclude Include="src\wrapper\sdk\net\minecraft\scoreboard\score_dummy_criteria.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\wrapper\sdk\net\minecraft\entity\item\entity_armor_stand.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base\base.cpp">

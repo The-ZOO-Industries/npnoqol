@@ -27,5 +27,11 @@ namespace jni
 		{
 			return get_method<jni::entity_player, std::string>("getPlayerEntityByName")->call(value);
 		}
+
+		auto add_entity_to_world(const int id, const std::unique_ptr<jni::entity>& entity) const
+			-> void
+		{
+			get_method<void, int, jni::entity>("addEntityToWorld")->call(id, entity);
+		}
 	};
 }

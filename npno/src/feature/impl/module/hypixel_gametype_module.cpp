@@ -64,23 +64,10 @@ auto npno::hypixel_gametype_module::update_nametags()
 auto npno::hypixel_gametype_module::update_second_nametags()
 	-> void
 {
-	const std::unique_ptr<jni::scoreboard>& scoreboard{ mc->get_the_world()->get_scoreboard() };
+	const std::unique_ptr<jni::world_client>& the_world{ mc->get_the_world() };
+	const std::unique_ptr<jni::scoreboard>& scoreboard{ the_world->get_scoreboard() };
 
-	const std::unique_ptr<jni::score_objective>& existing{ scoreboard->get_objective("nig") };
-
-	if (not existing->get_instance())
-	{
-		scoreboard->add_score_objective("nig", jni::make_unique<jni::score_dummy_criteria, std::string>("ger"));
-	}
-
-	const std::unique_ptr<jni::score_objective>& objective{ scoreboard->get_objective("nig") };
-
-	scoreboard->set_objective_in_display_slot(2, objective);
-
-	for (const std::unique_ptr<jni::entity_player>& player : mc->get_the_world()->get_player_entities())
-	{
-		objective->set_display_name(this->format_second_nametag(player));
-	}
+	scoreboard->set_objective_in_display_slot(2, std::make_unique<jni::score_objective>(nullptr));
 }
 
 auto npno::hypixel_gametype_module::get_player_data(const std::string& player_name)

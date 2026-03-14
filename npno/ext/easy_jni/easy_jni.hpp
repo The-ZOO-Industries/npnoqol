@@ -1576,6 +1576,13 @@ namespace jni
 		}
 	};
 
+	template<typename T>
+	struct unwrap_object_ptr { using type = T; };
+
+	template<typename T>
+		requires (std::is_base_of_v<object, T>)
+	struct unwrap_object_ptr<std::unique_ptr<T>> { using type = T; };
+
 	// friend function of jni::object 
 	// allows you to create jobject using java constructors
 	template<typename type, typename... args_t>
@@ -1598,7 +1605,9 @@ namespace jni
 			}
 
 			jni::object temp{ nullptr };
-			temp.register_method_id<void, std::remove_cvref_t<args_t>...>(clazz, "<init>", jni::method_type::NOT_STATIC, std::type_index{ typeid(type) });
+			temp.register_method_id<void, typename unwrap_object_ptr<std::remove_cvref_t<args_t>>::type...>(
+				clazz, "<init>", jni::method_type::NOT_STATIC, std::type_index{ typeid(type) }
+			);
 
 			const jmethodID constructor_id{ jni::method_ids.at(typeid(type)).at("<init>") };
 

@@ -5,6 +5,7 @@
 #include "entity/entity_player_sp.hpp"
 #include "multiplayer/world_client.hpp"
 #include "gui/gui_ingame.hpp"
+#include "../entity/item/entity_armor_stand.hpp"
 
 namespace jni
 {

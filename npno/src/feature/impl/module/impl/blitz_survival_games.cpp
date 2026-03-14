@@ -155,37 +155,30 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
 
     if (player_data.error)
     {
-        return std::format(" {}{}? {}{} {}{:.1f}",
+        return std::format(" {}{}? {}{}",
             team_prefix,
             enum_chat_formatting::dark_red,
             enum_chat_formatting::dark_aqua,
-            player->get_name(),
-            this->get_hp_color(health),
-            health
+            player->get_name()
         );
     }
 
     if (player_data.is_nicked)
     {
-        return std::format(" {}{} {} {}{:.1f}",
+        return std::format(" {}{} {}",
             team_prefix,
             player_data.prefix,
-            player->get_name(),
-            this->get_hp_color(health),
-            health
+            player->get_name()
         );
     }
 
     const std::string rank_section{ player_data.rank.empty() ? "" : (player_data.rank + " ") };
-    return std::format(" {}{}[{}] {}{} {}{:.1f} {}; {}{}",
+    return std::format(" {}{}[{}] {}{} {}{}",
         team_prefix,
         this->get_wins_color(player_data.prefix),
         player_data.prefix,
         rank_section,
         player->get_name(),
-        this->get_hp_color(health),
-        health,
-        enum_chat_formatting::dark_aqua,
         this->get_kdr_color(player_data.suffix),
         player_data.suffix
     );
@@ -210,7 +203,7 @@ auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entit
         }
     }
 
-    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health); 
+    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
    
     return { prefix, suffix };
 }
@@ -218,7 +211,7 @@ auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entit
 auto npno::blitz_survival_games::format_second_nametag(const std::unique_ptr<jni::entity_player>& player)
     -> std::string
 {
-        
+    return std::string{};
 }
 
 auto npno::blitz_survival_games::get_wins_color(const std::string& wins) const 
