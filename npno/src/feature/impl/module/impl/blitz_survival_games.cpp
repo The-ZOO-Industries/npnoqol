@@ -84,8 +84,13 @@ auto npno::blitz_survival_games::load_players_datas(const std::vector<std::strin
         }
         catch (...)
         {
+            std::lock_guard lock{ this->player_cache_mutex };
+            if (auto archive_it{ player_archive_cache.find(player_name) }; archive_it != player_archive_cache.end())
             {
-                std::lock_guard lock{ this->player_cache_mutex };
+                this->player_cache[player_name] = archive_it->second;
+            }
+            else
+            {
                 this->player_cache[player_name] = player_data;
             }
         }
@@ -114,24 +119,37 @@ auto npno::blitz_survival_games::handle_mode()
 auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::entity_player>& player)
     -> std::string
 {
-    for (const std::unique_ptr<jni::potion_effect>& effect : player->get_active_potion_effects())
+    bool spectator_flag{ false };
+    for (const std::unique_ptr<jni::potion_effect>& effect : mc->get_the_player()->get_active_potion_effects())
     {
         if (effect->get_effect_name() == "potion.invisibility" and effect->get_duration() > 6000)
         {
-            if (this->mode == mode::TEAMS)
-            {
-                const std::string team_name{ team_manager[player->get_name()].hypixel_team };
-                const auto it{ this->team_colors.find(team_name) };
-                if (it != this->team_colors.end() and team_colors.size() != 1)
-                {
-                    return std::format("{}{}", it->second, player->get_name());
-                }
-            }
+            spectator_flag = true;
+            break;
+        }
+    }
 
-            return std::format(" {}{}",
-                enum_chat_formatting::dark_aqua,
-                player->get_name()
-            );
+    if (spectator_flag)
+    {
+        for (const std::unique_ptr<jni::potion_effect>& effect : player->get_active_potion_effects())
+        {
+            if (effect->get_effect_name() == "potion.invisibility" and effect->get_duration() > 6000)
+            {
+                if (this->mode == mode::TEAMS)
+                {
+                    const std::string team_name{ team_manager[player->get_name()].hypixel_team };
+                    const auto it{ this->team_colors.find(team_name) };
+                    if (it != this->team_colors.end() and team_colors.size() != 1)
+                    {
+                        return std::format("{}{}", it->second, player->get_name());
+                    }
+                }
+
+                return std::format(" {}{}",
+                    enum_chat_formatting::dark_aqua,
+                    player->get_name()
+                );
+            }
         }
     }
 
@@ -199,67 +217,75 @@ auto npno::blitz_survival_games::format_tab_name(const std::unique_ptr<jni::enti
     );
 }
 
-auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entity_player>& player)
-    -> std::pair<std::string, std::string>
-{
-    player_data& player_data{ this->get_player_data(player->get_name()) };
-    const float health{ player->get_health() + player->get_absorption_amount() };
-
-    std::string prefix{ enum_chat_formatting::dark_aqua };
-    std::string suffix{};
-
-    if (this->mode == mode::TEAMS)
+    auto npno::blitz_survival_games::format_nametag(const std::unique_ptr<jni::entity_player>& player)
+        -> std::pair<std::string, std::string>
     {
-        const std::string team_name{ this->team_manager[player->get_name()].hypixel_team };
-        const auto it{ this->team_colors.find(team_name) };
-        if (it != this->team_colors.end())
+        player_data pd{ this->get_player_data(player->get_name()) };
+        const float health{ player->get_health() + player->get_absorption_amount() };
+
+        std::string prefix{ enum_chat_formatting::dark_aqua };
+        std::string suffix{};
+
+        if (this->mode == mode::TEAMS)
         {
-            prefix += it->second;
+            const std::string team_name{ this->team_manager[player->get_name()].hypixel_team };
+            const auto it{ this->team_colors.find(team_name) };
+            if (it != this->team_colors.end())
+            {
+                prefix += it->second;
+            }
         }
-    }
 
-    suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
+        suffix = std::format(" {}{:.1f}", this->get_hp_color(health), health);
 
-    if (player_data.kit.empty())
-    {
-        const std::unique_ptr<jni::inventory_player>& inventory{ player->get_inventory() };
-
-        for (std::uint32_t i{ 0 }; i < 4; i++)
+        if (pd.kit.empty())
         {
-            const std::unique_ptr<jni::item_stack>& stack{ inventory->armor_item_in_slot(i) };
-            if (not stack->get_instance())
+            const std::unique_ptr<jni::inventory_player>& inventory{ player->get_inventory() };
+
+            for (std::uint8_t i{ 0 }; i < 4; ++i)
             {
-                continue;
+                const std::unique_ptr<jni::item_stack>& stack{ inventory->armor_item_in_slot(i) };
+                if (not stack->get_instance())
+                {
+                    continue;
+                }
+
+                const std::string name{ stack->get_display_name() };
+
+                const auto apostrophe{ name.find("'s ") };
+                const auto open_paren{ name.rfind('(') };
+                const auto close_paren{ name.rfind(')') };
+
+                if (apostrophe == std::string::npos or open_paren == std::string::npos or close_paren == std::string::npos or open_paren >= close_paren)
+                {
+                    continue;
+                }
+
+                const std::string kit_name{ name.substr(3, apostrophe - 3) };
+                const std::string kit_level{ name.substr(open_paren + 1, close_paren - open_paren - 1) };
+                const std::string kit{ std::format("{}{} {}", enum_chat_formatting::aqua, kit_name, kit_level) };
+
+                {
+                    std::lock_guard lock{ this->player_cache_mutex };
+                    if (auto it{ this->player_cache.find(player->get_name()) }; it != this->player_cache.end())
+                    {
+                        it->second.kit = kit;
+                    }
+                }
+
+                pd.kit = kit;
+                break;
             }
-
-            const std::string name{ stack->get_display_name() };
-
-            const auto apostrophe{ name.find("'s ") };
-            const auto open_paren{ name.rfind('(') };
-            const auto close_paren{ name.rfind(')') };
-
-            if (apostrophe == std::string::npos or open_paren == std::string::npos or close_paren == std::string::npos or open_paren >= close_paren)
-            {
-                continue;
-            }
-
-            const std::string kit_name{ name.substr(3, apostrophe - 3) };
-
-            const std::string kit_level{ name.substr(open_paren + 1, close_paren - open_paren - 1) };
-
-            player_data.kit = std::format("{}{} {}", enum_chat_formatting::aqua, kit_name, kit_level);
-            break;
         }
+
+        std::string full_prefix{};
+        if (not pd.kit.empty())
+        {
+            full_prefix = std::format("{} {}", pd.kit, prefix);
+        }
+
+        return { full_prefix.empty() ? prefix : full_prefix, suffix };
     }
-   
-    std::string full_prefix{};
-    if (not player_data.kit.empty())
-    {
-        full_prefix = std::format("{} {}", player_data.kit, prefix);
-    }
-    
-    return { full_prefix.empty() ? prefix : full_prefix, suffix};
-}
 
 auto npno::blitz_survival_games::format_second_nametag(const std::unique_ptr<jni::entity_player>& player)
     -> std::string

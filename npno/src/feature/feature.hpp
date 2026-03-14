@@ -14,6 +14,9 @@
 #include <sstream>
 #include <mutex>
 #include <regex>
+#include <random>
+#include <cctype>
+#include <chrono>
 
 namespace npno
 {

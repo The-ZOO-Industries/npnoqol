@@ -71,7 +71,7 @@ auto npno::hypixel_gametype_module::update_second_nametags()
 }
 
 auto npno::hypixel_gametype_module::get_player_data(const std::string& player_name)
-	-> player_data&
+	-> player_data
 {
 	std::lock_guard lock{ this->player_cache_mutex };
 
@@ -80,23 +80,18 @@ auto npno::hypixel_gametype_module::get_player_data(const std::string& player_na
 		if (it->second.error)
 		{
 			if (auto archive_it{ player_archive_cache.find(player_name) }; archive_it != player_archive_cache.end())
-			{
 				return archive_it->second;
-			}
 		}
-
 		return it->second;
 	}
 
-	player_data& pd{ this->player_cache[player_name] };
-	pd.error = true;
-
 	if (auto archive_it{ player_archive_cache.find(player_name) }; archive_it != player_archive_cache.end())
 	{
-		pd = archive_it->second;
-		pd.error = false;
+		return archive_it->second;
 	}
 
+	player_data pd{};
+	pd.error = true;
 	return pd;
 }
 

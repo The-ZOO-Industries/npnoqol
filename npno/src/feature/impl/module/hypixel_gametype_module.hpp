@@ -60,7 +60,7 @@ namespace npno
 			-> void;
 
 		virtual auto get_player_data(const std::string& player_name) 
-			-> player_data&;
+			-> player_data;
 
 		virtual auto load_players_datas(const std::vector<std::string>& player_names) 
 			-> void = 0;
@@ -93,7 +93,7 @@ namespace npno
 			-> void;
 		auto fill_team_manager() 
 			-> void;
-		auto assign_npno_teams() 
+		auto assign_npno_teams()
 			-> void;
 		auto apply_teams()
 			-> void;
