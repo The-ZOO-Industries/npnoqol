@@ -1,6 +1,6 @@
 # npnoqol
 
-A Minecraft client designed to be injected or uninjected **at runtime** on **Lunar Client 1.8.9**.
+A Minecraft client designed to be injected or uninjected **at runtime** on **any 1.8.9 client**.
 
 > Press Delete to uninject, slide the .dll on the .exe to inject.
 
