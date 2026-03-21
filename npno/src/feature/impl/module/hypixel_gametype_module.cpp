@@ -259,8 +259,9 @@ auto npno::hypixel_gametype_module::archive_player_cache()
 	-> void
 {
 	std::lock_guard lock{ player_cache_mutex };
-	for (const auto& [name, data] : this->player_cache)
+	for (auto& [name, data] : this->player_cache)
 	{
+		data.kit.clear();
 		player_archive_cache[name] = data;
 		if (player_archive_cache.size() > 100)
 		{

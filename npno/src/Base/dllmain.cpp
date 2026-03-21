@@ -12,7 +12,7 @@ static DWORD WINAPI ThreadEntry(const HMODULE module)
         base->run();
     }
 
-    // FreeConsole();
+    //FreeConsole();
     FreeLibraryAndExitThread(module, 0ul);
 
     return 0l;

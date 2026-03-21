@@ -15,10 +15,12 @@ npno::module_manager::module_manager()
 
 npno::module_manager::~module_manager() = default;
 
-auto npno::module_manager::update()
+auto npno::module_manager::update() 
 	-> void
 {
 	std::lock_guard<std::mutex> lock{ this->hook_mutex };
+
+	const bool world_loaded{ this->load_world.detected };
 
 	for (const std::unique_ptr<npno::module>& module : this->modules)
 	{
@@ -31,13 +33,16 @@ auto npno::module_manager::update()
 		{
 			module->update();
 
-			if (this->load_world.detected)
+			if (world_loaded)
 			{
 				module->on_load_world();
-
-				this->load_world.clear();
 			}
 		}
+	}
+
+	if (world_loaded)
+	{
+		this->load_world.clear();
 	}
 }
 

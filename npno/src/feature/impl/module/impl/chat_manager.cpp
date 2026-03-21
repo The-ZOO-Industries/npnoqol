@@ -33,6 +33,14 @@ auto npno::chat_manager::on_print_chat_message(const std::unique_ptr<jni::i_chat
 auto npno::chat_manager::watchdog_lover(const std::string& text) const
     -> void
 {
+    static std::chrono::time_point<std::chrono::steady_clock> last_sent_time{ std::chrono::steady_clock::now() - std::chrono::seconds{ 5 } };
+
+    const std::chrono::time_point<std::chrono::steady_clock> now{ std::chrono::steady_clock::now() };
+    if (std::chrono::duration_cast<std::chrono::seconds>(now - last_sent_time).count() < 5)
+    {
+        return;
+    }
+
     if (text == "[WATCHDOG ANNOUNCEMENT]")
     {
         mc->get_the_player()->send_chat_message("/ac Thank you Watchdog! <3");
@@ -75,7 +83,7 @@ auto npno::chat_manager::welcome_guild(const std::string& text) const
     const std::string prefix{ "Guild > " };
     const std::string suffix{ " joined." };
 
-    if (not text.rfind(prefix, 0))
+    if (text.starts_with(prefix))
     {
         const std::size_t start{ prefix.size() };
         const std::size_t end{ text.find(suffix, start) };
@@ -102,7 +110,7 @@ auto npno::chat_manager::boop_friend(const std::string& text) const
     const std::string prefix{ "Friend > " };
     const std::string suffix{ " joined." };
 
-    if (not text.rfind(prefix, 0))
+    if (text.starts_with(prefix))
     {
         const std::size_t start{ prefix.size() };
         const std::size_t end{ text.find(suffix, start) };
@@ -128,9 +136,13 @@ auto npno::chat_manager::random_case(const std::string& text) const
         if (std::isalpha(c))
         {
             if (dist(gen) == 0)
+            {
                 result += std::tolower(c);
+            }
             else
+            {
                 result += std::toupper(c);
+            }
         }
         else
         {

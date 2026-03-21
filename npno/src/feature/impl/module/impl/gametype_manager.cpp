@@ -11,17 +11,25 @@ npno::gametype_manager::~gametype_manager() = default;
 auto npno::gametype_manager::on_load_world()
     -> void
 {
-    if (this->sanity_check())
+    static std::chrono::time_point<std::chrono::steady_clock> last_sent_time{ std::chrono::steady_clock::now() - std::chrono::seconds{ 5 } };
+
+    const std::chrono::time_point<std::chrono::steady_clock> now{ std::chrono::steady_clock::now() };
+    if (std::chrono::duration_cast<std::chrono::seconds>(now - last_sent_time).count() < 5)
     {
-        mc->get_the_player()->send_chat_message("/locraw");
+        return;
+    }
 
-        const bool valid{ hypixel_api::check_apikey(config::get<std::string>("api.hypixel")) };
+    mc->get_the_player()->send_chat_message("/locraw");
 
+    const bool valid{ hypixel_api::check_apikey(config::get<std::string>("api.hypixel")) };
+
+    if (not valid)
+    {
         mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(
-            std::format("{}Outdated hypixel apikey {}https://developer.hypixel.net/dashboard", 
-                enum_chat_formatting::red, 
+            std::format("{}Outdated hypixel apikey {}https://developer.hypixel.net/dashboard",
+                enum_chat_formatting::red,
                 enum_chat_formatting::aqua)
-            ));
+        ));
     }
 }
 
