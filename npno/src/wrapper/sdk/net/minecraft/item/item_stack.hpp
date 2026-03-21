@@ -16,7 +16,7 @@ namespace jni
 		auto get_display_name() const
 			-> std::string
 		{
-			return get_method<std::string>("getDisplayName")->call();
+			return get_method<std::string>(mapping::item_stack::getDisplayName)->call();
 		}
 	};
 }

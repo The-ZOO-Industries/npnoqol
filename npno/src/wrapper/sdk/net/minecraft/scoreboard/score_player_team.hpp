@@ -16,37 +16,37 @@ namespace jni
 		auto get_team_name() const
 			-> std::string
 		{
-			return get_method<std::string>("getTeamName")->call();
+			return get_method<std::string>(mapping::score_player_team::getTeamName)->call();
 		}
 
 		auto get_membership_collection() const
 			-> std::vector<std::string>
 		{
-			return get_method<jni::collection>("getMembershipCollection")->call()->to_vector<std::string>();
+			return get_method<jni::collection>(mapping::score_player_team::getMembershipCollection)->call()->to_vector<std::string>();
 		}
 
 		auto get_name_prefix() const
 			-> std::string
 		{
-			return get_method<std::string>("getColorPrefix")->call();
+			return get_method<std::string>(mapping::score_player_team::getColorPrefix)->call();
 		}
 
 		auto get_name_suffix() const
 			-> std::string
 		{
-			return get_method<std::string>("getColorSuffix")->call();
+			return get_method<std::string>(mapping::score_player_team::getColorSuffix)->call();
 		}
 
 		auto set_name_prefix(const std::string& value) const
 			-> void
 		{
-			get_method<void, std::string>("setNamePrefix")->call(value);
+			get_method<void, std::string>(mapping::score_player_team::setNamePrefix)->call(value);
 		}
 
 		auto set_name_suffix(const std::string& value) const
 			-> void
 		{
-			get_method<void, std::string>("setNameSuffix")->call(value);
+			get_method<void, std::string>(mapping::score_player_team::setNameSuffix)->call(value);
 		}
 	};
 }

@@ -2511,3 +2511,5 @@ namespace jni
 		hotspot::hooked_i2i_entries.clear();
 	}
 }
+
+#include "../../src/wrapper/mapping.hpp"

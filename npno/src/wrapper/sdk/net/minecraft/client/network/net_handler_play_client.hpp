@@ -18,7 +18,7 @@ namespace jni
 		auto get_player_info_map() const
 			-> std::vector<std::unique_ptr<jni::network_player_info>>
 		{
-			return get_method<jni::collection>("getPlayerInfoMap")->call()->to_vector<jni::network_player_info>();
+			return get_method<jni::collection>(mapping::net_handler_play_client::getPlayerInfoMap)->call()->to_vector<jni::network_player_info>();
 		}
 	};
 }

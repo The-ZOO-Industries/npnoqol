@@ -16,13 +16,13 @@ namespace jni
 		auto get_score_points() const
 			-> int
 		{
-			return get_field<int>("scorePoints")->get();
+			return get_field<int>(mapping::score::scorePoints)->get();
 		}
 
 		auto set_score_points(const int value) const
 			-> void
 		{
-			get_field<int>("scorePoints")->set(value);
+			get_field<int>(mapping::score::scorePoints)->set(value);
 		}
 	};
 }

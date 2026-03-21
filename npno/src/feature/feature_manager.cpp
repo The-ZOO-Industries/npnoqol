@@ -5,9 +5,9 @@ npno::feature_manager::feature_manager()
 	command_manager = std::make_unique<npno::command_manager>();
 	module_manager = std::make_unique<npno::module_manager>();
 
-	jni::hook<jni::entity_player_sp>("sendChatMessage", &npno::feature_manager::send_chat_message_hook);
-	jni::hook<jni::minecraft>("loadWorld", &npno::feature_manager::load_world_hook);
-	jni::hook<jni::gui_new_chat>("printChatMessage", &npno::feature_manager::print_chat_message);
+	jni::hook<jni::entity_player_sp>(mapping::entity_player_sp::sendChatMessage, &npno::feature_manager::send_chat_message_hook);
+	jni::hook<jni::minecraft>(mapping::minecraft::loadWorld, &npno::feature_manager::load_world_hook);
+	jni::hook<jni::gui_new_chat>(mapping::gui_new_chat::printChatMessage, &npno::feature_manager::print_chat_message);
 }
 
 npno::feature_manager::~feature_manager() = default;

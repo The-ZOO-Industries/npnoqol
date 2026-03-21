@@ -16,13 +16,13 @@ namespace jni
 		auto get_formatted_text() const
 			-> std::string
 		{
-			return get_method<std::string>("getFormattedText")->call();
+			return get_method<std::string>(mapping::i_chat_component::getFormattedText)->call();
 		}
 
 		auto get_unformatted_text() const
 			-> std::string
 		{
-			return get_method<std::string>("getUnformattedText")->call();
+			return get_method<std::string>(mapping::i_chat_component::getUnformattedText)->call();
 		}
 	};
 }

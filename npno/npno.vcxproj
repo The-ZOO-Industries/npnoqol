@@ -50,6 +50,8 @@
     <ClInclude Include="src\util\hypixel_gametype.hpp" />
     <ClInclude Include="src\util\hypixel_mode.hpp" />
     <ClInclude Include="src\util\network.hpp" />
+    <ClInclude Include="src\wrapper\mapping.hpp" />
+    <ClInclude Include="src\wrapper\mapping_json.hpp" />
     <ClInclude Include="src\wrapper\register_classes.hpp" />
     <ClInclude Include="src\wrapper\sdk\com\mojang\authlib\game_profile.hpp" />
     <ClInclude Include="src\wrapper\sdk\net\minecraft\client\entity\entity_player_sp.hpp" />

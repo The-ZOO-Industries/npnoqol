@@ -18,7 +18,7 @@ namespace jni
 		auto get_persistant_chat_gui() const
 			-> std::unique_ptr<jni::gui_new_chat>
 		{
-			return get_field<jni::gui_new_chat>("persistantChatGUI")->get();
+			return get_field<jni::gui_new_chat>(mapping::gui_ingame::persistantChatGUI)->get();
 		}
 	};
 }

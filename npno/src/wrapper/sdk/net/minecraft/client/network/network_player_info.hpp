@@ -19,19 +19,19 @@ namespace jni
 		auto get_game_profile() const
 			-> std::unique_ptr<jni::game_profile>
 		{
-			return get_method<jni::game_profile>("getGameProfile")->call();
+			return get_method<jni::game_profile>(mapping::network_player_info::getGameProfile)->call();
 		}
 
 		auto get_display_name() const
 			-> std::unique_ptr<jni::i_chat_component>
 		{
-			return get_method<jni::i_chat_component>("getDisplayName")->call();
+			return get_method<jni::i_chat_component>(mapping::network_player_info::getDisplayName)->call();
 		}
 
 		auto set_display_name(const std::unique_ptr<jni::i_chat_component>& value) const
 			-> void
 		{
-			get_method<void, jni::i_chat_component>("setDisplayName")->call(value);
+			get_method<void, jni::i_chat_component>(mapping::network_player_info::setDisplayName)->call(value);
 		}
 	};
 }

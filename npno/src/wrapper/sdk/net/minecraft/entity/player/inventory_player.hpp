@@ -18,7 +18,7 @@ namespace jni
 		auto armor_item_in_slot(const int value) const
 			-> std::unique_ptr<jni::item_stack>
 		{
-			return get_method<jni::item_stack, int>("armorItemInSlot")->call(value);
+			return get_method<jni::item_stack, int>(mapping::inventory_player::armorItemInSlot)->call(value);
 		}
 	};
 }

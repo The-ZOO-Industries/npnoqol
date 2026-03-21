@@ -21,25 +21,25 @@ namespace jni
 		auto get_the_minecraft() const
 			-> std::unique_ptr<jni::minecraft>
 		{
-			return get_field<jni::minecraft>("theMinecraft", jni::field_type::STATIC)->get();
+			return get_field<jni::minecraft>(mapping::minecraft::theMinecraft, jni::field_type::STATIC)->get();
 		}
 		
 		auto get_the_player() const
 			-> std::unique_ptr<jni::entity_player_sp>
 		{
-			return get_field<jni::entity_player_sp>("thePlayer")->get();
+			return get_field<jni::entity_player_sp>(mapping::minecraft::thePlayer)->get();
 		}
 
 		auto get_the_world() const
 			-> std::unique_ptr<jni::world_client>
 		{
-			return get_field<jni::world_client>("theWorld")->get();
+			return get_field<jni::world_client>(mapping::minecraft::theWorld)->get();
 		}
 
 		auto get_ingame_gui() const
 			-> std::unique_ptr<jni::gui_ingame>
 		{
-			return get_field<jni::gui_ingame>("ingameGUI")->get();
+			return get_field<jni::gui_ingame>(mapping::minecraft::ingameGUI)->get();
 		}
 	};
 }

@@ -18,13 +18,13 @@ namespace jni
 		auto get_name() const
 			-> std::string
 		{
-			return get_method<std::string>("getName")->call();
+			return get_method<std::string>(mapping::entity_player::getName)->call();
 		}
 
 		auto get_inventory() const
 			-> std::unique_ptr<jni::inventory_player>
 		{
-			return get_field<jni::inventory_player>("inventory")->get();
+			return get_field<jni::inventory_player>(mapping::entity_player::inventory)->get();
 		}
 	};
 }

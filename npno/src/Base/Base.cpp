@@ -1,9 +1,10 @@
 #include "base.hpp"
 
 #include "../wrapper/register_classes.hpp"
+#include "../wrapper/mapping.hpp"
 
 npno::base::base()
-    : running{ jni::init()}
+    : running{ jni::init() and mapping::init() }
 {
     if (running)
     {
@@ -26,5 +27,10 @@ auto npno::base::run()
         this->features->update();
 
         std::this_thread::sleep_for(std::chrono::milliseconds{ 40 });
+
+        if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
+        {
+            this->running = false;
+        }
     }
 }

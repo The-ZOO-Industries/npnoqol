@@ -18,25 +18,25 @@ namespace jni
 		auto set_name(const std::string& value) const
 			-> void
 		{
-			get_field<std::string>("name")->set(value);
+			get_field<std::string>(mapping::score_objective::name)->set(value);
 		}
 
 		auto get_name() const
 			-> std::string
 		{
-			return get_field<std::string>("name")->get();
+			return get_field<std::string>(mapping::score_objective::name)->get();
 		}
 
 		auto get_display_name() const
 			-> std::string
 		{
-			return get_field<std::string>("displayName")->get();
+			return get_field<std::string>(mapping::score_objective::displayName)->get();
 		}
 
 		auto set_display_name(const std::string& value) const
 			-> void
 		{
-			get_field<std::string>("displayName")->set(value);
+			get_field<std::string>(mapping::score_objective::displayName)->set(value);
 		}
 	};
 }

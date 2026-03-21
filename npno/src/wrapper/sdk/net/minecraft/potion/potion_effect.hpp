@@ -16,13 +16,13 @@ namespace jni
 		auto get_duration() const
 			-> int
 		{
-			return get_method<int>("getDuration")->call();
+			return get_method<int>(mapping::potion_effect::getDuration)->call();
 		}
 
 		auto get_effect_name() const
 			-> std::string
 		{
-			return get_method<std::string>("getEffectName")->call();
+			return get_method<std::string>(mapping::potion_effect::getEffectName)->call();
 		}
 	};
 }

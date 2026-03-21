@@ -19,19 +19,19 @@ namespace jni
 		auto get_scoreboard() const
 			-> std::unique_ptr<jni::scoreboard>
 		{
-			return get_method<jni::scoreboard>("getScoreboard")->call();
+			return get_method<jni::scoreboard>(mapping::world_client::getScoreboard)->call();
 		}
 
 		auto get_player_entity_by_name(const std::string& value) const
 			-> std::unique_ptr<jni::entity_player>
 		{
-			return get_method<jni::entity_player, std::string>("getPlayerEntityByName")->call(value);
+			return get_method<jni::entity_player, std::string>(mapping::world_client::getPlayerEntityByName)->call(value);
 		}
 
 		auto add_entity_to_world(const int id, const std::unique_ptr<jni::entity>& entity) const
 			-> void
 		{
-			get_method<void, int, jni::entity>("addEntityToWorld")->call(id, entity);
+			get_method<void, int, jni::entity>(mapping::world_client::addEntityToWorld)->call(id, entity);
 		}
 	};
 }
