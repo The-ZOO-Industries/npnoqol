@@ -2,17 +2,17 @@
 
 static DWORD WINAPI ThreadEntry(const HMODULE module)
 {
-    FILE* outputBuffer{ nullptr };
+    //FILE* outputBuffer{ nullptr };
 
-    AllocConsole();
-    freopen_s(&outputBuffer, "CONOUT$", "w", stdout);
+    //AllocConsole();
+    //freopen_s(&outputBuffer, "CONOUT$", "w", stdout);
 
     {
         const std::unique_ptr<npno::base> base{ std::make_unique<npno::base>() };
         base->run();
     }
 
-    FreeConsole();
+    //FreeConsole();
     FreeLibraryAndExitThread(module, 0ul);
 
     return 0l;

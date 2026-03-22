@@ -69,6 +69,8 @@ auto npno::gametype_manager::on_print_chat_message(const std::unique_ptr<jni::i_
         {
             hypixel_mode::current_mode = "unknown";
         }
+
+        //mc->get_the_player()->add_chat_message(jni::make_unique<jni::chat_component_text>(hypixel_mode::current_mode));
     }
 
     return result;

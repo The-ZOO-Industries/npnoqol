@@ -97,7 +97,8 @@ namespace config
 		std::regex{ "You are AFK. Move around to return from AFK.", std::regex_constants::icase },
 		std::regex{ "You are sending commands too fast! Please slow down.", std::regex_constants::icase }, 
 		std::regex{ "Teaming is not allowed on Solo maps! Report teamers using /report!", std::regex_constants::icase },
-		std::regex{ "Saved and copied screenshot", std::regex_constants::icase }
+		std::regex{ "Saved and copied screenshot", std::regex_constants::icase },
+		std::regex{ "You tipped", std::regex_constants::icase }
 	};
 
 	inline const std::vector<std::regex> auto_gg_lines =

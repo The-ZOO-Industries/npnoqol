@@ -28,9 +28,9 @@ auto npno::base::run()
 
         std::this_thread::sleep_for(std::chrono::milliseconds{ 40 });
 
-        if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
-        {
-            this->running = false;
-        }
+        //if (GetAsyncKeyState(VK_DELETE) bitand 0x8000)
+        //{
+        //    this->running = false;
+        //}
     }
 }
