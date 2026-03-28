@@ -3,6 +3,8 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="injector/injector.vcxproj" Id="28d8ce7b-e11c-424c-81b2-a4f6b3a34b62" />
+  <Project Path="injector/injector.vcxproj" Id="28d8ce7b-e11c-424c-81b2-a4f6b3a34b62">
+    <BuildDependency Project="npno/npno.vcxproj" />
+  </Project>
   <Project Path="npno/npno.vcxproj" Id="80961015-eaaf-4f40-a307-a9ba8555c30e" />
 </Solution>

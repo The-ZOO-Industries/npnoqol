@@ -13,7 +13,8 @@ namespace injector
         std::string title{};
     };
 
-    static bool is_javaw_process(const DWORD process_id) noexcept
+    static auto is_javaw_process(const DWORD process_id) noexcept
+        -> bool
     {
         const HANDLE hSnap{ CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) };
         if (hSnap == INVALID_HANDLE_VALUE)
@@ -71,7 +72,48 @@ namespace injector
         return TRUE;
     }
 
-    static bool inject_dll(const DWORD process_id, const char* dll_path) noexcept
+    static auto extract_dll_to_temp() noexcept
+        -> std::string
+    {
+        const HRSRC hRes{ FindResourceW(nullptr, MAKEINTRESOURCEW(256), RT_RCDATA) };
+        if (!hRes)
+        {
+            std::println("[ERROR] FindResource failed");
+            return {};
+        }
+
+        const HGLOBAL hData{ LoadResource(nullptr, hRes) };
+        if (!hData)
+        {
+            std::println("[ERROR] LoadResource failed");
+            return {};
+        }
+
+        const void* data{ LockResource(hData) };
+        const DWORD size{ SizeofResource(nullptr, hRes) };
+
+        char temp_path[MAX_PATH];
+        char temp_file[MAX_PATH];
+        GetTempPathA(MAX_PATH, temp_path);
+        GetTempFileNameA(temp_path, "dll", 0, temp_file);
+
+        const HANDLE hFile{ CreateFileA(temp_file, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr) };
+        if (hFile == INVALID_HANDLE_VALUE)
+        {
+            std::println("[ERROR] CreateFile failed");
+            std::cin.get();
+            return {};
+        }
+
+        DWORD written{ 0 };
+        WriteFile(hFile, data, size, &written, nullptr);
+        CloseHandle(hFile);
+
+        return std::string{ temp_file };
+    }
+
+    static auto inject_dll(const DWORD process_id, const char* dll_path) noexcept
+        -> bool
     {
         const HANDLE hProcess{ OpenProcess(PROCESS_ALL_ACCESS, FALSE, process_id) };
         if (!hProcess || hProcess == INVALID_HANDLE_VALUE)
@@ -113,28 +155,37 @@ namespace injector
             return false;
         }
 
+        WaitForSingleObject(hThread, INFINITE);
+
+        DWORD exit_code{ 0 };
+        GetExitCodeThread(hThread, &exit_code);
+        if (!exit_code)
+        {
+            std::println("[ERROR] LoadLibrary failed in remote process");
+            CloseHandle(hThread);
+            CloseHandle(hProcess);
+            return false;
+        }
+
+        std::println("[INFO] LoadLibrary succeeded (module: {:#x})", exit_code);
+
         CloseHandle(hThread);
         CloseHandle(hProcess);
         return true;
     }
 }
 
-int main(int argc, char** argv)
+auto main()
+    -> std::int32_t
 {
-    if (argc < 2)
-    {
-        std::println("[ERROR] DLL path missing");
-        return EXIT_FAILURE;
-    }
-
-    const char* dll_path{ argv[1] };
-
     std::vector<injector::javaw_window> windows;
     EnumWindows(injector::EnumWindowsCallback, reinterpret_cast<LPARAM>(&windows));
 
     if (windows.empty())
     {
         std::println("[ERROR] No javaw.exe window found");
+        std::cin.get();
+
         return EXIT_FAILURE;
     }
 
@@ -158,16 +209,23 @@ int main(int argc, char** argv)
         if (choice >= windows.size())
         {
             std::println("[ERROR] Invalid choice");
+            std::cin.get();
             return EXIT_FAILURE;
         }
 
         target_pid = windows[choice].process_id;
     }
 
-    std::println("[INFO] Injecting into PID: {}", target_pid);
-
-    if (!injector::inject_dll(target_pid, dll_path))
+    const std::string dll_path{ injector::extract_dll_to_temp() };
+    if (dll_path.empty())
     {
+        std::cin.get();
+        return EXIT_FAILURE;
+    }
+
+    if (!injector::inject_dll(target_pid, dll_path.c_str()))
+    {
+        std::cin.get();
         return EXIT_FAILURE;
     }
 }
