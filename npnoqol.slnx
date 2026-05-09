@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="injector/injector.vcxproj" Id="e350f030-4663-41f8-b83e-d6e451d43715">
+    <BuildDependency Project="npnoqol/npnoqol.vcxproj" />
+  </Project>
+  <Project Path="npnoqol/npnoqol.vcxproj" Id="d36b0a9c-a73c-440b-8830-4c7d7436ce26" />
+</Solution>
