@@ -11,7 +11,7 @@ zoo::find_nick::find_nick() noexcept
 zoo::find_nick::~find_nick() noexcept = default;
 
 auto zoo::find_nick::on_command(const std::vector<std::string>& args) const noexcept
-	-> void
+-> void
 {
 	if (args.size() != 2)
 	{

@@ -45,10 +45,10 @@ namespace network
 		CURL* curl{ curl_easy_init() };
 		curl_slist* headers{};
 
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, network::write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, network::write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
 		if (url_type == network::url::ZOO)
 		{
@@ -67,13 +67,64 @@ namespace network
 			curl_slist_free_all(headers);
 		}
 
-        curl_easy_cleanup(curl);
+		curl_easy_cleanup(curl);
 
 		if (result == CURLE_OK)
 		{
 			return response;
 		}
 
-        return {};
+		return {};
+	}
+
+	static auto get(
+		const std::string& endpoint,
+		const network::url url_type,
+		const std::vector<std::string>& custom_headers
+	) -> std::string
+	{
+		const std::string url{
+			std::format("{}{}", network::url_to_string.at(url_type), endpoint)
+		};
+
+		std::string response{};
+		CURL* curl{ curl_easy_init() };
+		curl_slist* headers{};
+
+		if (curl == nullptr)
+		{
+			return {};
+		}
+
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, network::write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+		for (const std::string& header : custom_headers)
+		{
+			headers = curl_slist_append(headers, header.c_str());
+		}
+
+		if (headers != nullptr)
+		{
+			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+		}
+
+		const CURLcode result{ curl_easy_perform(curl) };
+
+		if (headers != nullptr)
+		{
+			curl_slist_free_all(headers);
+		}
+
+		curl_easy_cleanup(curl);
+
+		if (result == CURLE_OK)
+		{
+			return response;
+		}
+
+		return {};
 	}
 }

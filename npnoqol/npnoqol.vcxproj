@@ -215,6 +215,7 @@
     <ClInclude Include="src\util\hypixel_gametype.hpp" />
     <ClInclude Include="src\util\hypixel_mode.hpp" />
     <ClInclude Include="src\util\network.hpp" />
+    <ClInclude Include="src\util\zoo_api.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

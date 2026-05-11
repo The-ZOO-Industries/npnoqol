@@ -7,6 +7,7 @@
 #include "../util/hypixel_gametype.hpp"
 #include "../util/hypixel_mode.hpp"
 #include "../util/network.hpp"
+#include "../util/zoo_api.hpp"
 
 #include <deque>
 #include <memory>

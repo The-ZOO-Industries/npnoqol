@@ -11,7 +11,7 @@ zoo::denick::denick() noexcept
 zoo::denick::~denick() noexcept = default;
 
 auto zoo::denick::on_command(const std::vector<std::string>& args) const noexcept
-	-> void
+-> void
 {
 	if (args.size() != 2)
 	{
