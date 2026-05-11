@@ -18,7 +18,7 @@ namespace zoo
 {
 	class util;
 
-	inline std::string watermark{ std::format("{}{}*{}zoo{}*{}", enum_chat_formatting::italic, enum_chat_formatting::aqua, enum_chat_formatting::dark_aqua, enum_chat_formatting::aqua, enum_chat_formatting::reset) };
+	inline std::string watermark{ std::format("{} > {}", enum_chat_formatting::aqua, enum_chat_formatting::reset) };
 	
 	class feature
 	{
@@ -42,14 +42,11 @@ namespace zoo
         static auto add_chat_message(const std::string& message) noexcept
             -> void
         {
-            if (feature::minecraft && feature::minecraft->get_the_player()->get_instance())
+            if (feature::minecraft->get_the_player()->get_instance())
             {
-                std::unique_ptr<sdk::chat_component_text> chat_component{ vmhook::make_unique<sdk::chat_component_text>(std::format("{} {}", zoo::watermark, message)) };
-                if (chat_component && chat_component->get_instance())
-                {
-                    feature::minecraft->get_the_player()->add_chat_message(
-                        std::unique_ptr<sdk::i_chat_component>{ static_cast<sdk::i_chat_component*>(chat_component.release()) });
-                }
+				feature::minecraft->get_the_player()->add_chat_message(
+					vmhook::make_unique<sdk::chat_component_text>(std::format("{} {}", zoo::watermark, message))
+				);
             }
         }
     };

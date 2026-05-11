@@ -16,25 +16,6 @@ namespace sdk
 		auto construct(const std::string& text) const noexcept
 			-> void
 		{
-			if (!vmhook::detail::find_call_stub_entry())
-			{
-				vmhook::hotspot::klass* const klass{ vmhook::find_class(mapping::chat_component_text::clazz) };
-				void* const string_oop{ vmhook::make_java_string(text) };
-				if (!klass || !string_oop)
-				{
-					return;
-				}
-
-				for (const char* const field_name : { "text", "field_150267_b", "b", "a" })
-				{
-					if (vmhook::find_field(klass, field_name))
-					{
-						vmhook::set_field(this->get_instance(), klass, field_name, vmhook::hotspot::encode_oop_pointer(string_oop));
-						return;
-					}
-				}
-			}
-
 			get_method("<init>")->call(text);
 		}
 	};
