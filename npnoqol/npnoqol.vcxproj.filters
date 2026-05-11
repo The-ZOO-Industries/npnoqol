@@ -179,5 +179,8 @@
     <ClInclude Include="src\util\zoo_api.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sdk\java\util\uuid.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

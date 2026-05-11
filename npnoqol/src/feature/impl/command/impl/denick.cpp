@@ -25,7 +25,7 @@ auto zoo::denick::on_command(const std::vector<std::string>& args) const noexcep
 		const std::string result{ network::get(std::format("/denick/{}", args[1]), network::url::ZOO) };
 		if (!nlohmann::json::accept(result))
 		{
-			zoo::util::add_chat_message(std::format("{}Nick not found", enum_chat_formatting::red));
+			zoo::chat::add_chat_message(std::format("{}Nick not found", enum_chat_formatting::red));
 
 			return;
 		}
@@ -33,20 +33,20 @@ auto zoo::denick::on_command(const std::vector<std::string>& args) const noexcep
 		const nlohmann::json json_response{ nlohmann::json::parse(result, nullptr, false) };
 		if (!json_response.contains("real_name") || !json_response["real_name"].is_string())
 		{
-			zoo::util::add_chat_message(std::format("{}Nick not found", enum_chat_formatting::red));
+			zoo::chat::add_chat_message(std::format("{}Nick not found", enum_chat_formatting::red));
 
 			return;
 		}
 
-		zoo::util::add_chat_message(std::format("{}{} {}is {}{}",
+		zoo::chat::add_chat_message(std::format("{}{} {}is the nick of {}{}",
 			enum_chat_formatting::dark_aqua,
 			args[1],
 			enum_chat_formatting::aqua,
-			enum_chat_formatting::green,
+			enum_chat_formatting::dark_aqua,
 			json_response["real_name"].get<std::string>()));
 	}
 	catch (...)
 	{
-		zoo::util::add_chat_message(std::format("{}Failed to denick {}", enum_chat_formatting::red, args[1]));
+		zoo::chat::add_chat_message(std::format("{}Failed to denick {}", enum_chat_formatting::red, args[1]));
 	}
 }

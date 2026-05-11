@@ -195,6 +195,7 @@
     <ClInclude Include="src\feature\impl\command\impl\find_nick.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
     <ClInclude Include="src\main\main.hpp" />
+    <ClInclude Include="src\sdk\java\util\uuid.hpp" />
     <ClInclude Include="src\sdk\mapping.hpp" />
     <ClInclude Include="src\sdk\mapping_json.hpp" />
     <ClInclude Include="src\sdk\net\minecraft\client\entity\entity_player_sp.hpp" />

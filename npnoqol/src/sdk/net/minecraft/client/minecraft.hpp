@@ -6,6 +6,7 @@
 #include "../client/gui/gui_ingame.hpp"
 #include "../client/multiplayer/world_client.hpp"
 #include "../util/chat_component_text.hpp"
+#include "../entity/entity.hpp"
 
 namespace sdk
 {

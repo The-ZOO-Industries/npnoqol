@@ -24,22 +24,22 @@ auto zoo::set_apikey::on_command(const std::vector<std::string>& args) const noe
     {
         if (hypixel_api::check_apikey(args[2]))
         {
-            zoo::util::add_chat_message(std::format("{}Hypixel API key is valid", enum_chat_formatting::green));
+            zoo::chat::add_chat_message(std::format("{}Hypixel API key is valid", enum_chat_formatting::green));
         }
         else
         {
-            zoo::util::add_chat_message(std::format("{}Hypixel API key is invalid", enum_chat_formatting::red));
+            zoo::chat::add_chat_message(std::format("{}Hypixel API key is invalid", enum_chat_formatting::red));
         }
     }
     else if (args[1] == "zoo")
     {
         if (zoo_api::check_apikey(args[2]))
         {
-            zoo::util::add_chat_message(std::format("{}Zoo API key is valid", enum_chat_formatting::green));
+            zoo::chat::add_chat_message(std::format("{}Zoo API key is valid", enum_chat_formatting::green));
         }
         else
         {
-            zoo::util::add_chat_message(std::format("{}Zoo API key is invalid", enum_chat_formatting::red));
+            zoo::chat::add_chat_message(std::format("{}Zoo API key is invalid", enum_chat_formatting::red));
         }
     }
     else

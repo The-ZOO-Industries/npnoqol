@@ -17,7 +17,8 @@
 
 namespace zoo
 {
-	class util;
+	class chat;
+	class player;
 
 	inline std::string watermark{ std::format("{} > {}", enum_chat_formatting::aqua, enum_chat_formatting::reset) };
 	
@@ -34,10 +35,11 @@ namespace zoo
 	protected:
 		static inline std::unique_ptr<sdk::minecraft> minecraft{};
 
-		friend class util;
+		friend class chat;
+		friend class player;
 	};
 
-    class util final
+    class chat final
     {
     public:
         static auto add_chat_message(const std::string& message) noexcept
@@ -51,6 +53,16 @@ namespace zoo
             }
         }
     };
+
+	class entity final
+	{
+	public:
+		static auto is_bot(const std::unique_ptr<sdk::entity>& entity) noexcept
+			-> bool
+		{
+			return entity->get_unique_id()->version() == 2;
+		}
+	};
 
 	struct hook_handler
 	{
