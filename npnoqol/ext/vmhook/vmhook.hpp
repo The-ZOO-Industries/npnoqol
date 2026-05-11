@@ -3722,14 +3722,16 @@ namespace vmhook
         3. Disable JIT compilation by setting NO_COMPILE in Method._access_flags
            and _dont_inline in Method._flags.
         4. Register the method and its detour in g_hooked_methods for dispatch by common_detour.
-        5. Check whether the i2i entry point has already been patched; if so, reuse it.
-        6. If the i2i entry is new, locate the injection point via find_hook_location(),
+        5. If the method is already compiled, clear Method._code and restore the
+           interpreted entry so future dispatch reaches the interpreter hook.
+        6. Check whether the i2i entry point has already been patched; if so, reuse it.
+        7. If the i2i entry is new, locate the injection point via find_hook_location(),
            allocate a trampoline via midi2i_hook, and register it in g_hooked_i2i_entries.
 
         @note Unlike the JNI/JVMTI version, this implementation does not force a class
-              retransformation to flush existing JIT-compiled code. Hooking a method that
-              has already been JIT-compiled by the time hook() is called will not intercept
-              calls that execute through compiled code. Hook early, before the method is called.
+              retransformation to flush existing inline caches. Hooking early is still best:
+              compiled callers that already cached an nmethod can keep bypassing the hook
+              until HotSpot repairs that call site at a safepoint.
         @see midi2i_hook, common_detour, set_dont_inline, NO_COMPILE, shutdown_hooks
     */
     template<class wrapper_type>
@@ -3865,7 +3867,7 @@ namespace vmhook
             // -- Deoptimise JIT-compiled methods ---------------------------------
             // Problem:  when _code != nullptr, _from_interpreted_entry points to the i2c
             //           adapter (not the i2i stub), so calls bypass our patch entirely.
-            // Fix:      null _code and reset both entry points so the JVM dispatches
+            // Fix:      null _code and reset the interpreted entry so the JVM dispatches
             //           through the interpreter - and therefore through our patched i2i stub.
             // Limitation: compiled callers with stale monomorphic inline caches still call
             //             the old nmethod directly.  Those caches will be repaired the next
@@ -3874,13 +3876,6 @@ namespace vmhook
             {
                 void* const adapter{ found_method->get_adapter() };
                 void* const c2i_entry{ vmhook::hotspot::get_c2i_entry_from_adapter(adapter) };
-                if (!c2i_entry || !vmhook::hotspot::is_valid_pointer(c2i_entry))
-                {
-                    std::println("{} hook(): '{}' is JIT-compiled and no c2i adapter is available; refusing unsafe i2i fallback.", vmhook::warning_tag, method_name);
-                    vmhook::hotspot::g_hooked_methods.pop_back();
-                    return false;
-                }
-
                 // 1. Redirect interpreted callers to the (now-patched) i2i stub.
                 found_method->set_from_interpreted_entry(i2i);
 
@@ -3892,10 +3887,10 @@ namespace vmhook
                 }
                 else
                 {
-                    // Fallback: no c2i adapter available; point at the i2i stub directly.
-                    // Compiled callers with fresh dispatch will still reach the hook.
-                    found_method->set_from_compiled_entry(i2i);
-                    std::println("{} hook():   _from_compiled_entry → i2i (c2i adapter unavailable)", vmhook::warning_tag);
+                    // Do not point compiled callers directly at i2i: the compiled-call ABI
+                    // expects a c2i adapter. Leaving this entry unchanged is safer; once
+                    // _code is cleared, normal interpreted dispatch reaches the hook.
+                    std::println("{} hook():   c2i adapter unavailable; leaving _from_compiled_entry unchanged.", vmhook::info_tag);
                 }
 
                 // 3. Clear _code last so the above entry-point writes are visible first.
