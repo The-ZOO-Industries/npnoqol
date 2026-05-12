@@ -20,13 +20,13 @@ auto zoo::feature_manager::run_tick() noexcept
 	command_manager->run_tick();
 }
 
-auto zoo::feature_manager::run_tick_hook(vmhook::return_value& return_value, const std::unique_ptr<sdk::minecraft>& minecraft)
+auto zoo::feature_manager::run_tick_hook(vmhook::return_value& return_value, const std::unique_ptr<sdk::minecraft>& thizz)
 	-> void
 {
 	command_manager->run_tick();
 }
 
-auto zoo::feature_manager::send_chat_message_hook(vmhook::return_value& return_value, const std::unique_ptr<sdk::entity_player_sp>& player, const std::string& message)
+auto zoo::feature_manager::send_chat_message_hook(vmhook::return_value& return_value, const std::unique_ptr<sdk::entity_player_sp>& thizz, const std::string& message)
 	-> void
 {
 	if (command_manager->on_send_chat_message(message))

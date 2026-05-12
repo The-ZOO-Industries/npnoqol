@@ -184,6 +184,7 @@
     <ClInclude Include="ext\curl\typecheck-gcc.h" />
     <ClInclude Include="ext\curl\urlapi.h" />
     <ClInclude Include="ext\curl\websockets.h" />
+    <ClInclude Include="ext\hypixel\hypixel.hpp" />
     <ClInclude Include="ext\nlohmann\json.hpp" />
     <ClInclude Include="ext\nlohmann\json_fwd.hpp" />
     <ClInclude Include="ext\vmhook\vmhook.hpp" />

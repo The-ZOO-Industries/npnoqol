@@ -182,5 +182,8 @@
     <ClInclude Include="src\sdk\java\util\uuid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ext\hypixel\hypixel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
