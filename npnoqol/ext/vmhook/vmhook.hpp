@@ -75,6 +75,7 @@
 #include <optional>
 #include <variant>
 #include <functional>
+#include <limits>
 
 #include <windows.h>
 
@@ -1592,7 +1593,7 @@ namespace vmhook
                 {
                     if (!entry)
                     {
-                        throw vmhook::exception{ "Failed to find ClassLoaderData._dictionary entry." };
+                        return nullptr;
                     }
 
                     if (!vmhook::hotspot::is_valid_pointer(this))
@@ -2765,26 +2766,125 @@ namespace vmhook
             @brief Allocates a block of executable memory within a 32-bit relative jump range
                    of a given address.
             @details
-            Iterates outward from nearby_addr in steps of 65536 bytes (Windows allocation
-            granularity) up to +/- 0x7FFFFFFF bytes, attempting VirtualAlloc at each step.
-            This ensures the allocated block can be reached by a 5-byte relative JMP.
+            Walks the process address space with VirtualQuery and allocates inside a free
+            region that is reachable by a 5-byte relative JMP. HotSpot often reserves dense
+            areas around code stubs, so blindly probing exact offsets with VirtualAlloc can
+            fail even when a usable nearby free region exists.
         */
         static auto allocate_nearby_memory(std::uint8_t* nearby_addr, const std::size_t size, const DWORD protect) noexcept
             -> std::uint8_t*
         {
-            for (std::int64_t distance_step{ 65536 }; distance_step < 0x7FFFFFFF; distance_step += 65536)
+            if (!nearby_addr || size == 0)
             {
-                std::uint8_t* allocated{ reinterpret_cast<std::uint8_t*>(VirtualAlloc(nearby_addr + distance_step, size, MEM_COMMIT | MEM_RESERVE, protect)) };
-                if (allocated)
+                return nullptr;
+            }
+
+            SYSTEM_INFO system_info{};
+            GetSystemInfo(&system_info);
+
+            const std::uintptr_t minimum_application_address{ reinterpret_cast<std::uintptr_t>(system_info.lpMinimumApplicationAddress) };
+            const std::uintptr_t maximum_application_address{ reinterpret_cast<std::uintptr_t>(system_info.lpMaximumApplicationAddress) };
+            const std::uintptr_t allocation_granularity{ static_cast<std::uintptr_t>(system_info.dwAllocationGranularity) };
+            const std::uintptr_t target_address{ reinterpret_cast<std::uintptr_t>(nearby_addr) };
+            const std::uintptr_t relative_limit{ static_cast<std::uintptr_t>((std::numeric_limits<std::int32_t>::max)()) };
+
+            const auto align_up = [](const std::uintptr_t value, const std::uintptr_t alignment) noexcept
+                -> std::uintptr_t
+            {
+                return (value + alignment - 1) & ~(alignment - 1);
+            };
+
+            const auto align_down = [](const std::uintptr_t value, const std::uintptr_t alignment) noexcept
+                -> std::uintptr_t
+            {
+                return value & ~(alignment - 1);
+            };
+
+            const std::uintptr_t search_min{
+                (std::max)(minimum_application_address, target_address > relative_limit ? target_address - relative_limit : minimum_application_address)
+            };
+            const std::uintptr_t search_max{
+                target_address > maximum_application_address - relative_limit ? maximum_application_address : (std::min)(maximum_application_address, target_address + relative_limit)
+            };
+
+            auto try_allocate_in_region = [&](const std::uintptr_t region_base, const std::uintptr_t region_end) noexcept
+                -> std::uint8_t*
+            {
+                if (region_end <= region_base || region_end - region_base < size)
                 {
-                    return allocated;
+                    return nullptr;
                 }
 
-                allocated = reinterpret_cast<std::uint8_t*>(VirtualAlloc(nearby_addr - distance_step, size, MEM_COMMIT | MEM_RESERVE, protect));
-                if (allocated)
+                const std::uintptr_t usable_begin{ (std::max)(region_base, search_min) };
+                const std::uintptr_t usable_end{ (std::min)(region_end, search_max + 1) };
+                if (usable_end <= usable_begin || usable_end - usable_begin < size)
                 {
-                    return allocated;
+                    return nullptr;
                 }
+
+                const std::uintptr_t first_candidate{ align_up(usable_begin, allocation_granularity) };
+                const std::uintptr_t last_candidate{ align_down(usable_end - size, allocation_granularity) };
+                if (first_candidate > last_candidate)
+                {
+                    return nullptr;
+                }
+
+                const std::uintptr_t preferred_candidate{
+                    target_address < first_candidate ? first_candidate :
+                    target_address > last_candidate ? last_candidate :
+                    align_down(target_address, allocation_granularity)
+                };
+
+                if (void* const allocated{ VirtualAlloc(reinterpret_cast<void*>(preferred_candidate), size, MEM_COMMIT | MEM_RESERVE, protect) })
+                {
+                    return reinterpret_cast<std::uint8_t*>(allocated);
+                }
+
+                if (preferred_candidate != first_candidate)
+                {
+                    if (void* const allocated{ VirtualAlloc(reinterpret_cast<void*>(first_candidate), size, MEM_COMMIT | MEM_RESERVE, protect) })
+                    {
+                        return reinterpret_cast<std::uint8_t*>(allocated);
+                    }
+                }
+
+                if (preferred_candidate != last_candidate && first_candidate != last_candidate)
+                {
+                    if (void* const allocated{ VirtualAlloc(reinterpret_cast<void*>(last_candidate), size, MEM_COMMIT | MEM_RESERVE, protect) })
+                    {
+                        return reinterpret_cast<std::uint8_t*>(allocated);
+                    }
+                }
+
+                return nullptr;
+            };
+
+            MEMORY_BASIC_INFORMATION memory_basic_info{};
+            for (std::uintptr_t current{ search_min }; current < search_max; )
+            {
+                if (!VirtualQuery(reinterpret_cast<void*>(current), &memory_basic_info, sizeof(memory_basic_info)))
+                {
+                    current += system_info.dwPageSize;
+                    continue;
+                }
+
+                const std::uintptr_t region_base{ reinterpret_cast<std::uintptr_t>(memory_basic_info.BaseAddress) };
+                const std::uintptr_t region_size{ memory_basic_info.RegionSize };
+                const std::uintptr_t region_end{ region_base + region_size };
+
+                if (memory_basic_info.State == MEM_FREE)
+                {
+                    if (std::uint8_t* const allocated{ try_allocate_in_region(region_base, region_end) })
+                    {
+                        return allocated;
+                    }
+                }
+
+                if (region_end <= current)
+                {
+                    break;
+                }
+                current = region_end;
             }
 
             return nullptr;
@@ -3481,6 +3581,12 @@ namespace vmhook
         }
     }
 
+    namespace detail
+    {
+        inline auto jni_find_class_with_context_loader(const std::string_view class_name) noexcept
+            -> vmhook::hotspot::klass*;
+    }
+
     // --- Cache and class lookup -----------------------------------------------
 
     /*
@@ -3514,11 +3620,15 @@ namespace vmhook
         try
         {
             const vmhook::hotspot::class_loader_data_graph graph{};
-            vmhook::hotspot::klass* const found_klass{ graph.find_klass(class_name) };
+            vmhook::hotspot::klass* found_klass{ graph.find_klass(class_name) };
 
             if (!found_klass)
             {
-                return nullptr;
+                found_klass = vmhook::detail::jni_find_class_with_context_loader(class_name);
+                if (!found_klass)
+                {
+                    return nullptr;
+                }
             }
 
             vmhook::klass_lookup_cache.insert({ std::string{ class_name }, found_klass });
@@ -4027,6 +4137,19 @@ namespace vmhook
             return find_class(vmhook::hotspot::current_jni_env, name.c_str());
         }
 
+        inline auto jni_exception_clear() noexcept
+            -> void
+        {
+            using exception_check_t = bool (*)(void*);
+            using exception_clear_t = void (*)(void*);
+            exception_check_t const exception_check{ vmhook::detail::jni_function<228, exception_check_t>(vmhook::hotspot::current_jni_env) };
+            exception_clear_t const exception_clear{ vmhook::detail::jni_function<17, exception_clear_t>(vmhook::hotspot::current_jni_env) };
+            if (exception_check && exception_clear && exception_check(vmhook::hotspot::current_jni_env))
+            {
+                exception_clear(vmhook::hotspot::current_jni_env);
+            }
+        }
+
         inline auto jni_get_object_class(void* const object_handle) noexcept
             -> void*
         {
@@ -4041,6 +4164,164 @@ namespace vmhook
             using get_method_id_t = void* (*)(void*, void*, const char*, const char*);
             get_method_id_t const get_method_id{ vmhook::detail::jni_function<33, get_method_id_t>(vmhook::hotspot::current_jni_env) };
             return get_method_id ? get_method_id(vmhook::hotspot::current_jni_env, klass, name.c_str(), signature.c_str()) : nullptr;
+        }
+
+        inline auto jni_new_string_utf(const std::string_view value) noexcept
+            -> void*;
+
+        inline auto jni_get_static_method_id(void* const klass, const std::string& name, const std::string& signature) noexcept
+            -> void*
+        {
+            using get_static_method_id_t = void* (*)(void*, void*, const char*, const char*);
+            get_static_method_id_t const get_static_method_id{ vmhook::detail::jni_function<113, get_static_method_id_t>(vmhook::hotspot::current_jni_env) };
+            return get_static_method_id ? get_static_method_id(vmhook::hotspot::current_jni_env, klass, name.c_str(), signature.c_str()) : nullptr;
+        }
+
+        inline auto jni_get_static_field_id(void* const klass, const std::string& name, const std::string& signature) noexcept
+            -> void*
+        {
+            using get_static_field_id_t = void* (*)(void*, void*, const char*, const char*);
+            get_static_field_id_t const get_static_field_id{ vmhook::detail::jni_function<144, get_static_field_id_t>(vmhook::hotspot::current_jni_env) };
+            return get_static_field_id ? get_static_field_id(vmhook::hotspot::current_jni_env, klass, name.c_str(), signature.c_str()) : nullptr;
+        }
+
+        inline auto jni_get_static_object_field(void* const klass, void* const field_id) noexcept
+            -> void*
+        {
+            using get_static_object_field_t = void* (*)(void*, void*, void*);
+            get_static_object_field_t const get_static_object_field{ vmhook::detail::jni_function<145, get_static_object_field_t>(vmhook::hotspot::current_jni_env) };
+            return get_static_object_field ? get_static_object_field(vmhook::hotspot::current_jni_env, klass, field_id) : nullptr;
+        }
+
+        inline auto jni_call_object_method(void* const object, void* const method_id, const vmhook::detail::jni_value* const args = nullptr) noexcept
+            -> void*
+        {
+            using call_object_method_a_t = void* (*)(void*, void*, void*, const vmhook::detail::jni_value*);
+            call_object_method_a_t const call_object_method_a{ vmhook::detail::jni_function<36, call_object_method_a_t>(vmhook::hotspot::current_jni_env) };
+            return call_object_method_a ? call_object_method_a(vmhook::hotspot::current_jni_env, object, method_id, args) : nullptr;
+        }
+
+        inline auto jni_call_static_object_method(void* const klass, void* const method_id, const vmhook::detail::jni_value* const args = nullptr) noexcept
+            -> void*
+        {
+            using call_static_object_method_a_t = void* (*)(void*, void*, void*, const vmhook::detail::jni_value*);
+            call_static_object_method_a_t const call_static_object_method_a{ vmhook::detail::jni_function<116, call_static_object_method_a_t>(vmhook::hotspot::current_jni_env) };
+            return call_static_object_method_a ? call_static_object_method_a(vmhook::hotspot::current_jni_env, klass, method_id, args) : nullptr;
+        }
+
+        inline auto jni_klass_from_class_mirror(void* const class_handle) noexcept
+            -> vmhook::hotspot::klass*
+        {
+            void* const class_oop{ vmhook::detail::jni_decode_object(class_handle) };
+            if (!class_oop || !vmhook::hotspot::is_valid_pointer(class_oop))
+            {
+                return nullptr;
+            }
+
+            static const vmhook::hotspot::vm_struct_entry_t* const klass_offset{ vmhook::hotspot::iterate_struct_entries("java_lang_Class", "_klass_offset") };
+            if (!klass_offset || !klass_offset->address)
+            {
+                return nullptr;
+            }
+
+            const int offset{ *reinterpret_cast<const int*>(klass_offset->address) };
+            void* const raw_klass{ const_cast<void*>(vmhook::hotspot::safe_read_pointer(reinterpret_cast<const std::uint8_t*>(class_oop) + offset)) };
+            return vmhook::hotspot::is_valid_pointer(raw_klass) ? reinterpret_cast<vmhook::hotspot::klass*>(const_cast<void*>(vmhook::hotspot::untag_pointer(raw_klass))) : nullptr;
+        }
+
+        inline auto jni_find_class_with_context_loader(const std::string_view class_name) noexcept
+            -> vmhook::hotspot::klass*
+        {
+            if (!vmhook::hotspot::ensure_current_java_thread())
+            {
+                return nullptr;
+            }
+
+            auto load_with_loader = [&](void* const class_loader) noexcept
+                -> vmhook::hotspot::klass*
+            {
+                if (!class_loader)
+                {
+                    return nullptr;
+                }
+
+                void* const class_loader_class{ vmhook::detail::jni_find_class("java/lang/ClassLoader") };
+                if (!class_loader_class)
+                {
+                    vmhook::detail::jni_exception_clear();
+                    return nullptr;
+                }
+
+                void* const load_class_id{ vmhook::detail::jni_get_method_id(class_loader_class, "loadClass", "(Ljava/lang/String;)Ljava/lang/Class;") };
+                if (!load_class_id)
+                {
+                    vmhook::detail::jni_exception_clear();
+                    return nullptr;
+                }
+
+                std::string dotted_name{ class_name };
+                std::replace(dotted_name.begin(), dotted_name.end(), '/', '.');
+                void* const name_string{ vmhook::detail::jni_new_string_utf(dotted_name) };
+                if (!name_string)
+                {
+                    vmhook::detail::jni_exception_clear();
+                    return nullptr;
+                }
+
+                vmhook::detail::jni_value args[1]{};
+                args[0].l = name_string;
+
+                void* const class_mirror{ vmhook::detail::jni_call_object_method(class_loader, load_class_id, args) };
+                vmhook::hotspot::klass* const klass{ vmhook::detail::jni_klass_from_class_mirror(class_mirror) };
+                vmhook::detail::jni_exception_clear();
+                return klass;
+            };
+
+            void* const thread_class{ vmhook::detail::jni_find_class("java/lang/Thread") };
+            if (thread_class)
+            {
+                void* const current_thread_id{ vmhook::detail::jni_get_static_method_id(thread_class, "currentThread", "()Ljava/lang/Thread;") };
+                void* const get_context_loader_id{ vmhook::detail::jni_get_method_id(thread_class, "getContextClassLoader", "()Ljava/lang/ClassLoader;") };
+                if (current_thread_id && get_context_loader_id)
+                {
+                    void* const current_thread{ vmhook::detail::jni_call_static_object_method(thread_class, current_thread_id) };
+                    void* const context_loader{ current_thread ? vmhook::detail::jni_call_object_method(current_thread, get_context_loader_id) : nullptr };
+                    if (vmhook::hotspot::klass* const klass{ load_with_loader(context_loader) })
+                    {
+                        return klass;
+                    }
+                }
+            }
+            vmhook::detail::jni_exception_clear();
+
+            void* const class_loader_class{ vmhook::detail::jni_find_class("java/lang/ClassLoader") };
+            if (class_loader_class)
+            {
+                void* const get_system_loader_id{ vmhook::detail::jni_get_static_method_id(class_loader_class, "getSystemClassLoader", "()Ljava/lang/ClassLoader;") };
+                void* const system_loader{ get_system_loader_id ? vmhook::detail::jni_call_static_object_method(class_loader_class, get_system_loader_id) : nullptr };
+                if (vmhook::hotspot::klass* const klass{ load_with_loader(system_loader) })
+                {
+                    return klass;
+                }
+            }
+            vmhook::detail::jni_exception_clear();
+
+            void* const launch_class{ vmhook::detail::jni_find_class("net/minecraft/launchwrapper/Launch") };
+            if (!launch_class)
+            {
+                vmhook::detail::jni_exception_clear();
+                return nullptr;
+            }
+
+            void* const class_loader_field{ vmhook::detail::jni_get_static_field_id(launch_class, "classLoader", "Lnet/minecraft/launchwrapper/LaunchClassLoader;") };
+            void* const launch_loader{ class_loader_field ? vmhook::detail::jni_get_static_object_field(launch_class, class_loader_field) : nullptr };
+            if (vmhook::hotspot::klass* const klass{ load_with_loader(launch_loader) })
+            {
+                return klass;
+            }
+
+            vmhook::detail::jni_exception_clear();
+            return nullptr;
         }
 
         inline auto jni_new_string_utf(const std::string_view value) noexcept
@@ -5372,7 +5653,6 @@ namespace vmhook
                     return value_t{ std::monostate{} };
                 }
 
-                std::println("{} method_proxy::call_jni('{}{}'): invoking object return through JNI fallback.", vmhook::info_tag, this->name(), this->m_signature);
                 void* const result_handle{ call_object_method_a(vmhook::hotspot::current_jni_env, object_handle, method_id, values.data()) };
                 return value_t{ vmhook::detail::jni_get_string_utf(result_handle) };
             }
@@ -5385,7 +5665,6 @@ namespace vmhook
                 return value_t{ std::monostate{} };
             }
 
-            std::println("{} method_proxy::call_jni('{}{}'): invoking through JNI fallback.", vmhook::info_tag, this->name(), this->m_signature);
             call_void_method_a(vmhook::hotspot::current_jni_env, object_handle, method_id, values.data());
             return value_t{ std::monostate{} };
         }
@@ -5429,16 +5708,19 @@ namespace vmhook
                 return value_t{ std::monostate{} };
             }
 
+            vmhook::hotspot::method* const selected_method{ this->resolve_compatible_method<std::remove_cvref_t<args_t>...>() };
+            const std::string selected_signature{ selected_method ? selected_method->get_signature() : this->m_signature };
+
             if (!vmhook::hotspot::ensure_current_java_thread())
             {
-                std::println("{} method_proxy::call('{}{}'): no current JavaThread.", vmhook::error_tag, this->name(), this->m_signature);
+                std::println("{} method_proxy::call('{}{}'): no current JavaThread.", vmhook::error_tag, this->name(), selected_signature);
                 return value_t{ std::monostate{} };
             }
 
             auto* const thread{ vmhook::hotspot::current_java_thread };
             if (!thread)
             {
-                std::println("{} method_proxy::call('{}{}'): current JavaThread is null after attach.", vmhook::error_tag, this->name(), this->m_signature);
+                std::println("{} method_proxy::call('{}{}'): current JavaThread is null after attach.", vmhook::error_tag, this->name(), selected_signature);
                 return value_t{ std::monostate{} };
             }
 
@@ -5448,18 +5730,18 @@ namespace vmhook
             void* const call_stub{ vmhook::detail::find_call_stub_entry() };
             if (!call_stub)
             {
-                return this->call_jni(std::forward<args_t>(args)...);
+                return method_proxy{ this->object, selected_method, selected_signature }.call_jni(std::forward<args_t>(args)...);
             }
 
-            void* const entry{ this->method->get_from_interpreted_entry() };
+            void* const entry{ selected_method->get_from_interpreted_entry() };
             if (!entry || !vmhook::hotspot::is_valid_pointer(entry))
             {
-                std::println("{} method_proxy::call('{}{}'): interpreted entry is null or invalid.", vmhook::error_tag, this->name(), this->m_signature);
+                std::println("{} method_proxy::call('{}{}'): interpreted entry is null or invalid.", vmhook::error_tag, this->name(), selected_signature);
                 return value_t{ std::monostate{} };
             }
 
             // ── Return type ───────────────────────────────────────────────────
-            const std::string_view sig{ this->m_signature };
+            const std::string_view sig{ selected_signature };
             const std::size_t rparen{ sig.rfind(')') };
             const char ret_char{
                 rparen != std::string_view::npos ? sig[rparen + 1] : 'V' };
@@ -5486,7 +5768,7 @@ namespace vmhook
                         void* const string_oop{ vmhook::make_java_string(a) };
                         if (!string_oop)
                         {
-                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), this->m_signature);
+                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), selected_signature);
                         }
                         params[param_idx++] = reinterpret_cast<std::intptr_t>(string_oop);
                     }
@@ -5495,7 +5777,7 @@ namespace vmhook
                         void* const string_oop{ vmhook::make_java_string(a) };
                         if (!string_oop)
                         {
-                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), this->m_signature);
+                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), selected_signature);
                         }
                         params[param_idx++] = reinterpret_cast<std::intptr_t>(string_oop);
                     }
@@ -5504,7 +5786,7 @@ namespace vmhook
                         void* const string_oop{ vmhook::make_java_string(a ? std::string_view{ a } : std::string_view{}) };
                         if (!string_oop)
                         {
-                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), this->m_signature);
+                            std::println("{} method_proxy::call('{}{}'): failed to allocate Java String argument.", vmhook::error_tag, this->name(), selected_signature);
                         }
                         params[param_idx++] = reinterpret_cast<std::intptr_t>(string_oop);
                     }
@@ -5551,13 +5833,11 @@ namespace vmhook
             const vmhook::hotspot::java_thread_state previous_state{ thread->get_thread_state() };
             thread->set_thread_state(vmhook::hotspot::java_thread_state::_thread_in_Java);
 
-            std::println("{} method_proxy::call('{}{}'): invoking with JavaThread 0x{:016X}, Method 0x{:016X}, entry 0x{:016X}, params {}.", vmhook::info_tag, this->name(), this->m_signature, reinterpret_cast<std::uintptr_t>(thread), reinterpret_cast<std::uintptr_t>(this->method), reinterpret_cast<std::uintptr_t>(entry), param_idx);
-
             reinterpret_cast<call_stub_fn_t>(call_stub)(
                 reinterpret_cast<void*>(static_cast<std::intptr_t>(-1)),
                 &result_holder,
                 result_type,
-                reinterpret_cast<void*>(this->method),
+                reinterpret_cast<void*>(selected_method),
                 entry,
                 params,
                 static_cast<int>(param_idx),
@@ -5634,6 +5914,188 @@ namespace vmhook
         }
 
     private:
+        static auto klass_from_object_header(void* const oop) noexcept
+            -> vmhook::hotspot::klass*
+        {
+            if (!oop || !vmhook::hotspot::is_valid_pointer(oop))
+            {
+                return nullptr;
+            }
+
+            const std::uint32_t narrow_klass{ *reinterpret_cast<const std::uint32_t*>(
+                reinterpret_cast<const std::uint8_t*>(oop) + 8) };
+            void* const decoded{ vmhook::hotspot::decode_klass_pointer(narrow_klass) };
+            if (!decoded || !vmhook::hotspot::is_valid_pointer(decoded))
+            {
+                return nullptr;
+            }
+
+            return reinterpret_cast<vmhook::hotspot::klass*>(decoded);
+        }
+
+        template<typename argument_type>
+        static auto argument_matches_descriptor(const std::string_view descriptor) noexcept
+            -> bool
+        {
+            using clean_type = std::remove_cvref_t<argument_type>;
+
+            if constexpr (std::is_same_v<clean_type, std::string> || std::is_same_v<clean_type, std::string_view> || std::is_same_v<clean_type, const char*> || std::is_same_v<clean_type, char*>)
+            {
+                return descriptor == "Ljava/lang/String;";
+            }
+            else if constexpr (
+                requires(const clean_type& value) { value.get(); }
+                && std::is_pointer_v<decltype(std::declval<const clean_type&>().get())>
+                && std::is_base_of_v<vmhook::object_base, std::remove_pointer_t<decltype(std::declval<const clean_type&>().get())>>)
+            {
+                using wrapper_type = std::remove_pointer_t<decltype(std::declval<const clean_type&>().get())>;
+                const auto type_map_entry{ vmhook::type_to_class_map.find(std::type_index{ typeid(wrapper_type) }) };
+                return descriptor.size() >= 3
+                    && descriptor.front() == 'L'
+                    && descriptor.back() == ';'
+                    && (type_map_entry == vmhook::type_to_class_map.end() || descriptor.substr(1, descriptor.size() - 2) == type_map_entry->second);
+            }
+            else if constexpr (std::is_base_of_v<vmhook::object_base, clean_type>)
+            {
+                const auto type_map_entry{ vmhook::type_to_class_map.find(std::type_index{ typeid(clean_type) }) };
+                return descriptor.size() >= 3
+                    && descriptor.front() == 'L'
+                    && descriptor.back() == ';'
+                    && (type_map_entry == vmhook::type_to_class_map.end() || descriptor.substr(1, descriptor.size() - 2) == type_map_entry->second);
+            }
+            else if constexpr (std::is_same_v<clean_type, bool>)
+            {
+                return descriptor == "Z";
+            }
+            else if constexpr (std::is_integral_v<clean_type> && sizeof(clean_type) == 1)
+            {
+                return descriptor == "B" || descriptor == "Z";
+            }
+            else if constexpr (std::is_integral_v<clean_type> && sizeof(clean_type) == 2)
+            {
+                return descriptor == "S" || descriptor == "C";
+            }
+            else if constexpr (std::is_integral_v<clean_type> && sizeof(clean_type) == 4)
+            {
+                return descriptor == "I";
+            }
+            else if constexpr (std::is_integral_v<clean_type> && sizeof(clean_type) == 8)
+            {
+                return descriptor == "J";
+            }
+            else if constexpr (std::is_same_v<clean_type, float>)
+            {
+                return descriptor == "F";
+            }
+            else if constexpr (std::is_same_v<clean_type, double>)
+            {
+                return descriptor == "D";
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        static auto next_argument_descriptor(const std::string_view signature, std::size_t& position, const std::size_t close_paren) noexcept
+            -> std::string_view
+        {
+            const std::size_t start{ position };
+            while (position < close_paren && signature[position] == '[')
+            {
+                ++position;
+            }
+
+            if (position >= close_paren)
+            {
+                return {};
+            }
+
+            if (signature[position] == 'L')
+            {
+                const std::size_t semicolon{ signature.find(';', position) };
+                if (semicolon == std::string_view::npos || semicolon > close_paren)
+                {
+                    return {};
+                }
+                position = semicolon + 1;
+                return signature.substr(start, position - start);
+            }
+
+            ++position;
+            return signature.substr(start, position - start);
+        }
+
+        template<typename... args_t>
+        static auto signature_matches_arguments(const std::string_view signature) noexcept
+            -> bool
+        {
+            const std::size_t open_paren{ signature.find('(') };
+            const std::size_t close_paren{ signature.find(')') };
+            if (open_paren == std::string_view::npos || close_paren == std::string_view::npos || close_paren < open_paren)
+            {
+                return false;
+            }
+
+            std::size_t position{ open_paren + 1 };
+            bool matches{ true };
+            ([&]
+                {
+                    if (!matches)
+                    {
+                        return;
+                    }
+                    const std::string_view descriptor{ next_argument_descriptor(signature, position, close_paren) };
+                    matches = !descriptor.empty() && argument_matches_descriptor<args_t>(descriptor);
+                }(), ...);
+
+            return matches && position == close_paren;
+        }
+
+        template<typename... args_t>
+        auto resolve_compatible_method() const noexcept
+            -> vmhook::hotspot::method*
+        {
+            if (signature_matches_arguments<args_t...>(this->m_signature))
+            {
+                return this->method;
+            }
+
+            vmhook::hotspot::klass* const resolved_klass{ this->object ? klass_from_object_header(this->object) : nullptr };
+            if (!resolved_klass)
+            {
+                return this->method;
+            }
+
+            const std::string method_name{ this->name() };
+            for (vmhook::hotspot::klass* k{ resolved_klass }; k != nullptr; k = k->get_super())
+            {
+                const std::int32_t method_count{ k->get_methods_count() };
+                vmhook::hotspot::method** const methods_array{ k->get_methods_ptr() };
+                if (!methods_array || method_count <= 0)
+                {
+                    continue;
+                }
+
+                for (std::int32_t method_index{ 0 }; method_index < method_count; ++method_index)
+                {
+                    vmhook::hotspot::method* const current_method{ methods_array[method_index] };
+                    if (!current_method || !vmhook::hotspot::is_valid_pointer(current_method) || current_method->get_name() != method_name)
+                    {
+                        continue;
+                    }
+
+                    const std::string current_signature{ current_method->get_signature() };
+                    if (signature_matches_arguments<args_t...>(current_signature))
+                    {
+                        return current_method;
+                    }
+                }
+            }
+
+            return this->method;
+        }
+
         void* object;
         vmhook::hotspot::method* method;
         std::string m_signature;
@@ -5879,6 +6341,45 @@ namespace vmhook
             return std::nullopt;
         }
 
+        auto get_method(const std::string_view method_name, const std::string_view method_signature) const
+            -> std::optional<vmhook::method_proxy>
+        {
+            vmhook::hotspot::klass* const resolved_klass{ this->resolve_klass() };
+            if (!resolved_klass)
+            {
+                return std::nullopt;
+            }
+
+            // Walk the superclass chain so inherited methods are found.
+            for (vmhook::hotspot::klass* k{ resolved_klass }; k != nullptr; k = k->get_super())
+            {
+                const std::int32_t method_count{ k->get_methods_count() };
+                vmhook::hotspot::method** const methods_array{ k->get_methods_ptr() };
+
+                if (!methods_array || method_count <= 0)
+                {
+                    continue;
+                }
+
+                for (std::int32_t method_index{ 0 }; method_index < method_count; ++method_index)
+                {
+                    vmhook::hotspot::method* const current_method{ methods_array[method_index] };
+                    if (!current_method || !vmhook::hotspot::is_valid_pointer(current_method))
+                    {
+                        continue;
+                    }
+
+                    const std::string current_signature{ current_method->get_signature() };
+                    if (current_method->get_name() == method_name && current_signature == method_signature)
+                    {
+                        return vmhook::method_proxy{ this->instance, current_method, current_signature };
+                    }
+                }
+            }
+
+            return std::nullopt;
+        }
+
         static auto get_method(const std::type_index wrapper_type, const std::string_view method_name)
             -> std::optional<vmhook::method_proxy>
         {
@@ -5906,6 +6407,45 @@ namespace vmhook
                         && current_method->get_name() == method_name)
                     {
                         return vmhook::method_proxy{ nullptr, current_method, current_method->get_signature() };
+                    }
+                }
+            }
+
+            return std::nullopt;
+        }
+
+        static auto get_method(const std::type_index wrapper_type, const std::string_view method_name, const std::string_view method_signature)
+            -> std::optional<vmhook::method_proxy>
+        {
+            vmhook::hotspot::klass* const resolved_klass{ resolve_klass(wrapper_type) };
+            if (!resolved_klass)
+            {
+                return std::nullopt;
+            }
+
+            // Walk the superclass chain so inherited methods are found.
+            for (vmhook::hotspot::klass* k{ resolved_klass }; k != nullptr; k = k->get_super())
+            {
+                const std::int32_t method_count{ k->get_methods_count() };
+                vmhook::hotspot::method** const methods_array{ k->get_methods_ptr() };
+
+                if (!methods_array || method_count <= 0)
+                {
+                    continue;
+                }
+
+                for (std::int32_t method_index{ 0 }; method_index < method_count; ++method_index)
+                {
+                    vmhook::hotspot::method* const current_method{ methods_array[method_index] };
+                    if (!current_method || !vmhook::hotspot::is_valid_pointer(current_method))
+                    {
+                        continue;
+                    }
+
+                    const std::string current_signature{ current_method->get_signature() };
+                    if (current_method->get_name() == method_name && current_signature == method_signature)
+                    {
+                        return vmhook::method_proxy{ nullptr, current_method, current_signature };
                     }
                 }
             }
@@ -5992,6 +6532,12 @@ namespace vmhook
             return self.object_base::get_method(name);
         }
 
+        auto get_method(this const object_base& self, const char* const name, const char* const signature)
+            -> std::optional<vmhook::method_proxy>
+        {
+            return self.object_base::get_method(name, signature);
+        }
+
         /*
             @brief Static get_field / get_method — for static Java fields called
             from static C++ methods.
@@ -6015,6 +6561,12 @@ namespace vmhook
             -> std::optional<vmhook::method_proxy>
         {
             return object_base::get_method(std::type_index{ typeid(derived) }, name);
+        }
+
+        static auto get_method(const std::string_view name, const std::string_view signature)
+            -> std::optional<vmhook::method_proxy>
+        {
+            return object_base::get_method(std::type_index{ typeid(derived) }, name, signature);
         }
     };
 
