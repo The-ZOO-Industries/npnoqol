@@ -15,6 +15,11 @@ zoo::main::main() noexcept
 {
 	std::println("[INFO] main initialized");
 
+    if (!this->running)
+    {
+        return;
+    }
+
     sdk::register_classes();
 }
 
@@ -26,6 +31,11 @@ zoo::main::~main() noexcept
 auto zoo::main::run() noexcept
     -> void
 {
+    if (!this->running)
+    {
+        return;
+    }
+
     feature_manager features{};
 
     while (this->running)
