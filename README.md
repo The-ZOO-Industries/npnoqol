@@ -1,35 +1,36 @@
 # npnoqol
 
-## `/setapikey` Command
+## Commands
 
-Validates and saves an API key for use with the client.
+### `/setapikey <type> <apikey>`
 
-### Usage
+Validates and saves an API key to `config.json`.
 
-```
-/setapikey <type> <apikey>
-```
-
-| Argument | Description |
-|----------|-------------|
-| `type`   | The API type — either `hypixel` or `zoo` |
-| `apikey` | Your API key |
-
-### Examples
+- `type` — `hypixel` or `zoo`
 
 ```
 /setapikey hypixel xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-/setapikey zoo your_zoo_api_key_here
+/setapikey zoo your_zoo_key
 ```
 
-### How It Works
+---
 
-The command validates the key against the respective API before saving it. If the key is accepted, it is stored in `config.json` and a green confirmation message is shown in chat. If the key is rejected, a red error message is shown and nothing is saved.
+### `/denick <nick>`
 
-- **hypixel** — sends a request to the Hypixel API (`/v2/key`) to verify the key
-- **zoo** — sends a request to the Zoo API (`/check_key`) to verify the key
+Looks up the real username behind a nick.
 
-### Notes
+```
+/denick SomeNick
+→ SomeNick is the nick of ActualPlayer
+```
 
-- The command is processed asynchronously; there may be a brief delay while the key is being validated.
-- Saved keys persist across sessions via `config.json`.
+---
+
+### `/find_nick <name>`
+
+Looks up the nick a player is currently using.
+
+```
+/find_nick ActualPlayer
+→ ActualPlayer is nicked as SomeNick
+```
