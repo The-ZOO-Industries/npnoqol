@@ -24,5 +24,6 @@ namespace sdk
 		{
 			return get_method(mapping::i_chat_component::getUnformattedText)->call();
 		}
+
 	};
 }

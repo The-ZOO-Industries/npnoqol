@@ -45,9 +45,15 @@ namespace zoo
         static auto add_chat_message(const std::string& message) noexcept
             -> void
         {
-            if (feature::minecraft->get_the_player()->get_instance())
+            if (!feature::minecraft)
             {
-				feature::minecraft->get_the_player()->add_chat_message(
+                return;
+            }
+
+            const auto player{ feature::minecraft->get_the_player() };
+            if (player && player->get_instance())
+            {
+				player->add_chat_message(
 					vmhook::make_unique<sdk::chat_component_text>(std::format("{} {}", zoo::watermark, message))
 				);
             }

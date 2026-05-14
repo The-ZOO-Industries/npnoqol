@@ -45,6 +45,21 @@
     <ClCompile Include="src\feature\impl\command\impl\find_nick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\feature\impl\command\impl\stats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\impl\module\module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\impl\module\module_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\impl\module\impl\gametype_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\feature\impl\module\impl\chat_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.hpp">
@@ -104,7 +119,7 @@
     <ClInclude Include="src\sdk\net\minecraft\client\multiplayer\world_client.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sdk\net\minecraft\world.hpp">
+    <ClInclude Include="src\sdk\net\minecraft\world\world.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\util\enum_chat_formatting.hpp">
@@ -183,6 +198,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ext\hypixel\hypixel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\impl\command\impl\stats.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\impl\module\module.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\impl\module\module_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\impl\module\impl\gametype_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\feature\impl\module\impl\chat_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

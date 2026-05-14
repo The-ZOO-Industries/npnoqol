@@ -150,6 +150,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)npnoqol_dll.pdb</ProgramDatabaseFile>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>C:\documents\vcpkg\installed\x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(ProjectDir)ext\curl\libcurl.lib;zlib.lib;ws2_32.lib;iphlpapi.lib;crypt32.lib;secur32.lib;wldap32.lib;normaliz.lib;advapi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -167,6 +168,11 @@
     <ClCompile Include="src\feature\impl\command\impl\denick.cpp" />
     <ClCompile Include="src\feature\impl\command\impl\find_nick.cpp" />
     <ClCompile Include="src\feature\impl\command\impl\set_apikey.cpp" />
+    <ClCompile Include="src\feature\impl\command\impl\stats.cpp" />
+    <ClCompile Include="src\feature\impl\module\impl\chat_manager.cpp" />
+    <ClCompile Include="src\feature\impl\module\impl\gametype_manager.cpp" />
+    <ClCompile Include="src\feature\impl\module\module.cpp" />
+    <ClCompile Include="src\feature\impl\module\module_manager.cpp" />
     <ClCompile Include="src\main\dllmain.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\sdk\mapping.cpp" />
@@ -195,6 +201,11 @@
     <ClInclude Include="src\feature\impl\command\impl\denick.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\find_nick.hpp" />
     <ClInclude Include="src\feature\impl\command\impl\set_apikey.hpp" />
+    <ClInclude Include="src\feature\impl\command\impl\stats.hpp" />
+    <ClInclude Include="src\feature\impl\module\impl\chat_manager.hpp" />
+    <ClInclude Include="src\feature\impl\module\impl\gametype_manager.hpp" />
+    <ClInclude Include="src\feature\impl\module\module.hpp" />
+    <ClInclude Include="src\feature\impl\module\module_manager.hpp" />
     <ClInclude Include="src\main\main.hpp" />
     <ClInclude Include="src\sdk\java\util\uuid.hpp" />
     <ClInclude Include="src\sdk\mapping.hpp" />
@@ -209,7 +220,7 @@
     <ClInclude Include="src\sdk\net\minecraft\entity\player\entity_player.hpp" />
     <ClInclude Include="src\sdk\net\minecraft\util\chat_component_text.hpp" />
     <ClInclude Include="src\sdk\net\minecraft\util\i_chat_component.hpp" />
-    <ClInclude Include="src\sdk\net\minecraft\world.hpp" />
+    <ClInclude Include="src\sdk\net\minecraft\world\world.hpp" />
     <ClInclude Include="src\sdk\register_classes.hpp" />
     <ClInclude Include="src\util\config.hpp" />
     <ClInclude Include="src\util\enum_chat_formatting.hpp" />

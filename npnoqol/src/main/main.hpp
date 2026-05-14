@@ -16,5 +16,5 @@ namespace zoo
         bool running;
     };
 
-	inline constexpr const bool use_console{ false };
+	inline constexpr const bool use_console{ true };
 }

@@ -5,7 +5,7 @@
 #include "net/minecraft/entity/entity.hpp"
 #include "net/minecraft/entity/entity_living_base.hpp"
 #include "net/minecraft/entity/player/entity_player.hpp"
-#include "net/minecraft/world.hpp"
+#include "net/minecraft/world/world.hpp"
 #include "mapping.hpp"
 
 #include <vmhook/vmhook.hpp>

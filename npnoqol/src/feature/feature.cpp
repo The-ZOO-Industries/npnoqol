@@ -13,9 +13,13 @@ zoo::feature::feature() noexcept
 		{
 			minecraft = sdk::minecraft::get_minecraft();
 
-			zoo::chat::add_chat_message(
-				std::format("{}Hello {}{}", enum_chat_formatting::aqua, enum_chat_formatting::dark_aqua, minecraft->get_the_player()->get_name())
-			);
+			const auto player{ minecraft ? minecraft->get_the_player() : nullptr };
+			if (player && player->get_instance())
+			{
+				zoo::chat::add_chat_message(
+					std::format("{}Hello {}{}", enum_chat_formatting::aqua, enum_chat_formatting::dark_aqua, player->get_name())
+				);
+			}
 		}
 	);
 }
@@ -26,9 +30,13 @@ zoo::feature::~feature() noexcept
 
 	std::call_once(destructor_flag, []()
 		{
-			zoo::chat::add_chat_message(
-				std::format("{}See you {}{}", enum_chat_formatting::aqua, enum_chat_formatting::dark_aqua, minecraft->get_the_player()->get_name())
-			);
+			const auto player{ minecraft ? minecraft->get_the_player() : nullptr };
+			if (player && player->get_instance())
+			{
+				zoo::chat::add_chat_message(
+					std::format("{}See you {}{}", enum_chat_formatting::aqua, enum_chat_formatting::dark_aqua, player->get_name())
+				);
+			}
 		}
 	);
 }
@@ -36,7 +44,14 @@ zoo::feature::~feature() noexcept
 auto zoo::feature::sanity_check() const noexcept
 	-> bool
 {
-	if (!minecraft || !minecraft->get_the_player()->get_instance() || !minecraft->get_the_world()->get_instance())
+	if (!minecraft)
+	{
+		return false;
+	}
+
+	const auto player{ minecraft->get_the_player() };
+	const auto world{ minecraft->get_the_world() };
+	if (!player || !player->get_instance() || !world || !world->get_instance())
 	{
 		return false;
 	}

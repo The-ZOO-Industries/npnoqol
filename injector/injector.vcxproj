@@ -139,6 +139,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)npnoqol_injector.pdb</ProgramDatabaseFile>
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dwmapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>

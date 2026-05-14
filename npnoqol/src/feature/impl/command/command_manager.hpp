@@ -38,7 +38,7 @@ namespace zoo
 		auto run_tick() noexcept
 			-> void;
 
-		auto on_send_chat_message(const std::string& message) noexcept
+		auto on_send_chat_message(const std::unique_ptr<sdk::entity_player_sp>& player, const std::string& message) noexcept
 			-> bool;
 
 		auto queue_command(const std::string& message) noexcept

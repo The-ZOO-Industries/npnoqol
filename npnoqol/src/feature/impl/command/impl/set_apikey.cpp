@@ -5,13 +5,42 @@ zoo::set_apikey::set_apikey() noexcept
         enum_chat_formatting::dark_aqua,
         enum_chat_formatting::aqua) }
 {
+    static std::once_flag flag{};
 
+	std::call_once(flag, []() noexcept
+		{
+			if (!hypixel_api::check_apikey(config::get<std::string>("api.hypixel")))
+			{
+				zoo::chat::add_chat_message(std::format("{}Hypixel API key is invalid",
+					enum_chat_formatting::red
+                ));
+			}
+            else
+            {
+				zoo::chat::add_chat_message(std::format("{}Hypixel API key is valid",
+					enum_chat_formatting::green
+				));
+            }
+
+			if (!zoo_api::check_apikey(config::get<std::string>("api.zoo")))
+			{
+				zoo::chat::add_chat_message(std::format("{}Zoo API key is invalid",
+					enum_chat_formatting::red
+				));
+			}
+            else
+            {
+                zoo::chat::add_chat_message(std::format("{}Zoo API key is valid",
+                    enum_chat_formatting::green
+                ));
+            }
+		});
 }
 
 zoo::set_apikey::~set_apikey() noexcept = default;
 
 auto zoo::set_apikey::on_command(const std::vector<std::string>& args) const noexcept
--> void
+    -> void
 {
     if (args.size() != 3)
     {

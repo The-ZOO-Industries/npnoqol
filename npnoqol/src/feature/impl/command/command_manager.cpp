@@ -3,12 +3,14 @@
 #include "impl/denick.hpp"
 #include "impl/find_nick.hpp"
 #include "impl/set_apikey.hpp"
+#include "impl/stats.hpp"
 
 zoo::command_manager::command_manager() noexcept
 {
 	this->register_command<zoo::set_apikey>();
 	this->register_command<zoo::denick>();
 	this->register_command<zoo::find_nick>();
+	this->register_command<zoo::stats>();
 	this->worker = std::thread{ &zoo::command_manager::worker_loop, this };
 }
 
@@ -30,7 +32,7 @@ auto zoo::command_manager::run_tick() noexcept
 	this->send_chat_message.clear();
 }
 
-auto zoo::command_manager::on_send_chat_message(const std::string& message) noexcept
+auto zoo::command_manager::on_send_chat_message(const std::unique_ptr<sdk::entity_player_sp>& player, const std::string& message) noexcept
 	-> bool
 {
 	for (const std::unique_ptr<zoo::command>& command : this->commands)

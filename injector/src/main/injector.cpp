@@ -1,5 +1,6 @@
 #include "injector.hpp"
 
+#include <filesystem>
 #include <tlhelp32.h>
 
 namespace
@@ -64,6 +65,20 @@ namespace injector
     auto extract_dll_to_temp() noexcept
         -> std::string
     {
+        char executable_path[MAX_PATH]{};
+        if (GetModuleFileNameA(nullptr, executable_path, MAX_PATH))
+        {
+            const std::filesystem::path debug_dll{
+                std::filesystem::path{ executable_path }.parent_path() / "npnoqol.dll"
+            };
+
+            std::error_code error{};
+            if (std::filesystem::exists(debug_dll, error))
+            {
+                return debug_dll.string();
+            }
+        }
+
         const HRSRC resource{ FindResourceW(nullptr, MAKEINTRESOURCEW(256), MAKEINTRESOURCEW(10)) };
         if (!resource)
         {
@@ -84,7 +99,11 @@ namespace injector
         GetTempPathA(MAX_PATH, temp_path);
         GetTempFileNameA(temp_path, "dll", 0, temp_file);
 
-        const HANDLE file{ CreateFileA(temp_file, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr) };
+        std::filesystem::path temp_dll{ temp_file };
+        temp_dll.replace_extension(".dll");
+        DeleteFileA(temp_file);
+
+        const HANDLE file{ CreateFileA(temp_dll.string().c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr) };
         if (file == INVALID_HANDLE_VALUE)
         {
             return {};
@@ -94,7 +113,7 @@ namespace injector
         WriteFile(file, data, size, &written, nullptr);
         CloseHandle(file);
 
-        return std::string{ temp_file };
+        return temp_dll.string();
     }
 
     auto inject_dll(const DWORD process_id, const char* dll_path) noexcept
